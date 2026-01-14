@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SUPER LEAGUE</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{
     margin:0;
@@ -13,41 +12,48 @@ body{
     color:#000;
 }
 header{
-    background:#222;
+    background: transparent; /* يبقى شفاف */
     color:#fff;
-    padding:10px 15px;
+    padding:0px 2px;       /* خلي padding أكبر عشان الأزرار تبان مرتاحة */
     display:flex;
-    justify-content:space-between;
+    justify-content: flex-start; 
     align-items:center;
-    box-shadow:0 2px 5px rgba(0,0,0,0.3);
-    position: sticky;
+    box-shadow:none;         /* إزالة أي ظل */
+    position: fixed;
     top:0;
+    left:0;
+    right:0;
     z-index:1000;
 }
+
+
+
 .logo{
-    color:#27ae60; 
+    color:#27ae60;
     font-size:22px;
     font-weight:bold;
-    font-family: "S𝕌ℙ𝔼ℝ L𝔼𝔸𝔾𝕌𝔼";
 }
 nav button{
-    background:#1e7e34; 
+    background:#1e7e34;
     color:#fff;
-    border-radius:6px;
-    padding:6px 10px;
-    margin:0 2px;
+    border-radius:10px;       /* أقل زوايا مدورة */
+    padding:5px 10px;         /* مساحة أكبر داخل الزر */
+    margin:5px 10px;             /* مسافة جانبية أقل */
     font-weight:bold;
-    transition:0.3s;
-    font-size:14px;
+    font-size:12px;           /* حجم الخط أكبر */
+    cursor:pointer;
 }
 nav button:hover{
     background:#2ecc71;
 }
+
 .container{
     position:relative;
-    height:calc(100vh - 60px);
-    padding:5px;
+    height:100vh;               /* خليها كامل الشاشة */
+    padding:100px 10px 10px 10px; /* padding-top = ارتفاع header + الأزرار */
 }
+
+
 .page{
     position:absolute;
     inset:0;
@@ -63,7 +69,7 @@ nav button:hover{
     transform: translateX(0);
 }
 .post,.box{
-    background:#fff6a0; 
+    background:#fff6a0;
     padding:12px;
     border-radius:10px;
     margin-bottom:12px;
@@ -81,7 +87,6 @@ nav button:hover{
     margin:3px 0;
     cursor:pointer;
     border-radius:6px;
-    transition:0.3s all;
 }
 .btn:hover{
     background:#2ecc71;
@@ -93,351 +98,454 @@ input,textarea{
     border-radius:6px;
     border:1px solid #ccc;
 }
-small{color:#555}
-b{color:#000}
 footer{
     text-align:center;
     padding:10px 5px;
     font-size:14px;
 }
-footer a{
-    color:#27ae60;
-    text-decoration:none;
+
+/* صندوق الرسائل الثابت أسفل الشاشة يظهر فقط في صفحة المحادثة */
+#msgBox {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    display: none; /* نخفيه افتراضيًا */
+    gap: 5px;
+    background: #f7b600;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    z-index: 1000;
 }
-@media (max-width:600px){
-  nav{
-    display:grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap:5px;
-    padding:5px;
-  }
-  nav button{
-    width:100%;
-    margin:2px 0;
-    font-size:14px;
-  }
-  nav button:first-child{
-    grid-column: 1 / 3;
-  }
-  nav button:nth-child(2){ grid-column:1; }
-  nav button:nth-child(3){ grid-column:2; }
-  nav button:nth-child(4){ grid-column:1; }
-  nav button:nth-child(5){ grid-column:2; }
+#msgBox input {
+    flex: 1;
 }
+
 </style>
 </head>
 <body>
 
 <header>
-<div class="logo">S𝕌ℙ𝔼ℝ L𝔼𝔸𝔾𝕌𝔼</div>
-<nav>
-<button onclick="showPage('homePage')">الرئيسية</button>
-<button onclick="showPage('home')">المنشورات</button>
-<button onclick="showPage('chat')">المحادثة</button>
-<button onclick="showPage('settings')">الإعدادات</button>
-<button onclick="showPage('adminLogin')">المشرفون</button>
-</nav>
+
+          <button id="toggleNav" style="background:#1e7e34;color:#fff;border:none;padding:5px 10px;margin-left:10px;border-radius:5px;cursor:pointer;">☰</button>
+    <nav>
+        <button data-target="homePage">الرئيسية</button>
+        <button data-target="home">المنشورات</button>
+        <button data-target="chat">المحادثة</button>
+        <button data-target="settings">الإعدادات</button>
+        <button data-target="adminLogin">المشرفون</button>
+    </nav>
 </header>
 
 <div class="container">
-
-<div style="display:flex; justify-content:center; align-items:center; height:100vh;">
-    <img 
+    <div id="homePage" class="page active">
+        <div style="text-align:center;margin-top:30px;">
+            <h1 class="logo" style="font-size:28px;">SUPER LEAGUE</h1>
+          <img 
         src="https://i.postimg.cc/sfZcCN9x/Whats-App-Image-2026-01-13-at-12-20-39-AM.jpg" 
         alt="صورة" 
         style="width:50%; height:50%; object-fit:contain; border-radius:10px;"
     >
-</div>
+           <h1>مصمم الموقع</h1>
+          <h3>يوسف الهواري</h3>
+                   <h3>01128915630</h3>
+        </div>
+    </div>
 
-<div id="homePage" class="page active">
-<div style="text-align:center;margin-top:30px;">
-<h1 class="logo" style="font-size:28px;">S𝕌ℙ𝔼ℝ L𝔼𝔸𝔾𝕌𝔼</h1>
-<p>المصمم: YouSsef JoO</p>
-<p>الهاتف: 01128915630</p>
-</div>
-</div>
-
-<div id="home" class="page">
-<input placeholder="بحث في المنشورات" oninput="renderPosts(this.value)">
-<div id="posts"></div>
-</div>
+    <div id="home" class="page">
+        <input placeholder="بحث في المنشورات" oninput="renderPosts(this.value)">
+        <div id="posts"></div>
+    </div>
 
 <div id="chat" class="page">
-<input placeholder="بحث في الرسائل" oninput="renderChat(this.value)">
-<input id="msg" placeholder="اكتب رسالة">
-<button class="btn" onclick="sendMsg()">إرسال</button>
-<div id="chatBox"></div>
+    <input placeholder="بحث في الرسائل" oninput="renderChat(this.value)">
+    <div id="chatBox"></div>
 </div>
 
-<div id="settings" class="page">
-<label>ID الجهاز:</label>
-<input id="uid" disabled>
-<label>اسم المستخدم:</label>
-<input id="uname" placeholder="اكتب اسمك" oninput="saveName()">
+<!-- صندوق الرسالة المثبت خارج كل الصفحات -->
+<div id="msgBox">
+    <input id="msg" placeholder="اكتب رسالة">
+    <button class="btn" id="sendMsgBtn">إرسال</button>
 </div>
 
-<div id="adminLogin" class="page">
-<input type="password" id="pass" placeholder="كلمة السر">
-<button class="btn" onclick="login()">دخول</button>
-</div>
 
-<div id="admin" class="page">
-<button class="btn" onclick="adminTab='posts';renderAdmin()">المنشورات</button>
-<button class="btn" onclick="adminTab='pred';renderAdmin()">التوقعات</button>
-<button class="btn" onclick="adminTab='chat';renderAdmin()">المحادثات</button>
-<hr>
-<div id="adminContent"></div>
-</div>
+    <div id="settings" class="page">
+        <label>ID الجهاز:</label>
+        <input id="uid" disabled>
 
+        <label>اسم المستخدم:</label>
+        <input id="uname" placeholder="اكتب اسمك" oninput="saveName()">
+
+        <label>صورة المستخدم:</label>
+        <input type="file" id="userImg" accept="image/*">
+        <img id="previewImg" style="width:80px;height:80px;border-radius:50%;display:none;margin-top:5px;">
+    </div>
+
+    <div id="adminLogin" class="page">
+        <input type="password" id="pass" placeholder="كلمة السر">
+        <button class="btn" id="loginBtn">دخول</button>
+    </div>
+
+    <div id="admin" class="page">
+        <button class="btn" id="adminPostsBtn">المنشورات</button>
+        <button class="btn" id="adminPredsBtn">التوقعات</button>
+        <button class="btn" id="adminChatBtn">المحادثات</button>
+        <hr>
+        <div id="adminContent"></div>
+    </div>
 </div>
 
 <footer>
-<div>YouSsef JoO ALhwarY</div>
-<div>01128915630</div>
+    <div>تابع اخبار كرة القدم</div>
+   
 </footer>
-
-<script>
-let uid = localStorage.uid || Date.now();
-localStorage.uid = uid;
-document.getElementById("uid").value = uid;
-let uname = document.getElementById("uname");
-uname.value = localStorage.name || "";
-
-let posts = [];
-let preds = [];
-let chats = [];
-let adminTab = "posts";
-
-function showPage(id){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-}
-
-function saveName(){localStorage.name = uname.value;}
-
-function renderPosts(q=""){
-let box = document.getElementById("posts");
-box.innerHTML="";
-posts.filter(p=>p.text.includes(q)).forEach(p=>{
-let liked = p.likes.includes(uid);
-box.innerHTML+=`
-<div class="post">
-<small>${p.name}</small>
-<p>${p.text}</p>
-${p.img?`<img src="${p.img}" width="100%">`:""}
-<button class="btn" onclick="likePost(${p.id})" ${liked?"disabled":""}>
-❤️ ${p.likes.length}
-</button>
-</div>`;
-});
-preds.forEach(p=>{
-box.innerHTML+=`
-<div class="post">
-<small>توقعات</small>
-<p>${p.desc}</p>
-<button class="btn" onclick="votePred(${p.id},1)" ${p.voted.includes(uid)?"disabled":""}>
-${p.t1} (${p.v1})
-</button>
-<button class="btn" onclick="votePred(${p.id},2)" ${p.voted.includes(uid)?"disabled":""}>
-${p.t2} (${p.v2})
-</button>
-</div>`;
-});
-}
-
-function likePost(id){
-let p = posts.find(x=>x.id==id);
-if(!p.likes.includes(uid)){
-p.likes.push(uid);
-save();
-renderPosts();
-}
-}
-
-function sendMsg(){
-if(!msg.value.trim()) return;
-chats.push({id:Date.now(),user:uname.value||uid,text:msg.value,likes:[]});
-msg.value="";
-save();
-renderChat();
-}
-
-function renderChat(q=""){
-let box = document.getElementById("chatBox");
-box.innerHTML="";
-chats.filter(c=>c.text.startsWith(q)).forEach(c=>{
-let liked = c.likes.includes(uid);
-box.innerHTML+=`
-<div class="box">
-<b>${c.user}</b>: ${c.text}
-<button class="btn" onclick="likeMsg(${c.id})" ${liked?"disabled":""}>👍 ${c.likes.length}</button>
-</div>`;
-});
-}
-
-function likeMsg(id){
-let c = chats.find(x=>x.id==id);
-if(!c.likes.includes(uid)){
-c.likes.push(uid);
-save();
-renderChat();
-}
-}
-
-function login(){
-if(pass.value==="joo5555"){ showPage("admin"); pass.value=""; }
-else alert("كلمة السر غلط");
-}
-
-function renderAdmin(){
-let c = document.getElementById("adminContent");
-c.innerHTML="";
-if(adminTab==="posts"){
-c.innerHTML=`
-<input type="file" id="pimg">
-<textarea id="ptxt" placeholder="وصف المنشور"></textarea>
-<button class="btn" onclick="addPost()">حفظ</button>
-<input placeholder="بحث" oninput="renderAdminPosts(this.value)">
-<div id="adminList"></div>`;
-renderAdminPosts();
-}
-if(adminTab==="pred"){
-c.innerHTML=`
-<input id="t1" placeholder="الفريق الأول">
-<input id="t2" placeholder="الفريق الثاني">
-<textarea id="pdesc" placeholder="وصف التوقع"></textarea>
-<button class="btn" onclick="addPred()">حفظ</button>
-<div id="adminList"></div>`;
-renderAdminPred();
-}
-if(adminTab==="chat"){
-c.innerHTML=`<input placeholder="بحث" oninput="renderAdminChat(this.value)"><div id="adminList"></div>`;
-renderAdminChat();
-}
-}
-
-function addPost(){
-let img = document.getElementById("pimg").files[0];
-let text = document.getElementById("ptxt").value;
-if(!text.trim()) return alert("اكتب الوصف");
-let reader = new FileReader();
-reader.onload = ()=>{
-let postObj = {id:Date.now(), name:uname.value||"مشرف", text:text, img:img?reader.result:"", likes:[]};
-posts.unshift(postObj);
-save(); renderPosts(); renderAdminPosts();
-document.getElementById("ptxt").value=""; 
-document.getElementById("pimg").value="";
-};
-if(img) reader.readAsDataURL(img);
-else reader.onload();
-}
-
-function renderAdminPosts(q=""){
-let l = document.getElementById("adminList");
-l.innerHTML="";
-posts.filter(p=>p.text.includes(q)).forEach(p=>{
-l.innerHTML+=`<div class="box">${p.text} <button onclick="delPost(${p.id})">🗑️</button></div>`;
-});
-}
-
-function delPost(id){posts=posts.filter(p=>p.id!=id); save(); renderAdminPosts(); renderPosts();}
-
-function addPred(){
-preds.unshift({id:Date.now(),t1:t1.value,t2:t2.value,desc:pdesc.value,v1:0,v2:0,voted:[],name:uname.value||"مشرف"});
-save(); renderAdminPred(); renderPosts(); t1.value=""; t2.value=""; pdesc.value="";
-}
-function renderAdminPred(){let l=document.getElementById("adminList"); l.innerHTML=""; preds.forEach(p=>{l.innerHTML+=`<div class="box">${p.t1} vs ${p.t2} <button onclick="delPred(${p.id})">🗑️</button></div>`});}
-function delPred(id){preds=preds.filter(p=>p.id!=id); save(); renderAdminPred(); renderPosts();}
-function votePred(id,t){let p=preds.find(x=>x.id==id); if(p.voted.includes(uid)) return; p.voted.push(uid); t==1?p.v1++:p.v2++; save(); renderPosts();}
-
-function renderAdminChat(q=""){let l=document.getElementById("adminList"); l.innerHTML=""; chats.filter(c=>c.text.startsWith(q)).forEach(c=>{l.innerHTML+=`<div class="box">${c.user}: ${c.text} <button onclick="delMsg(${c.id})">🗑️</button></div>`});}
-function delMsg(id){chats=chats.filter(c=>c.id!=id); save(); renderChat(); renderAdminChat();}
-
-function save(){localStorage.posts=JSON.stringify(posts); localStorage.preds=JSON.stringify(preds); localStorage.chats=JSON.stringify(chats);}
-
-renderPosts();
-renderChat();
-</script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
+// --- Firebase Config ---
 const firebaseConfig = {
-  apiKey: "AIzaSyDgi3--q8nDGfps5MV4AmC8B4PYPMfAPZo",
-  authDomain: "yousef-a3438.firebaseapp.com",
-  projectId: "yousef-a3438",
-  storageBucket: "yousef-a3438.firebasestorage.app",
-  messagingSenderId: "645915709487",
-  appId: "1:645915709487:web:588dae85e94d33daa636da"
+    apiKey: "AIzaSyDgi3--q8nDGfps5MV4AmC8B4PYPMfAPZo",
+    authDomain: "yousef-a3438.firebaseapp.com",
+    projectId: "yousef-a3438",
+    storageBucket: "yousef-a3438.firebasestorage.app",
+    messagingSenderId: "645915709487",
+    appId: "1:645915709487:web:588dae85e94d33daa636da"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Firebase: تحميل البيانات الحية
+// --- User Setup ---
+let uid = localStorage.uid || Date.now();
+localStorage.uid = uid;
+document.getElementById("uid").value = uid;
+
+let uname = document.getElementById("uname");
+uname.value = localStorage.name || "";
+
+let userImg = localStorage.userImg || "";
+const previewImg = document.getElementById("previewImg");
+if(userImg){
+    previewImg.src = userImg;
+    previewImg.style.display = "block";
+}
+
+// --- Data Arrays ---
+let posts = [];
+let preds = [];
+let chats = [];
+let adminTab = "posts";
+
+// --- Pages ---
+function showPage(id){
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+
+    // اظهار صندوق الرسائل فقط في صفحة "chat"
+    const msgBox = document.getElementById("msgBox");
+    if(id === "chat"){
+        msgBox.style.display = "flex";
+    } else {
+        msgBox.style.display = "none";
+    }
+}
+
+
+// --- Nav buttons ---
+document.querySelectorAll("nav button").forEach(btn=>{
+    btn.addEventListener("click",()=> showPage(btn.dataset.target));
+});
+document.getElementById("sendMsgBtn").addEventListener("click",sendMsg);
+document.getElementById("loginBtn").addEventListener("click",login);
+
+document.getElementById("userImg").addEventListener("change", function(){
+    const file = this.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        userImg = reader.result;
+        localStorage.userImg = userImg;
+        previewImg.src = userImg;
+        previewImg.style.display = "block";
+        set(ref(db, "users/" + uid), {
+            name: uname.value || uid,
+            img: userImg
+        });
+    };
+    reader.readAsDataURL(file);
+});
+
+// --- Firebase Listeners ---
 const postsRef = ref(db, "posts");
 onValue(postsRef, snapshot=>{
-  posts = [];
-  snapshot.forEach(snap=>posts.push(snap.val()));
-  renderPosts(); renderAdminPosts();
+    posts = [];
+    snapshot.forEach(snap=>{
+        let obj = snap.val();
+        obj._key = snap.key;
+        posts.push(obj);
+    });
+    renderPosts();
+    renderAdminPosts();
+});
+
+const predsRef = ref(db, "preds");
+onValue(predsRef, snapshot=>{
+    preds = [];
+    snapshot.forEach(snap=>{
+        let obj = snap.val();
+        obj._key = snap.key;
+        preds.push(obj);
+    });
+    renderPosts();
+    renderAdminPred();
 });
 
 const chatsRef = ref(db, "chats");
 onValue(chatsRef, snapshot=>{
-  chats = [];
-  snapshot.forEach(snap=>chats.push(snap.val()));
-  renderChat(); renderAdminChat();
+    chats = [];
+    snapshot.forEach(snap=>{
+        let obj = snap.val();
+        obj._key = snap.key;
+        chats.push(obj);
+    });
+    renderChat();
+    renderAdminChat();
 });
 
-// حفظ المنشورات على Firebase
-const originalAddPost = window.addPost;
-window.addPost = function(){
-  let img = document.getElementById("pimg").files[0];
-  let text = document.getElementById("ptxt").value;
-  if(!text.trim()) return alert("اكتب الوصف");
-  let reader = new FileReader();
-  reader.onload = ()=>{
-    let postObj = {id:Date.now(), name:uname.value||"مشرف", text:text, img:img?reader.result:"", likes:[]};
-    let newPostRef = push(postsRef);
-    set(newPostRef, postObj);
-    document.getElementById("ptxt").value=""; 
-    document.getElementById("pimg").value="";
-  };
-  if(img) reader.readAsDataURL(img);
-  else reader.onload();
+// --- Rendering ---
+function renderPosts(q=""){
+    let box = document.getElementById("posts");
+    box.innerHTML = "";
+
+    // دمج المنشورات والتوقعات في مصفوفة واحدة
+    let allItems = [];
+
+    posts.forEach(p=>{
+        if(p.text.includes(q)){
+            allItems.push({type:'post', time:p.id, content:p});
+        }
+    });
+
+    preds.forEach(p=>{
+        if(p.desc.includes(q)){
+            allItems.push({type:'pred', time:p.id, content:p});
+        }
+    });
+
+    // ترتيب حسب الوقت (id يمثل وقت الإنشاء)
+    allItems.sort((a,b) => a.time - b.time);
+
+    // عرض كل العناصر حسب ترتيبها
+    allItems.forEach(item=>{
+        if(item.type === 'post'){
+            let p = item.content;
+            let liked = p.likes && p.likes.includes(uid);
+            box.innerHTML +=
+            `<div class="post">
+                <small>${p.name}</small>
+                <p>${p.text}</p>
+                ${p.img ? `<img src="${p.img}" width="100%">` : ""}
+                <button class="btn" onclick="likePost('${p._key}')" ${liked?"disabled":""}>❤️ ${p.likes ? p.likes.length : 0}</button>
+            </div>`;
+        } else if(item.type === 'pred'){
+            let p = item.content;
+            let liked = p.likes && p.likes.includes(uid);
+            box.innerHTML +=
+            `<div class="post">
+                <small>توقعات</small>
+                <p>${p.desc}</p>
+                <button class="btn" onclick="likePred('${p._key}')" ${liked?"disabled":""}>❤️ ${p.likes? p.likes.length : 0}</button>
+                <div>${p.t1} vs ${p.t2}</div>
+            </div>`;
+        }
+    });
 }
 
-// حفظ الرسائل على Firebase
-const originalSendMsg = window.sendMsg;
-window.sendMsg = function(){
-  if(!msg.value.trim()) return;
-  let chatObj = {id:Date.now(), user:uname.value||uid, text:msg.value, likes:[]};
-  let newChatRef = push(chatsRef);
-  set(newChatRef, chatObj);
-  msg.value="";
+
+function renderChat(q=""){
+    let box = document.getElementById("chatBox");
+    box.innerHTML = "";
+    chats.filter(c=>c.text.startsWith(q)).forEach(c=>{
+        let liked = c.likes && c.likes.includes(uid);
+        box.innerHTML +=
+        `<div class="box" style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;word-break:break-word;">
+            <img src="${c.img || ''}" 
+                 style="width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+            <div style="flex:1;">
+                <b>${c.user}</b><br>
+                ${c.text}<br>
+                <button class="btn" onclick="likeChat('${c._key}')" ${liked?"disabled":""}>👍 ${c.likes ? c.likes.length : 0}</button>
+            </div>
+        </div>`;
+    });
 }
 
-// لايك المنشورات على Firebase
-window.likePost = function(id){
-  let p = posts.find(x=>x.id==id);
-  if(!p.likes.includes(uid)){
-    p.likes.push(uid);
-    const postRef = ref(db, `posts/${posts.findIndex(x=>x.id==id)}`);
-    set(postRef, p);
-  }
+// --- Admin Functions ---
+function login(){
+    if(document.getElementById("pass").value==="joo5555"){
+        showPage("admin");
+        document.getElementById("pass").value="";
+        renderAdmin();
+    } else alert("كلمة السر غلط");
 }
 
-// لايك الرسائل على Firebase
-window.likeMsg = function(id){
-  let c = chats.find(x=>x.id==id);
-  if(!c.likes.includes(uid)){
-    c.likes.push(uid);
-    const chatRef = ref(db, `chats/${chats.findIndex(x=>x.id==id)}`);
-    set(chatRef, c);
-  }
+function renderAdmin(){
+    let c = document.getElementById("adminContent");
+    c.innerHTML="";
+    if(adminTab==="posts"){
+        c.innerHTML=
+        `<input type="file" id="pimg">
+        <textarea id="ptxt" placeholder="وصف المنشور"></textarea>
+        <button class="btn" onclick="addPost()">حفظ</button>
+        <input placeholder="بحث" oninput="renderAdminPosts(this.value)">
+        <div id="adminList"></div>`;
+        renderAdminPosts();
+    }
+    if(adminTab==="pred"){
+        c.innerHTML=
+        `<input id="t1" placeholder="الفريق الأول">
+        <input id="t2" placeholder="الفريق الثاني">
+        <textarea id="pdesc" placeholder="وصف التوقع"></textarea>
+        <button class="btn" onclick="addPred()">حفظ</button>
+        <div id="adminList"></div>`;
+        renderAdminPred();
+    }
+    if(adminTab==="chat"){
+        c.innerHTML=`<input placeholder="بحث" oninput="renderAdminChat(this.value)">
+        <div id="adminList"></div>`;
+        renderAdminChat();
+    }
 }
+
+document.getElementById("adminPostsBtn").addEventListener("click",()=>{ adminTab="posts"; renderAdmin(); });
+document.getElementById("adminPredsBtn").addEventListener("click",()=>{ adminTab="pred"; renderAdmin(); });
+document.getElementById("adminChatBtn").addEventListener("click",()=>{ adminTab="chat"; renderAdmin(); });
+
+// --- Add & Likes ---
+function addPost(){
+    let img = document.getElementById("pimg").files[0];
+    let text = document.getElementById("ptxt").value;
+    if(!text.trim()) return alert("اكتب الوصف");
+    let reader = new FileReader();
+    reader.onload = ()=>{
+        let obj = {id:Date.now(),name:uname.value||"مشرف",text:text,img:img?reader.result:"",likes:[]};
+        let newPostRef = push(postsRef);
+        set(newPostRef,obj);
+        document.getElementById("ptxt").value="";
+        document.getElementById("pimg").value="";
+    };
+    if(img) reader.readAsDataURL(img);
+    else reader.onload();
+}
+
+function addPred(){
+    let obj = {id:Date.now(),t1:t1.value,t2:t2.value,desc:pdesc.value,likes:[]};
+    let newPredRef = push(predsRef);
+    set(newPredRef,obj);
+    t1.value=""; t2.value=""; pdesc.value="";
+}
+
+function sendMsg(){
+    if(!msg.value.trim()) return;
+    let obj = {id:Date.now(),user:uname.value||uid,img:userImg||"",text:msg.value,likes:[]};
+    let newChatRef = push(chatsRef);
+    set(newChatRef,obj);
+    msg.value="";
+}
+
+// --- Likes Posts ---
+function likePost(key){
+    let p = posts.find(x=>x._key===key);
+    if(!p.likes) p.likes = [];
+    if(!p.likes.includes(uid)){
+        p.likes.push(uid);
+        set(ref(db,"posts/"+key),p);
+    }
+}
+
+// --- Likes Predictions ---
+function likePred(key){
+    let p = preds.find(x=>x._key===key);
+    if(!p.likes) p.likes = [];
+    if(!p.likes.includes(uid)){
+        p.likes.push(uid);
+        set(ref(db,"preds/"+key),p);
+    }
+}
+
+// --- Likes Chat ---
+function likeChat(key){
+    let c = chats.find(x=>x._key===key);
+    if(!c.likes) c.likes = [];
+    if(!c.likes.includes(uid)){
+        c.likes.push(uid);
+        set(ref(db,"chats/"+key),c);
+    }
+}
+
+// --- Admin Render Lists ---
+function renderAdminPosts(q=""){
+    let l = document.getElementById("adminList");
+    l.innerHTML="";
+    posts.filter(p=>p.text.includes(q)).forEach(p=>{
+        l.innerHTML+=`<div class="box">${p.text} <button class="btn" onclick="deletePost('${p._key}')">🗑️</button></div>`;
+    });
+}
+function renderAdminPred(q=""){
+    let l = document.getElementById("adminList");
+    l.innerHTML="";
+    preds.filter(p=>p.desc.includes(q)).forEach(p=>{
+        l.innerHTML+=`<div class="box">${p.t1} vs ${p.t2} - ${p.desc} <button class="btn" onclick="deletePred('${p._key}')">🗑️</button></div>`;
+    });
+}
+function renderAdminChat(q=""){
+    let l = document.getElementById("adminList");
+    l.innerHTML="";
+    chats.filter(c=>c.text.startsWith(q)).forEach(c=>{
+        l.innerHTML+=`<div class="box">${c.user}: ${c.text} <button class="btn" onclick="deleteChat('${c._key}')">🗑️</button></div>`;
+    });
+}
+
+// --- Delete Functions ---
+function deletePost(key){ set(ref(db,"posts/"+key),null); }
+function deletePred(key){ set(ref(db,"preds/"+key),null); }
+function deleteChat(key){ set(ref(db,"chats/"+key),null); }
+
+// --- Save name ---
+function saveName(){
+    localStorage.name = uname.value;
+}
+
+// --- Make functions global ---
+window.addPost = addPost;
+window.addPred = addPred;
+window.sendMsg = sendMsg;
+window.likePost = likePost;
+window.likePred = likePred;
+window.likeChat = likeChat;
+window.renderAdminPosts = renderAdminPosts;
+window.renderAdminPred = renderAdminPred;
+window.renderAdminChat = renderAdminChat;
+window.deletePost = deletePost;
+window.deletePred = deletePred;
+window.deleteChat = deleteChat;
+window.saveName = saveName;
+  const nav = document.querySelector("header nav");
+const toggleBtn = document.getElementById("toggleNav");
+
+// افتراضيا الـ nav ظاهر
+toggleBtn.addEventListener("click", () => {
+    if(nav.style.display === "none"){
+        nav.style.display = "flex";  // اظهار
+    } else {
+        nav.style.display = "none";  // اخفاء
+    }
+});
+
 </script>
 
 </body>
