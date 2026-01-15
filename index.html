@@ -122,10 +122,49 @@ footer{
 #msgBox input {
     flex: 1;
 }
+/* --- الثلوج المتساقطة الكثيرة --- */
+.snowflake {
+  position: fixed;
+  top: -10px;
+  color: #fff; /* لون الثلج */
+  font-size: 10px;
+  z-index: 9999;
+  user-select: none;
+  pointer-events: none;
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* حركة التساقط */
+@keyframes fall {
+  0% { transform: translateY(0) translateX(0); }
+  100% { transform: translateY(100vh) translateX(50px); }
+}
 
 </style>
 </head>
 <body>
+<!-- إضافة الثلوج الكثيرة -->
+<div class="snowflake" style="left:5%; animation-duration:10s;">❄</div>
+<div class="snowflake" style="left:10%; animation-duration:12s;">❄</div>
+<div class="snowflake" style="left:15%; animation-duration:8s;">❄</div>
+<div class="snowflake" style="left:20%; animation-duration:11s;">❄</div>
+<div class="snowflake" style="left:25%; animation-duration:9s;">❄</div>
+<div class="snowflake" style="left:30%; animation-duration:13s;">❄</div>
+<div class="snowflake" style="left:35%; animation-duration:7s;">❄</div>
+<div class="snowflake" style="left:40%; animation-duration:10s;">❄</div>
+<div class="snowflake" style="left:45%; animation-duration:12s;">❄</div>
+<div class="snowflake" style="left:50%; animation-duration:9s;">❄</div>
+<div class="snowflake" style="left:55%; animation-duration:11s;">❄</div>
+<div class="snowflake" style="left:60%; animation-duration:14s;">❄</div>
+<div class="snowflake" style="left:65%; animation-duration:8s;">❄</div>
+<div class="snowflake" style="left:70%; animation-duration:13s;">❄</div>
+<div class="snowflake" style="left:75%; animation-duration:10s;">❄</div>
+<div class="snowflake" style="left:80%; animation-duration:12s;">❄</div>
+<div class="snowflake" style="left:85%; animation-duration:9s;">❄</div>
+<div class="snowflake" style="left:90%; animation-duration:11s;">❄</div>
+<div class="snowflake" style="left:95%; animation-duration:14s;">❄</div>
 
 <header>
 
@@ -548,7 +587,12 @@ toggleBtn.addEventListener("click", () => {
 window.addEventListener("DOMContentLoaded", () => {
     nav.style.display = "none"; // يخفي الأزرار أول ما الصفحة تفتح
 });
-
+// إخفاء الـ nav لو ضغط المستخدم على أي زر فيه
+nav.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+        nav.style.display = "none";
+    });
+});
 </script>
 
 </body>
