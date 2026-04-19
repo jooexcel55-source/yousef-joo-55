@@ -21,22 +21,39 @@ body.dark{
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
-header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.3)}
-.hlogo{font-family:'Amiri',serif;color:var(--gold);font-size:19px;font-weight:700}
-.hright{display:flex;align-items:center;gap:8px}
-.icbtn{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:4px 6px;border-radius:8px;position:relative;transition:background .2s}
+
+header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 14px;height:56px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.hlogo{font-family:'Amiri',serif;color:var(--gold);font-size:16px;font-weight:700;line-height:1.2}
+.hlogo small{font-size:9px;color:rgba(255,255,255,.65);display:block;font-family:'Cairo',sans-serif}
+.hright{display:flex;align-items:center;gap:6px}
+.icbtn{background:none;border:none;color:#fff;font-size:19px;cursor:pointer;padding:4px 5px;border-radius:8px;position:relative;transition:background .2s}
 .icbtn:hover{background:rgba(255,255,255,.1)}
 .ndot{position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:var(--red);display:none;border:2px solid var(--hdr)}
+.coins-badge{background:var(--gold);color:#1a1a1a;font-size:12px;font-weight:900;padding:3px 8px;border-radius:20px;cursor:default;user-select:none}
+
 .bnav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:var(--nav);border-top:1px solid var(--border);display:flex;height:58px;box-shadow:0 -2px 12px rgba(0,0,0,.08)}
-.nitem{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:'Cairo',sans-serif;flex:1;padding:4px 2px;transition:color .2s}
-.nitem .ni{font-size:21px;margin-bottom:1px}
+.nitem{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:'Cairo',sans-serif;flex:1;padding:4px 2px;transition:color .2s}
+.nitem .ni{font-size:19px;margin-bottom:1px}
 .nitem.active{color:var(--primary);font-weight:700}
+
 .wrap{padding-top:60px;padding-bottom:66px;min-height:100vh}
 .page{display:none;padding:12px;animation:fi .3s ease}
 .page.active{display:block}
 @keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* GUIDE BOX */
+.guide{background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:1.5px solid #a5d6a7;border-radius:14px;padding:14px 14px 12px;margin-bottom:14px}
+body.dark .guide{background:linear-gradient(135deg,#1b3a20,#1e3d1e);border-color:#2d6a35}
+.guide-title{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.guide-text{font-size:13px;color:var(--text2);line-height:1.7}
+.guide-steps{margin-top:8px;padding-right:4px}
+.guide-step{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;font-size:13px;color:var(--text)}
+.guide-num{background:var(--primary);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;flex-shrink:0;margin-top:1px}
+
 .card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--border);transition:transform .2s}
 .card:hover{transform:translateY(-1px)}
+
+/* NAME STYLES */
 .nn{color:var(--text);font-weight:600}
 .np{color:var(--gold);font-weight:900}
 .ns{color:var(--silver);font-weight:900}
@@ -45,23 +62,27 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;pa
 .bdgp{background:var(--gold);color:#1a1a1a}
 .bdgs{background:var(--silver);color:#fff}
 .bdgb{background:var(--blueb);color:#fff}
-.phero{background:linear-gradient(135deg,var(--primary),var(--primary2));border-radius:18px;padding:24px 16px 16px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden}
+.joo-ttl{color:var(--gold);font-weight:900;font-size:11px;margin-left:5px;vertical-align:middle;font-family:'Amiri',serif}
+
+/* HERO */
+.phero{background:linear-gradient(135deg,var(--primary),var(--primary2));border-radius:18px;padding:22px 16px 16px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden}
 .phero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
-.pavt{width:80px;height:80px;border-radius:50%;border:3px solid var(--gold);object-fit:cover;margin:0 auto 10px;display:block;cursor:pointer;position:relative;z-index:1;background:#ccc}
-.pname{font-size:18px;color:#fff;font-weight:700;margin-bottom:4px;position:relative;z-index:1}
-.pdiv{color:var(--gold2);font-size:16px;letter-spacing:4px;position:relative;z-index:1}
-.pstats{display:flex;justify-content:center;gap:24px;margin-top:12px;position:relative;z-index:1}
-.psnum{font-size:18px;font-weight:900;color:var(--gold2)}
-.pslbl{font-size:10px;color:rgba(255,255,255,.8)}
+.pavt{width:78px;height:78px;border-radius:50%;border:3px solid var(--gold);object-fit:cover;margin:0 auto 10px;display:block;cursor:pointer;position:relative;z-index:1;background:#aaa}
+.pname{font-size:17px;color:#fff;font-weight:700;margin-bottom:4px;position:relative;z-index:1}
+.pdiv{color:var(--gold2);font-size:15px;letter-spacing:4px;position:relative;z-index:1}
+.pstats{display:flex;justify-content:center;gap:14px;margin-top:12px;position:relative;z-index:1}
+.psnum{font-size:17px;font-weight:900;color:var(--gold2)}
+.pslbl{font-size:9px;color:rgba(255,255,255,.8)}
 .abtns{display:flex;gap:10px;margin-bottom:14px}
 .abtn{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
-.abtnp{background:var(--primary);color:#fff}
-.abtnp:hover{background:var(--primary2)}
-.abtng{background:var(--gold);color:#1a1a1a}
-.abtng:hover{background:var(--gold2)}
+.abtnp{background:var(--primary);color:#fff}.abtnp:hover{background:var(--primary2)}
+.abtng{background:var(--gold);color:#1a1a1a}.abtng:hover{background:var(--gold2)}
+
 .stitle{font-family:'Amiri',serif;font-size:18px;font-weight:700;color:var(--primary);margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid var(--gold);display:flex;align-items:center;gap:8px}
+
+/* POSTS */
 .phead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.pavtp{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);cursor:pointer;flex-shrink:0}
+.pavtp{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);cursor:pointer;flex-shrink:0;background:#aaa}
 .ptime{font-size:11px;color:var(--text2)}
 .ptxt{font-size:15px;line-height:1.7;margin-bottom:10px;white-space:pre-wrap;word-break:break-word}
 .pimg{width:100%;border-radius:10px;margin-bottom:10px;max-height:300px;object-fit:cover}
@@ -70,18 +91,23 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;pa
 .aibtn:hover{color:var(--primary);background:rgba(26,92,56,.08)}
 .aibtn.liked{color:var(--red)}
 .vcnt{font-size:11px;color:var(--text2);margin-right:auto}
+
+/* POLL */
 .pollopt{display:flex;align-items:center;gap:10px;background:var(--inp);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent;transition:all .2s;font-size:14px}
 .pollopt:hover{border-color:var(--primary2)}
 .pollopt.voted{border-color:var(--primary);background:rgba(26,92,56,.08)}
 .pbw{flex:1;background:var(--border);border-radius:4px;height:6px;overflow:hidden}
 .pb{height:100%;background:var(--primary2);border-radius:4px;transition:width .5s}
 .ppct{font-size:12px;color:var(--text2);min-width:32px;text-align:left}
+
+/* COMMENTS */
 .cmtsec{margin-top:10px;border-top:1px solid var(--border);padding-top:8px;display:none}
 .cmt{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start}
 .cmtbbl{background:var(--inp);border-radius:10px;padding:6px 10px;flex:1;font-size:13px}
 .cmtnm{font-size:11px;font-weight:700;margin-bottom:2px}
 .cmtrow{display:flex;gap:8px;align-items:center;margin-top:6px}
 .cmtrow input{flex:1;margin-bottom:0}
+
 input,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--inp);color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;outline:none;transition:border .2s;margin-bottom:8px}
 input:focus,textarea:focus{border-color:var(--primary2)}
 textarea{resize:none;min-height:80px}
@@ -89,23 +115,29 @@ input[type=file]{padding:6px}
 input:disabled{opacity:.6}
 .btn{background:var(--primary);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;transition:background .2s;white-space:nowrap}
 .btn:hover{background:var(--primary2)}
+
+/* MODAL */
 .moverlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px}
 .moverlay.open{display:flex}
 .modal{background:var(--card);border-radius:18px;padding:20px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:fi .25s ease}
 .mtitle{font-size:17px;font-weight:700;margin-bottom:14px;color:var(--primary)}
 .mclose{float:left;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text2);line-height:1}
+
+/* CHAT */
 .cli{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;cursor:pointer;transition:background .2s;margin-bottom:4px}
 .cli:hover{background:var(--inp)}
-.clia{width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.clia{width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#aaa}
 .clin{flex:1;min-width:0}
 .clinm{font-weight:700;font-size:14px;margin-bottom:2px}
 .clip{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .clit{font-size:11px;color:var(--text2)}
 .udot{width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0}
+
+/* PRIVATE CHAT */
 .chbar{position:fixed;top:56px;left:0;right:0;z-index:900;background:var(--hdr);padding:10px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.chbar img{width:36px;height:36px;border-radius:50%;object-fit:cover}
+.chbar img{width:36px;height:36px;border-radius:50%;object-fit:cover;background:#aaa}
 .chbarnm{color:#fff;font-weight:700;font-size:15px}
-.backbtn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.backbtn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0 4px}
 .mwrap{padding:120px 12px 80px;min-height:100vh}
 .mbw{display:flex;margin-bottom:10px}
 .mbw.mine{justify-content:flex-start}
@@ -114,27 +146,48 @@ input:disabled{opacity:.6}
 .mbw.mine .mbb{background:var(--primary);color:#fff;border-bottom-right-radius:4px}
 .mbw.theirs .mbb{background:var(--card);border:1px solid var(--border);border-bottom-left-radius:4px}
 .mbt{font-size:10px;opacity:.7;margin-top:3px}
-.minbar{position:fixed;bottom:0;left:0;right:0;z-index:900;background:var(--nav);padding:10px 12px;display:flex;gap:8px;align-items:center;border-top:1px solid var(--border)}
+.minbar{position:fixed;bottom:58px;left:0;right:0;z-index:900;background:var(--nav);padding:10px 12px;display:flex;gap:8px;align-items:center;border-top:1px solid var(--border)}
 .minbar input{margin-bottom:0;flex:1}
+
+/* GROUP CHAT */
 .gmsg{display:flex;gap:8px;margin-bottom:12px;align-items:flex-start}
-.gmsgavt{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;cursor:pointer}
+.gmsgavt{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;cursor:pointer;background:#aaa}
 .gmsgc{flex:1}
 .gmsgnm{font-size:12px;font-weight:700;margin-bottom:3px}
 .gmsgb{background:var(--card);border:1px solid var(--border);border-radius:14px;border-top-right-radius:4px;padding:10px 12px;font-size:14px;line-height:1.5;display:inline-block;max-width:100%;white-space:pre-wrap;word-break:break-word}
 .gcbar{position:fixed;bottom:58px;left:0;right:0;z-index:900;background:var(--nav);padding:8px 12px;display:flex;gap:8px;align-items:center;border-top:1px solid var(--border)}
 .gcbar input{margin-bottom:0;flex:1}
+
+/* PRAYER */
 .pcard{background:linear-gradient(135deg,var(--primary),var(--primary2));border-radius:16px;padding:16px;margin-bottom:12px;color:#fff}
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .pit{background:rgba(255,255,255,.12);border-radius:10px;padding:10px 6px;text-align:center}
 .pit.nxt{background:var(--gold);color:#1a1a1a}
 .pnm{font-size:12px;font-weight:700}
 .ptm{font-size:14px;font-weight:900;font-family:'Amiri',serif}
+
+/* AZKAR */
 .zkcard{background:linear-gradient(135deg,#1a5c38,#2d8653);border-radius:14px;padding:18px;margin-bottom:10px;color:#fff;text-align:center}
 .zktxt{font-family:'Amiri',serif;font-size:18px;line-height:1.8;margin-bottom:8px}
 .zkcnt{font-size:12px;opacity:.8}
 .zkrow{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:10px}
 .zknum{font-size:28px;font-weight:900;color:var(--gold2);font-family:'Amiri',serif;min-width:50px;text-align:center}
 .zkbtn{background:var(--gold);color:#1a1a1a;border:none;border-radius:50%;width:44px;height:44px;font-size:22px;cursor:pointer;font-weight:900;flex-shrink:0}
+
+/* SHOP */
+.shop-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)}
+.shop-icon{font-size:26px;flex-shrink:0}
+.shop-info{flex:1}
+.shop-title{font-weight:700;font-size:14px;color:var(--primary)}
+.shop-price{font-size:12px;color:var(--text2);margin-top:2px}
+.shop-btn{background:var(--gold);color:#1a1a1a;border:none;padding:8px 14px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;transition:background .2s}
+.shop-btn:hover{background:var(--gold2)}
+.shop-btn:disabled{background:var(--border);color:var(--text2);cursor:not-allowed}
+.bag-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)}
+.bag-btn{background:var(--primary);color:#fff;border:none;padding:8px 14px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;transition:background .2s}
+.bag-btn.on{background:var(--gold);color:#1a1a1a}
+
+/* SETTINGS */
 .slbl{font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:700;letter-spacing:.5px}
 .togrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
 .tog{position:relative;display:inline-block;width:46px;height:26px}
@@ -143,16 +196,47 @@ input:disabled{opacity:.6}
 .togs:before{content:'';position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
 .tog input:checked+.togs{background:var(--primary)}
 .tog input:checked+.togs:before{transform:translateX(20px)}
-.toast{position:fixed;top:66px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:700;z-index:3000;display:none;box-shadow:0 4px 16px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none}
+
+/* TOAST */
+.toast{position:fixed;top:66px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:700;z-index:3000;display:none;box-shadow:0 4px 16px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{display:block;animation:ta 2.5s ease forwards}
 @keyframes ta{0%{opacity:0;transform:translateX(-50%) translateY(-10px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}75%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+
+/* SETUP SCREEN */
+.setup-screen{position:fixed;inset:0;background:linear-gradient(160deg,#1a5c38,#2d8653 60%,#c9a84c);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.setup-box{background:#fff;border-radius:24px;padding:28px 20px;width:100%;max-width:380px;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.35)}
+body.dark .setup-box{background:#1e2e22;color:var(--text)}
+.slogo{font-family:'Amiri',serif;font-size:26px;color:var(--primary);font-weight:700;margin-bottom:4px}
+.ssub{font-size:13px;color:#777;margin-bottom:20px;line-height:1.6}
+.savt{width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);object-fit:cover;margin:0 auto 8px;display:block;background:#ddd;cursor:pointer}
+.savt-lbl{font-size:13px;color:var(--primary);cursor:pointer;margin-bottom:16px;display:block;font-weight:700}
 </style>
 </head>
 <body>
 
+<!-- SETUP SCREEN -->
+<div class="setup-screen" id="setupScreen">
+  <div class="setup-box">
+    <div class="slogo">🕌 اعرف عن دينك</div>
+    <div class="ssub">أهلاً بك! 👋<br>عشان تنشر وتشارك مع الناس،<br>لازم تعمل حسابك الأول</div>
+    <img class="savt" id="sAvtPreview" src="https://ui-avatars.com/api/?name=أنت&background=1a5c38&color=fff&size=120" alt="">
+    <label class="savt-lbl">📷 اضغط هنا تغير صورتك
+      <input type="file" accept="image/*" id="sAvtFile" style="display:none">
+    </label>
+    <input id="sName" placeholder="اكتب اسمك هنا..." style="text-align:center;font-size:16px;font-weight:700;margin-bottom:6px">
+    <div style="font-size:12px;color:#999;margin-bottom:18px">⚠️ لازم تكتب اسمك عشان تكمل</div>
+    <button class="btn" style="width:100%;font-size:16px;padding:14px;border-radius:14px" id="sDone">
+      ابدأ رحلتك 🌟
+    </button>
+  </div>
+</div>
+
 <header>
-  <div class="hlogo">🕌 اعرف عن دينك</div>
+  <div class="hlogo">🕌 اعرف عن دينك
+    <small>أحد تلاميذ مدرسة الجزيرة بنين — يوسف محمد</small>
+  </div>
   <div class="hright">
+    <span class="coins-badge" id="coinsBadge">🪙 0</span>
     <button class="icbtn" id="notifBtn">🔔<span class="ndot" id="ndot"></span></button>
     <button class="icbtn" id="darkBtn">🌙</button>
   </div>
@@ -162,14 +246,25 @@ input:disabled{opacity:.6}
 
   <!-- HOME -->
   <div id="pg_home" class="page active">
+    <!-- GUIDE -->
+    <div class="guide">
+      <div class="guide-title">👋 مرحباً! إزاي تستخدم الصفحة الرئيسية؟</div>
+      <div class="guide-steps">
+        <div class="guide-step"><div class="guide-num">1</div><div>اضغط <b>أضف منشور</b> عشان تشارك حاجة دينية مع الناس</div></div>
+        <div class="guide-step"><div class="guide-num">2</div><div>اضغط <b>أضف تصويت</b> عشان تعمل استفتاء للناس يختاروا فيه</div></div>
+        <div class="guide-step"><div class="guide-num">3</div><div>اضغط ❤️ على أي منشور عشان تعجب بيه وتكسب عملة 🪙</div></div>
+        <div class="guide-step"><div class="guide-num">4</div><div>اضغط 💬 عشان تكتب تعليق على أي منشور</div></div>
+      </div>
+    </div>
     <div class="phero">
-      <img class="pavt" id="heroAvt" src="" alt="avatar">
-      <div class="pname" id="heroNm">أنت</div>
+      <img class="pavt" id="heroAvt" src="" alt="">
+      <div class="pname" id="heroNm">—</div>
       <div class="pdiv">✦ ✦ ✦</div>
       <div class="pstats">
         <div><div class="psnum" id="stP">0</div><div class="pslbl">منشور</div></div>
         <div><div class="psnum" id="stL">0</div><div class="pslbl">إعجاب</div></div>
         <div><div class="psnum" id="stC">0</div><div class="pslbl">تعليق</div></div>
+        <div><div class="psnum" id="stCoins">0</div><div class="pslbl">🪙 عملة</div></div>
       </div>
     </div>
     <div class="abtns">
@@ -177,30 +272,54 @@ input:disabled{opacity:.6}
       <button class="abtn abtng" id="btnPoll">📊 أضف تصويت</button>
     </div>
     <div class="stitle">📰 المنشورات</div>
-    <input id="srch" placeholder="🔍 بحث في المنشورات...">
+    <input id="srch" placeholder="🔍 ابحث في المنشورات...">
     <div id="postsBox"></div>
   </div>
 
   <!-- GROUP CHAT -->
   <div id="pg_chat" class="page">
+    <div class="guide">
+      <div class="guide-title">💬 المحادثة الجماعية — إزاي تستخدمها؟</div>
+      <div class="guide-steps">
+        <div class="guide-step"><div class="guide-num">1</div><div>اكتب رسالتك في الخانة في الأسفل</div></div>
+        <div class="guide-step"><div class="guide-num">2</div><div>اضغط <b>إرسال</b> أو اضغط Enter وهتظهر للكل</div></div>
+        <div class="guide-step"><div class="guide-num">3</div><div>لو عايز تكلم حد خاص، اضغط على <b>صورته</b></div></div>
+      </div>
+    </div>
     <div class="stitle">💬 المحادثة الجماعية</div>
     <div id="gcBox" style="padding-bottom:72px"></div>
     <div class="gcbar">
-      <img id="gcAvt" src="" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#ccc" alt="">
-      <input id="gcIn" placeholder="اكتب رسالة...">
+      <img id="gcAvt" src="" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#aaa" alt="">
+      <input id="gcIn" placeholder="اكتب رسالتك هنا...">
       <button class="btn" id="gcSend">إرسال</button>
     </div>
   </div>
 
   <!-- MESSAGES -->
   <div id="pg_msgs" class="page">
+    <div class="guide">
+      <div class="guide-title">✉️ الرسائل الخاصة — إزاي تشتغل؟</div>
+      <div class="guide-steps">
+        <div class="guide-step"><div class="guide-num">1</div><div>لو حد بعتلك رسالة هتلاقيها هنا</div></div>
+        <div class="guide-step"><div class="guide-num">2</div><div>عشان ترسل لحد، روح المنشورات أو المحادثة واضغط على <b>صورته</b></div></div>
+        <div class="guide-step"><div class="guide-num">3</div><div>الجرس 🔔 في فوق بيبقى فيه نقطة حمرا لما يجيلك رسالة جديدة</div></div>
+      </div>
+    </div>
     <div class="stitle">✉️ الرسائل الخاصة</div>
     <div id="msgsList"></div>
-    <p style="text-align:center;color:var(--text2);font-size:13px;margin-top:12px">اضغط على صورة أي شخص لمراسلته خاصة 👆</p>
+    <p style="text-align:center;color:var(--text2);font-size:13px;margin-top:12px">اضغط على صورة أي شخص في المنشورات أو المحادثة لمراسلته 👆</p>
   </div>
 
   <!-- AZKAR -->
   <div id="pg_azkar" class="page">
+    <div class="guide">
+      <div class="guide-title">📿 الأذكار — إزاي تستخدمها؟</div>
+      <div class="guide-steps">
+        <div class="guide-step"><div class="guide-num">1</div><div>شوف مواقيت الصلاة لمدينة أسوان في الكارت الأخضر فوق</div></div>
+        <div class="guide-step"><div class="guide-num">2</div><div>اضغط + في أي ذكر عشان تعد تسبيحاتك</div></div>
+        <div class="guide-step"><div class="guide-num">3</div><div>اضغط ↺ عشان ترجع العداد لـ صفر من أول</div></div>
+      </div>
+    </div>
     <div class="stitle">📿 الأذكار ومواقيت الصلاة</div>
     <div class="pcard">
       <div style="font-size:13px;opacity:.8;margin-bottom:6px">مواقيت الصلاة — أسوان 🕌</div>
@@ -212,34 +331,77 @@ input:disabled{opacity:.6}
     <div class="stitle">📿 أذكار متنوعة</div><div id="azX"></div>
   </div>
 
+  <!-- SHOP -->
+  <div id="pg_shop" class="page">
+    <div class="guide">
+      <div class="guide-title">🛒 المتجر — إزاي تشتري لقب؟</div>
+      <div class="guide-steps">
+        <div class="guide-step"><div class="guide-num">1</div><div>كل ما تعمل لايك أو تعليق أو منشور بتاخد عملة 🪙</div></div>
+        <div class="guide-step"><div class="guide-num">2</div><div>اجمع 10 عملات وابدأ تشتري أي لقب من القايمة دي</div></div>
+        <div class="guide-step"><div class="guide-num">3</div><div>بعد الشراء روح <b>شنطتي</b> واضغط <b>استخدم</b> عشان اللقب يظهر جمب اسمك للكل</div></div>
+      </div>
+    </div>
+    <div class="stitle">🛒 متجر الألقاب</div>
+    <div class="card" style="background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border:none;margin-bottom:14px">
+      <div style="font-size:13px;opacity:.8">رصيدك الحالي من العملات</div>
+      <div style="font-size:36px;font-weight:900;color:var(--gold2)" id="shopCoins">0 🪙</div>
+      <div style="font-size:11px;opacity:.7;margin-top:4px">كل تفاعل = 🪙1 • كل لقب = 🪙10</div>
+    </div>
+    <button class="btn" id="bagBtn" style="background:var(--gold);color:#1a1a1a;width:100%;margin-bottom:14px;font-size:15px">
+      🎒 شنطتي — شوف ألقابك المشتراة
+    </button>
+    <div id="shopList"></div>
+  </div>
+
   <!-- SETTINGS -->
   <div id="pg_stgs" class="page">
-    <div class="stitle">⚙️ الإعدادات</div>
+    <div class="guide">
+      <div class="guide-title">⚙️ الإعدادات — إزاي تغير بياناتك؟</div>
+      <div class="guide-steps">
+        <div class="guide-step"><div class="guide-num">1</div><div>اضغط على الصورة أو "تغيير الصورة" عشان تحط صورتك</div></div>
+        <div class="guide-step"><div class="guide-num">2</div><div>غير اسمك في خانة "تغيير الاسم"</div></div>
+        <div class="guide-step"><div class="guide-num">3</div><div>فعّل الوضع الليلي لو الشاشة بتأذي عينيك في الظلام</div></div>
+      </div>
+    </div>
+    <div class="stitle">⚙️ إعداداتي</div>
     <div class="card">
       <div class="slbl">الملف الشخصي</div>
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
-        <img id="stgsAvt" src="" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);background:#ccc" alt="">
+        <img id="stgsAvt" src="" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);background:#aaa;cursor:pointer" alt="" onclick="document.getElementById('avtFile').click()">
         <div>
           <div id="stgsNm" style="font-weight:700;font-size:15px;margin-bottom:6px"></div>
-          <label style="font-size:13px;color:var(--primary);cursor:pointer;font-weight:600">📷 تغيير الصورة
+          <label style="font-size:13px;color:var(--primary);cursor:pointer;font-weight:600;display:block;margin-bottom:4px">
+            📷 تغيير الصورة
             <input type="file" accept="image/*" id="avtFile" style="display:none">
           </label>
         </div>
       </div>
-      <input id="nmIn" placeholder="اكتب اسمك هنا">
-      <div class="slbl" style="margin-top:4px">🌟 البريموكود</div>
-      <input type="password" id="promoIn" placeholder="أدخل الكود الخاص">
+      <div class="slbl">تغيير الاسم</div>
+      <input id="nmIn" placeholder="اكتب اسمك الجديد هنا">
+      <!-- HIDDEN JOO FIELD — triggered by secret tap -->
+      <div id="jooZone" style="display:none;margin-top:8px">
+        <div class="slbl">🏷️ لقب خاص (سري)</div>
+        <input id="jooIn" placeholder="اكتب لقبك المخصص هنا...">
+        <div id="jooMsg" style="font-size:12px;margin-top:-4px;margin-bottom:8px"></div>
+      </div>
+      <!-- SECRET TRIGGER: tap logo 5 times -->
+      <div id="secretTap" style="height:6px;cursor:default"></div>
+    </div>
+    <div class="card">
+      <div class="slbl">البريموكود 🌟</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">لو عندك كود خاص، اكتبه هنا</div>
+      <input type="password" id="promoIn" placeholder="الكود الخاص...">
       <div id="promoMsg" style="font-size:12px;margin-top:-4px;margin-bottom:8px"></div>
     </div>
     <div class="card">
       <div class="slbl">المظهر</div>
       <div class="togrow">
-        <span>الوضع الليلي 🌙</span>
+        <span>الوضع الليلي 🌙 <small style="color:var(--text2);font-size:11px">(للاستخدام في الظلام)</small></span>
         <label class="tog"><input type="checkbox" id="darkTog"><span class="togs"></span></label>
       </div>
     </div>
     <div class="card">
-      <div class="slbl">معرّف الجهاز</div>
+      <div class="slbl">معرّف جهازك (للدعم الفني)</div>
       <input id="uidD" disabled style="font-size:11px">
     </div>
   </div>
@@ -248,17 +410,17 @@ input:disabled{opacity:.6}
   <div id="pg_pvt" class="page">
     <div class="chbar">
       <button class="backbtn" id="pvtBack">→</button>
-      <img id="pvtAvt" src="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;background:#ccc" alt="">
+      <img id="pvtAvt" src="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;background:#aaa" alt="">
       <span id="pvtNm" class="chbarnm"></span>
     </div>
     <div class="mwrap" id="pvtMsgs"></div>
     <div class="minbar">
-      <input id="pvtIn" placeholder="اكتب رسالة...">
+      <input id="pvtIn" placeholder="اكتب رسالتك...">
       <button class="btn" id="pvtSend">إرسال</button>
     </div>
   </div>
 
-</div><!-- .wrap -->
+</div>
 
 <!-- BOTTOM NAV -->
 <nav class="bnav">
@@ -266,6 +428,7 @@ input:disabled{opacity:.6}
   <button class="nitem" data-pg="chat"><span class="ni">💬</span>المحادثة</button>
   <button class="nitem" data-pg="msgs"><span class="ni">✉️</span>الرسائل</button>
   <button class="nitem" data-pg="azkar"><span class="ni">📿</span>الأذكار</button>
+  <button class="nitem" data-pg="shop"><span class="ni">🛒</span>المتجر</button>
   <button class="nitem" data-pg="stgs"><span class="ni">⚙️</span>إعداداتي</button>
 </nav>
 
@@ -276,10 +439,11 @@ input:disabled{opacity:.6}
   <div class="modal">
     <button class="mclose" id="mPostClose">×</button>
     <div class="mtitle">✏️ منشور جديد</div>
-    <textarea id="postTxt" placeholder="شارك شيئاً إسلامياً..."></textarea>
-    <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">📷 إضافة صورة (اختياري)</label>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">اكتب أي حاجة دينية تحب تشاركها مع الناس — آية، حديث، دعاء، نصيحة...</div>
+    <textarea id="postTxt" placeholder="اكتب هنا..."></textarea>
+    <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">📷 ضيف صورة (اختياري)</label>
     <input type="file" accept="image/*" id="postImg">
-    <button class="btn" style="width:100%;margin-top:6px" id="doPost">نشر ✨</button>
+    <button class="btn" style="width:100%;margin-top:6px" id="doPost">انشر ✨</button>
   </div>
 </div>
 
@@ -288,18 +452,29 @@ input:disabled{opacity:.6}
   <div class="modal">
     <button class="mclose" id="mPollClose">×</button>
     <div class="mtitle">📊 تصويت جديد</div>
-    <input id="pQ" placeholder="اكتب سؤال التصويت...">
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">اكتب سؤالك وحط الخيارات عشان الناس تصوت</div>
+    <input id="pQ" placeholder="السؤال — مثال: أيه أفضل وقت للأذكار؟">
     <input id="pO1" placeholder="الخيار الأول">
     <input id="pO2" placeholder="الخيار الثاني">
     <input id="pO3" placeholder="الخيار الثالث (اختياري)">
     <input id="pO4" placeholder="الخيار الرابع (اختياري)">
-    <button class="btn" style="width:100%;margin-top:6px" id="doPoll">نشر التصويت 📊</button>
+    <button class="btn" style="width:100%;margin-top:6px" id="doPoll">انشر التصويت 📊</button>
+  </div>
+</div>
+
+<!-- BAG MODAL -->
+<div class="moverlay" id="mBag">
+  <div class="modal">
+    <button class="mclose" id="mBagClose">×</button>
+    <div class="mtitle">🎒 شنطتي — ألقابي المشتراة</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:12px">اضغط <b>استخدم</b> على أي لقب عشان يظهر جمب اسمك للكل ✨</div>
+    <div id="bagList"></div>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getDatabase, ref, push, set, onValue, get } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 const app = initializeApp({
   apiKey:"AIzaSyDgi3--q8nDGfps5MV4AmC8B4PYPMfAPZo",
@@ -311,266 +486,429 @@ const app = initializeApp({
 });
 const db = getDatabase(app);
 
-// ── STATE ──────────────────────────────────────────
-let uid   = localStorage.getItem('din_uid') || ('u_'+Date.now());
-let uname = localStorage.getItem('din_name') || '';
-let uimg  = localStorage.getItem('din_img')  || '';
-let isPrem= localStorage.getItem('din_prem')==='1';
-let dark  = localStorage.getItem('din_dark')==='1';
-localStorage.setItem('din_uid', uid);
+// ── SHOP ITEMS ─────────────────────────────────────
+const SHOP = [
+  {id:'s1',icon:'🌙',title:'نور الليل'},{id:'s2',icon:'🌟',title:'نجم الإيمان'},
+  {id:'s3',icon:'🕌',title:'خادم المسجد'},{id:'s4',icon:'📿',title:'صاحب التسبيح'},
+  {id:'s5',icon:'🌹',title:'محب النبي ﷺ'},{id:'s6',icon:'💎',title:'جوهرة الأمة'},
+  {id:'s7',icon:'🦁',title:'أسد الإيمان'},{id:'s8',icon:'🕊️',title:'حمامة السلام'},
+  {id:'s9',icon:'🌿',title:'ورقة التوبة'},{id:'s10',icon:'⭐',title:'نجم الهداية'},
+  {id:'s11',icon:'🔥',title:'شعلة الدعوة'},{id:'s12',icon:'🌊',title:'بحر العلم'},
+  {id:'s13',icon:'🏆',title:'بطل الصبر'},{id:'s14',icon:'🌺',title:'زهرة الجنة'},
+  {id:'s15',icon:'🦋',title:'فراشة النور'},{id:'s16',icon:'🌈',title:'قوس قزح الإيمان'},
+  {id:'s17',icon:'⚡',title:'برق الحق'},{id:'s18',icon:'🏅',title:'ميدالية التقوى'},
+  {id:'s19',icon:'🎯',title:'صاحب القبلة'},{id:'s20',icon:'🌙',title:'هلال رمضان'},
+  {id:'s21',icon:'📖',title:'تالي القرآن'},{id:'s22',icon:'🤲',title:'رافع الأيدي'},
+  {id:'s23',icon:'🕋',title:'عاشق الكعبة'},{id:'s24',icon:'🌸',title:'بستان الخير'},
+  {id:'s25',icon:'👑',title:'تاج الصالحين'},{id:'s26',icon:'🌍',title:'داعية الإسلام'},
+  {id:'s27',icon:'💫',title:'ضياء السنة'},{id:'s28',icon:'🎋',title:'حكيم الأمة'},
+  {id:'s29',icon:'🦅',title:'نسر الإيمان'},{id:'s30',icon:'🌠',title:'نيزك الخير'},
+];
 
-let allPosts=[], prevPg='home', curPvt={uid:'',name:'',img:''};
-let pvtUnsub=null, unread={};
+// ── STATE ───────────────────────────────────────────
+let uid='',uname='',uimg='',isPrem=false,dark=false;
+let jooTitle='',activeTitle='',myCoins=0,myBag=[];
+let allPosts=[],prevPg='home',curPvt={uid:'',name:'',img:''};
+let pvtUnsub=null,unread={};
+let usersCache={};
+let secretTaps=0,secretTimer=null;
 
-// apply dark on load
-if(dark){ document.body.classList.add('dark'); document.getElementById('darkTog').checked=true; }
-document.getElementById('uidD').value = uid;
-document.getElementById('nmIn').value = uname;
+const $=id=>document.getElementById(id);
 
-// ── HELPERS ───────────────────────────────────────
-const $ = id => document.getElementById(id);
-function toast(m){ const t=$('toast'); t.textContent=m; t.className='toast show'; setTimeout(()=>t.className='toast',2700); }
-function avt(img,nm){ return (img&&img.length>10)?img:`https://ui-avatars.com/api/?name=${encodeURIComponent(nm||'م')}&background=1a5c38&color=fff&size=80`; }
-function ago(ts){ const d=Date.now()-ts; if(d<60000)return'الآن'; if(d<3600000)return Math.floor(d/60000)+' د'; if(d<86400000)return Math.floor(d/3600000)+' س'; return Math.floor(d/86400000)+' يوم'; }
-function fmt(ts){ return new Date(ts).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}); }
+// ── SETUP ───────────────────────────────────────────
+let setupImg='';
+$('sAvtFile').addEventListener('change',function(){
+  const f=this.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{setupImg=r.result;$('sAvtPreview').src=r.result;};r.readAsDataURL(f);
+});
+$('sDone').addEventListener('click',()=>{
+  const nm=$('sName').value.trim();
+  if(!nm){toast('⚠️ لازم تكتب اسمك الأول!');return;}
+  uid='u_'+Date.now(); uname=nm; uimg=setupImg||'';
+  localStorage.setItem('din_uid',uid);
+  localStorage.setItem('din_name',uname);
+  localStorage.setItem('din_img',uimg);
+  set(ref(db,'users6/'+uid),{name:uname,img:uimg,coins:0,bag:[],prem:false,joo:'',activeTitle:''});
+  $('setupScreen').style.display='none';
+  init();
+});
+
+function checkSetup(){
+  uid=localStorage.getItem('din_uid')||'';
+  uname=localStorage.getItem('din_name')||'';
+  if(uid&&uname){$('setupScreen').style.display='none';init();}
+}
+
+// ── HELPERS ─────────────────────────────────────────
+function toast(m){const t=$('toast');t.textContent=m;t.className='toast show';setTimeout(()=>t.className='toast',2700);}
+function avt(img,nm){return(img&&img.length>10)?img:`https://ui-avatars.com/api/?name=${encodeURIComponent(nm||'م')}&background=1a5c38&color=fff&size=80`;}
+function ago(ts){const d=Date.now()-ts;if(d<60000)return'الآن';if(d<3600000)return Math.floor(d/60000)+' د';if(d<86400000)return Math.floor(d/3600000)+' س';return Math.floor(d/86400000)+' يوم';}
+function fmt(ts){return new Date(ts).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});}
+function safeA(s){return(s||'').replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
 
 function sumLikes(ownerUid){
   let n=0;
   allPosts.forEach(p=>{
-    if(p.authorId===ownerUid){ if(p.likes)n+=Object.keys(p.likes).length; }
-    if(p.options&&p.authorId===ownerUid) Object.values(p.options).forEach(o=>{if(o.votes)n+=Object.keys(o.votes).length;});
-    if(p.comments) Object.values(p.comments).forEach(c=>{ if(c.authorId===ownerUid&&c.likes)n+=Object.keys(c.likes).length; });
+    if(p.authorId===ownerUid){if(p.likes)n+=Object.keys(p.likes).length;}
+    if(p.options&&p.authorId===ownerUid)Object.values(p.options).forEach(o=>{if(o.votes)n+=Object.keys(o.votes).length;});
   });
   return n;
 }
-function badge(aId, nm){
-  if(aId==='ROBOT') return `<span class="nn">🤖 روبوت ديني</span>`;
-  const pr = aId===uid ? isPrem : localStorage.getItem('din_prem_'+aId)==='1';
-  const lk = sumLikes(aId);
-  const esc = (nm||'مجهول').replace(/</g,'&lt;');
-  if(pr) return `<span class="bdg bdgp">مصمم الموقع</span><span class="np">${esc}</span>`;
-  if(lk>=500) return `<span class="bdg bdgb">مساهم قديم</span><span class="nb">${esc}</span>`;
-  if(lk>=200) return `<span class="bdg bdgs">مساهم نجومي</span><span class="ns">${esc}</span>`;
-  return `<span class="nn">${esc}</span>`;
+
+async function getUser(aId){
+  if(usersCache[aId])return usersCache[aId];
+  try{const s=await get(ref(db,'users6/'+aId));if(s.exists()){usersCache[aId]=s.val();return s.val();}}catch(e){}
+  return null;
 }
 
-// ── NAVIGATION ────────────────────────────────────
+function badge(aId,nm,uData){
+  if(aId==='ROBOT')return`<span class="nn">🤖 روبوت ديني</span>`;
+  const esc=(nm||'مجهول').replace(/</g,'&lt;');
+  const isMe=aId===uid;
+  const pr=isMe?isPrem:(uData?uData.prem:false);
+  const joo=isMe?jooTitle:(uData?uData.joo:'');
+  const aTitle=isMe?activeTitle:(uData?uData.activeTitle:'');
+  const lk=sumLikes(aId);
+  const jooHtml=joo?`<span class="joo-ttl">${joo}</span>`:'';
+  const titleHtml=aTitle?`<span class="joo-ttl">${aTitle}</span>`:'';
+  if(pr)return`<span class="bdg bdgp">مصمم الموقع</span><span class="np">${esc}</span>${jooHtml}${titleHtml}`;
+  if(lk>=500)return`<span class="bdg bdgb">مساهم قديم</span><span class="nb">${esc}</span>${jooHtml}${titleHtml}`;
+  if(lk>=200)return`<span class="bdg bdgs">مساهم نجومي</span><span class="ns">${esc}</span>${jooHtml}${titleHtml}`;
+  return`<span class="nn">${esc}</span>${jooHtml}${titleHtml}`;
+}
+
+// ── COINS ────────────────────────────────────────────
+function addCoins(n){
+  myCoins+=n;
+  localStorage.setItem('din_coins',myCoins);
+  set(ref(db,'users6/'+uid+'/coins'),myCoins);
+  updateCoinsUI();
+}
+function updateCoinsUI(){
+  $('coinsBadge').textContent='🪙 '+myCoins;
+  $('shopCoins').textContent=myCoins+' 🪙';
+  $('stCoins').textContent=myCoins;
+}
+
+// ── NAVIGATION ───────────────────────────────────────
 function goPage(pg){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const el=$('pg_'+pg); if(el) el.classList.add('active');
+  const el=$('pg_'+pg);if(el)el.classList.add('active');
   document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg===pg));
 }
-
 document.querySelectorAll('.nitem').forEach(btn=>{
-  btn.addEventListener('click',()=>{ prevPg=btn.dataset.pg; goPage(btn.dataset.pg); });
+  btn.addEventListener('click',()=>{prevPg=btn.dataset.pg;goPage(btn.dataset.pg);});
 });
+$('notifBtn').addEventListener('click',()=>{prevPg='msgs';goPage('msgs');document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg==='msgs'));});
+$('heroAvt').addEventListener('click',()=>{prevPg='stgs';goPage('stgs');document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg==='stgs'));});
 
-$('notifBtn').addEventListener('click',()=>{ prevPg='msgs'; goPage('msgs'); document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg==='msgs')); });
-$('heroAvt').addEventListener('click',()=>{ prevPg='stgs'; goPage('stgs'); document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg==='stgs')); });
-
-// ── DARK MODE ────────────────────────────────────
-function applyDark(v){ dark=v; document.body.classList.toggle('dark',v); $('darkTog').checked=v; localStorage.setItem('din_dark',v?'1':'0'); }
+// ── DARK ─────────────────────────────────────────────
+function applyDark(v){dark=v;document.body.classList.toggle('dark',v);$('darkTog').checked=v;localStorage.setItem('din_dark',v?'1':'0');}
 $('darkBtn').addEventListener('click',()=>applyDark(!dark));
 $('darkTog').addEventListener('change',()=>applyDark($('darkTog').checked));
 
-// ── MODALS ────────────────────────────────────────
+// ── MODALS ───────────────────────────────────────────
 $('btnPost').addEventListener('click',()=>$('mPost').classList.add('open'));
 $('btnPoll').addEventListener('click',()=>$('mPoll').classList.add('open'));
 $('mPostClose').addEventListener('click',()=>$('mPost').classList.remove('open'));
 $('mPollClose').addEventListener('click',()=>$('mPoll').classList.remove('open'));
-$('mPost').addEventListener('click',e=>{ if(e.target===$('mPost'))$('mPost').classList.remove('open'); });
-$('mPoll').addEventListener('click',e=>{ if(e.target===$('mPoll'))$('mPoll').classList.remove('open'); });
+$('mBagClose').addEventListener('click',()=>$('mBag').classList.remove('open'));
+$('mPost').addEventListener('click',e=>{if(e.target===$('mPost'))$('mPost').classList.remove('open');});
+$('mPoll').addEventListener('click',e=>{if(e.target===$('mPoll'))$('mPoll').classList.remove('open');});
+$('bagBtn').addEventListener('click',()=>{renderBag();$('mBag').classList.add('open');});
 
-// ── PROFILE UI ───────────────────────────────────
+// ── SECRET JOO TRIGGER ───────────────────────────────
+// Tap the small empty strip 5 times fast to reveal joo field
+$('secretTap').addEventListener('click',()=>{
+  secretTaps++;
+  clearTimeout(secretTimer);
+  secretTimer=setTimeout(()=>secretTaps=0,2000);
+  if(secretTaps>=5){
+    secretTaps=0;
+    const z=$('jooZone');
+    z.style.display=z.style.display==='none'?'block':'none';
+    if(z.style.display==='block')toast('🔐 منطقة سرية — اللقب الخاص');
+  }
+});
+
+// ── JOO INPUT ────────────────────────────────────────
+$('jooIn').addEventListener('input',()=>{
+  const v=$('jooIn').value.trim(),msg=$('jooMsg');
+  if(v.length>0){
+    jooTitle=v;
+    localStorage.setItem('din_joo',jooTitle);
+    set(ref(db,'users6/'+uid+'/joo'),jooTitle);
+    msg.innerHTML=`<span style="color:var(--gold);font-weight:700">✅ اللقب: "${jooTitle}" — يظهر للكل جمب اسمك 🌟</span>`;
+    refreshUI();
+  } else {
+    jooTitle='';
+    localStorage.setItem('din_joo','');
+    set(ref(db,'users6/'+uid+'/joo'),'');
+    msg.innerHTML='';
+    refreshUI();
+  }
+});
+
+// ── PROFILE UI ───────────────────────────────────────
 function refreshUI(){
-  const nm=uname||'أنت', a=avt(uimg,nm);
+  const nm=uname||'—',a=avt(uimg,nm);
   $('heroAvt').src=$('stgsAvt').src=$('gcAvt').src=a;
   $('heroNm').textContent=nm;
   $('nmIn').value=nm;
-  $('stgsNm').innerHTML=badge(uid,nm);
+  $('stgsNm').innerHTML=badge(uid,nm,null);
+  updateCoinsUI();
   const mp=allPosts.filter(p=>p.authorId===uid);
   $('stP').textContent=mp.length;
   $('stL').textContent=sumLikes(uid);
-  let tc=0; allPosts.forEach(p=>{ if(p.comments)Object.values(p.comments).forEach(c=>{ if(c.authorId===uid)tc++; }); });
+  let tc=0;allPosts.forEach(p=>{if(p.comments)Object.values(p.comments).forEach(c=>{if(c.authorId===uid)tc++;});});
   $('stC').textContent=tc;
 }
 
-$('nmIn').addEventListener('input',()=>{ uname=$('nmIn').value; localStorage.setItem('din_name',uname); refreshUI(); });
+$('nmIn').addEventListener('input',()=>{uname=$('nmIn').value;localStorage.setItem('din_name',uname);set(ref(db,'users6/'+uid+'/name'),uname);refreshUI();});
 $('promoIn').addEventListener('input',()=>{
-  const v=$('promoIn').value, msg=$('promoMsg');
-  if(v==='joo5555'){
-    isPrem=true; localStorage.setItem('din_prem','1'); localStorage.setItem('din_prem_'+uid,'1');
-    msg.innerHTML=`<span style="color:var(--gold);font-weight:700">✅ تم التفعيل! أنت مصمم الموقع 🌟</span>`; refreshUI();
-  } else if(v.length>=7){ msg.innerHTML=`<span style="color:var(--red)">❌ كود غير صحيح</span>`; }
+  const v=$('promoIn').value,msg=$('promoMsg');
+  if(v==='joo5555'){isPrem=true;localStorage.setItem('din_prem','1');set(ref(db,'users6/'+uid+'/prem'),true);msg.innerHTML=`<span style="color:var(--gold);font-weight:700">✅ تم التفعيل! أنت مصمم الموقع 🌟</span>`;refreshUI();}
+  else if(v.length>=7)msg.innerHTML=`<span style="color:var(--red)">❌ الكود غير صحيح</span>`;
   else msg.innerHTML='';
 });
 $('avtFile').addEventListener('change',function(){
-  const f=this.files[0]; if(!f) return;
-  const r=new FileReader(); r.onload=()=>{ uimg=r.result; localStorage.setItem('din_img',uimg); refreshUI(); }; r.readAsDataURL(f);
+  const f=this.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{uimg=r.result;localStorage.setItem('din_img',uimg);set(ref(db,'users6/'+uid+'/img'),uimg);refreshUI();};r.readAsDataURL(f);
 });
 
-// ── POSTS ─────────────────────────────────────────
-const postsRef=ref(db,'posts4');
+// ── SHOP & BAG ───────────────────────────────────────
+function renderShop(){
+  $('shopList').innerHTML=SHOP.map(item=>{
+    const owned=myBag.includes(item.id);
+    return`<div class="shop-item">
+      <div class="shop-icon">${item.icon}</div>
+      <div class="shop-info">
+        <div class="shop-title">${item.icon} ${item.title}</div>
+        <div class="shop-price">السعر: 10 🪙</div>
+        ${owned?'<div style="font-size:11px;color:var(--primary);font-weight:700;margin-top:2px">✅ في شنطتك بالفعل</div>':''}
+      </div>
+      <button class="shop-btn" ${owned||myCoins<10?'disabled':''} onclick="WW.buy('${item.id}','${safeA(item.title)}','${item.icon}')">
+        ${owned?'مشتري 🎒':'اشتري 🪙'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function renderBag(){
+  const owned=SHOP.filter(i=>myBag.includes(i.id));
+  if(!owned.length){
+    $('bagList').innerHTML=`<div style="text-align:center;color:var(--text2);padding:20px;font-size:14px">شنطتك فاضية دلوقتي 😊<br><br>روح المتجر واشتري أي لقب بـ 10 عملات</div>`;
+    return;
+  }
+  $('bagList').innerHTML=owned.map(item=>`
+    <div class="bag-item">
+      <div style="font-size:24px">${item.icon}</div>
+      <div style="flex:1"><div style="font-weight:700;font-size:14px">${item.icon} ${item.title}</div></div>
+      <button class="bag-btn ${activeTitle===item.icon+' '+item.title?'on':''}" onclick="WW.useTitle('${item.icon}','${safeA(item.title)}')">
+        ${activeTitle===item.icon+' '+item.title?'✅ مفعّل':'استخدم'}
+      </button>
+    </div>`).join('');
+}
+
+// ── POSTS ────────────────────────────────────────────
+const postsRef=ref(db,'posts6');
 onValue(postsRef,snap=>{
-  allPosts=[]; snap.forEach(s=>{ let o=s.val(); o._k=s.key; allPosts.push(o); });
+  allPosts=[];snap.forEach(s=>{let o=s.val();o._k=s.key;allPosts.push(o);});
   allPosts.sort((a,b)=>b.ts-a.ts);
-  renderPosts(); refreshUI();
+  renderPosts();refreshUI();renderShop();
 });
 
 $('srch').addEventListener('input',renderPosts);
 
 function renderPosts(){
-  const q=$('srch').value||'', box=$('postsBox');
+  const q=$('srch').value||'',box=$('postsBox');
   const list=allPosts.filter(p=>(p.text||'').includes(q));
-  if(!list.length){ box.innerHTML=`<div style="text-align:center;color:var(--text2);padding:30px;font-size:15px">لا توجد منشورات بعد 🌿</div>`; return; }
-  box.innerHTML=list.map(postCard).join('');
-  list.forEach(p=>{ if(!p.views||!p.views[uid]) set(ref(db,'posts4/'+p._k+'/views/'+uid),true); });
+  if(!list.length){box.innerHTML=`<div style="text-align:center;color:var(--text2);padding:40px;font-size:15px">لا توجد منشورات بعد 🌿<br><small>كن أول من ينشر!</small></div>`;return;}
+  box.innerHTML=list.map(p=>postCard(p)).join('');
+  // async badge update for others
+  list.forEach(async p=>{
+    if(p.authorId&&p.authorId!=='ROBOT'&&p.authorId!==uid){
+      const ud=await getUser(p.authorId);
+      if(ud){const el=document.getElementById('ph_'+p._k);if(el)el.innerHTML=badge(p.authorId,p.authorName,ud);}
+    }
+  });
+  list.forEach(p=>{if(!p.views||!p.views[uid])set(ref(db,'posts6/'+p._k+'/views/'+uid),true);});
 }
 
-function safeAttr(s){ return (s||'').replace(/'/g,'&#39;').replace(/"/g,'&quot;'); }
-
 function postCard(p){
-  const a=avt(p.authorImg,p.authorName), bh=badge(p.authorId,p.authorName);
+  const a=avt(p.authorImg,p.authorName);
+  const bh=badge(p.authorId,p.authorName,p.authorId===uid?null:{});
   const lc=p.likes?Object.keys(p.likes).length:0;
   const vc=p.views?Object.keys(p.views).length:0;
   const cc=p.comments?Object.keys(p.comments).length:0;
   const liked=p.likes&&p.likes[uid];
   const canPvt=p.authorId!=='ROBOT'&&p.authorId!==uid;
-
   let body='';
   if(p.type==='poll'&&p.options){
     const total=Object.values(p.options).reduce((s,o)=>s+(o.votes?Object.keys(o.votes).length:0),0);
     body=Object.entries(p.options).map(([k,o])=>{
-      const vc2=o.votes?Object.keys(o.votes).length:0, pct=total?Math.round(vc2/total*100):0, voted=o.votes&&o.votes[uid];
-      return `<div class="pollopt${voted?' voted':''}" onclick="WW.vote('${p._k}','${k}')">
+      const vc2=o.votes?Object.keys(o.votes).length:0,pct=total?Math.round(vc2/total*100):0,voted=o.votes&&o.votes[uid];
+      return`<div class="pollopt${voted?' voted':''}" onclick="WW.vote('${p._k}','${k}')">
         <span>${voted?'✅':'⭕'}</span><span style="flex:1">${o.text}</span>
         <div class="pbw"><div class="pb" style="width:${pct}%"></div></div>
         <span class="ppct">${pct}%</span><span style="font-size:11px;color:var(--text2)">${vc2}</span>
       </div>`;
     }).join('')+`<div style="font-size:11px;color:var(--text2);margin-top:4px">إجمالي الأصوات: ${total}</div>`;
-  } else if(p.img){
-    body=`<img class="pimg" src="${p.img}" loading="lazy">`;
-  }
-
+  } else if(p.img){body=`<img class="pimg" src="${p.img}" loading="lazy">`;}
   const cmts=p.comments?Object.entries(p.comments).map(([k,c])=>`
     <div class="cmt">
-      <img src="${avt(c.authorImg,c.authorName)}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0;${c.authorId!==uid&&c.authorId!=='ROBOT'?'cursor:pointer':''}" ${c.authorId!==uid&&c.authorId!=='ROBOT'?`onclick="WW.pvt('${c.authorId}','${safeAttr(c.authorName)}','${safeAttr(c.authorImg||'')}')"`:''}  alt="">
-      <div class="cmtbbl"><div class="cmtnm">${badge(c.authorId,c.authorName)}</div>${c.text}</div>
+      <img src="${avt(c.authorImg,c.authorName)}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0;${c.authorId!==uid&&c.authorId!=='ROBOT'?'cursor:pointer':''}" ${c.authorId!==uid&&c.authorId!=='ROBOT'?`onclick="WW.pvt('${c.authorId}','${safeA(c.authorName)}','${safeA(c.authorImg||'')}')"`:''}  alt="">
+      <div class="cmtbbl"><div class="cmtnm" id="cn_${k}">${badge(c.authorId,c.authorName,c.authorId===uid?null:{})}</div>${c.text}</div>
     </div>`).join(''):'';
-
-  return `<div class="card">
+  return`<div class="card">
     <div class="phead">
-      <img class="pavtp" src="${a}" ${canPvt?`onclick="WW.pvt('${p.authorId}','${safeAttr(p.authorName)}','${safeAttr(p.authorImg||'')}')"`:'style="cursor:default"'} alt="">
-      <div><div>${bh}</div><div class="ptime">${ago(p.ts)}</div></div>
+      <img class="pavtp" src="${a}" ${canPvt?`onclick="WW.pvt('${p.authorId}','${safeA(p.authorName)}','${safeA(p.authorImg||'')}')"`:'style="cursor:default"'} alt="">
+      <div><div id="ph_${p._k}">${bh}</div><div class="ptime">${ago(p.ts)}</div></div>
     </div>
     <div class="ptxt">${p.text}</div>
     ${body}
     <div class="pacts">
-      <button class="aibtn${liked?' liked':''}" onclick="WW.like('${p._k}')">❤️ ${lc}</button>
-      <button class="aibtn" onclick="WW.cmts('${p._k}')">💬 ${cc}</button>
+      <button class="aibtn${liked?' liked':''}" onclick="WW.like('${p._k}','${p.authorId}')">❤️ ${lc}</button>
+      <button class="aibtn" onclick="WW.cmts('${p._k}')">💬 ${cc} تعليق</button>
       <span class="vcnt">👁 ${vc}</span>
     </div>
     <div class="cmtsec" id="cs_${p._k}">
       ${cmts}
       <div class="cmtrow">
         <img src="${avt(uimg,uname)}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0" alt="">
-        <input placeholder="اكتب تعليقاً..." id="ci_${p._k}">
-        <button class="btn" style="padding:6px 10px;font-size:12px" onclick="WW.cmt('${p._k}')">إرسال</button>
+        <input placeholder="اكتب تعليقك هنا..." id="ci_${p._k}">
+        <button class="btn" style="padding:6px 10px;font-size:12px" onclick="WW.cmt('${p._k}','${p.authorId}')">إرسال</button>
       </div>
     </div>
   </div>`;
 }
 
-// Add post
 $('doPost').addEventListener('click',()=>{
-  const txt=$('postTxt').value.trim(); if(!txt){toast('اكتب شيئاً!');return;}
+  const txt=$('postTxt').value.trim();if(!txt){toast('⚠️ اكتب شيئاً قبل النشر!');return;}
   const f=$('postImg').files[0];
-  const go=img=>{ push(postsRef,{type:'post',ts:Date.now(),text:txt,authorId:uid,authorName:uname||'مجهول',authorImg:uimg,img:img||'',likes:{},views:{},comments:{}}); $('postTxt').value=''; $('postImg').value=''; $('mPost').classList.remove('open'); toast('تم النشر ✨'); };
+  const go=img=>{push(postsRef,{type:'post',ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorImg:uimg,img:img||'',likes:{},views:{},comments:{}});$('postTxt').value='';$('postImg').value='';$('mPost').classList.remove('open');toast('تم النشر بنجاح ✨');addCoins(1);};
   if(f){const r=new FileReader();r.onload=()=>go(r.result);r.readAsDataURL(f);}else go('');
 });
 
-// Add poll
 $('doPoll').addEventListener('click',()=>{
-  const q=$('pQ').value.trim(), o1=$('pO1').value.trim(), o2=$('pO2').value.trim();
-  if(!q||!o1||!o2){toast('اكتب السؤال وخيارين!');return;}
-  const opts={}; [o1,o2,$('pO3').value.trim(),$('pO4').value.trim()].filter(Boolean).forEach((t,i)=>{opts['o'+i]={text:t,votes:{}};});
-  push(postsRef,{type:'poll',ts:Date.now(),text:q,authorId:uid,authorName:uname||'مجهول',authorImg:uimg,options:opts,likes:{},views:{},comments:{}});
-  ['pQ','pO1','pO2','pO3','pO4'].forEach(id=>$(id).value=''); $('mPoll').classList.remove('open'); toast('تم نشر التصويت 📊');
+  const q=$('pQ').value.trim(),o1=$('pO1').value.trim(),o2=$('pO2').value.trim();
+  if(!q||!o1||!o2){toast('⚠️ اكتب السؤال وخيارين على الأقل!');return;}
+  const opts={};[o1,o2,$('pO3').value.trim(),$('pO4').value.trim()].filter(Boolean).forEach((t,i)=>{opts['o'+i]={text:t,votes:{}};});
+  push(postsRef,{type:'poll',ts:Date.now(),text:q,authorId:uid,authorName:uname,authorImg:uimg,options:opts,likes:{},views:{},comments:{}});
+  ['pQ','pO1','pO2','pO3','pO4'].forEach(id=>$(id).value='');$('mPoll').classList.remove('open');toast('تم نشر التصويت 📊');addCoins(1);
 });
 
-// ── GLOBAL ACTIONS ────────────────────────────────
-window.WW = {
-  like(k){ const p=allPosts.find(x=>x._k===k); if(!p)return; set(ref(db,'posts4/'+k+'/likes/'+uid), p.likes&&p.likes[uid]?null:true); },
-  vote(pk,ok){
-    const p=allPosts.find(x=>x._k===pk); if(!p||p.type!=='poll')return;
-    Object.keys(p.options).forEach(k=>{ if(p.options[k].votes&&p.options[k].votes[uid]) set(ref(db,'posts4/'+pk+'/options/'+k+'/votes/'+uid),null); });
-    set(ref(db,'posts4/'+pk+'/options/'+ok+'/votes/'+uid),true);
+// ── GLOBAL ACTIONS ───────────────────────────────────
+window.WW={
+  like(k,postAuthorId){
+    const p=allPosts.find(x=>x._k===k);if(!p)return;
+    const already=p.likes&&p.likes[uid];
+    set(ref(db,'posts6/'+k+'/likes/'+uid),already?null:true);
+    if(!already){
+      addCoins(1);
+      if(postAuthorId&&postAuthorId!==uid&&postAuthorId!=='ROBOT'){
+        get(ref(db,'users6/'+postAuthorId+'/coins')).then(s=>{set(ref(db,'users6/'+postAuthorId+'/coins'),(s.val()||0)+1);});
+      }
+    }
   },
-  cmts(k){ const el=$('cs_'+k); if(el) el.style.display=el.style.display==='block'?'none':'block'; },
-  cmt(k){ const inp=$('ci_'+k); const txt=inp?inp.value.trim():''; if(!txt)return; push(ref(db,'posts4/'+k+'/comments'),{ts:Date.now(),text:txt,authorId:uid,authorName:uname||'مجهول',authorImg:uimg}); if(inp)inp.value=''; },
+  vote(pk,ok){
+    const p=allPosts.find(x=>x._k===pk);if(!p||p.type!=='poll')return;
+    Object.keys(p.options).forEach(k=>{if(p.options[k].votes&&p.options[k].votes[uid])set(ref(db,'posts6/'+pk+'/options/'+k+'/votes/'+uid),null);});
+    set(ref(db,'posts6/'+pk+'/options/'+ok+'/votes/'+uid),true);addCoins(1);
+  },
+  cmts(k){const el=$('cs_'+k);if(el)el.style.display=el.style.display==='block'?'none':'block';},
+  cmt(k,postAuthorId){
+    const inp=$('ci_'+k);const txt=inp?inp.value.trim():'';if(!txt)return;
+    push(ref(db,'posts6/'+k+'/comments'),{ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorImg:uimg});
+    if(inp)inp.value='';addCoins(1);
+    if(postAuthorId&&postAuthorId!==uid&&postAuthorId!=='ROBOT'){
+      get(ref(db,'users6/'+postAuthorId+'/coins')).then(s=>{set(ref(db,'users6/'+postAuthorId+'/coins'),(s.val()||0)+1);});
+    }
+  },
   pvt(oUid,oNm,oImg){
     if(!oUid||oUid===uid||oUid==='ROBOT')return;
     curPvt={uid:oUid,name:oNm,img:oImg};
-    $('pvtAvt').src=avt(oImg,oNm); $('pvtNm').textContent=oNm;
-    if(unread[oUid]){delete unread[oUid]; ndotUpdate();}
+    $('pvtAvt').src=avt(oImg,oNm);$('pvtNm').textContent=oNm;
+    if(unread[oUid]){delete unread[oUid];ndotUpdate();}
     goPage('pvt');
     if(pvtUnsub){pvtUnsub();pvtUnsub=null;}
     const ck=[uid,oUid].sort().join('_');
-    pvtUnsub=onValue(ref(db,'pvt4/'+ck),snap=>{
-      let msgs=[]; snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);}); msgs.sort((a,b)=>a.ts-b.ts);
+    pvtUnsub=onValue(ref(db,'pvt6/'+ck),snap=>{
+      let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);
       const w=$('pvtMsgs');
       w.innerHTML=msgs.map(m=>`<div class="mbw ${m.sid===uid?'mine':'theirs'}"><div class="mbb">${m.txt}<div class="mbt">${fmt(m.ts)}</div></div></div>`).join('');
       w.scrollTop=w.scrollHeight;
     });
+  },
+  buy(itemId,title,icon){
+    if(myCoins<10){toast('⚠️ عملاتك مش كافية! تحتاج 10 🪙');return;}
+    if(myBag.includes(itemId)){toast('عندك اللقب ده بالفعل في شنطتك!');return;}
+    myCoins-=10;myBag=[...myBag,itemId];
+    localStorage.setItem('din_coins',myCoins);localStorage.setItem('din_bag',JSON.stringify(myBag));
+    set(ref(db,'users6/'+uid+'/coins'),myCoins);set(ref(db,'users6/'+uid+'/bag'),myBag);
+    updateCoinsUI();renderShop();
+    toast('تم الشراء! 🎉 '+icon+' '+title+' في شنطتك — افتح شنطتك واستخدمه');
+  },
+  useTitle(icon,title){
+    const full=icon+' '+title;
+    activeTitle=activeTitle===full?'':full;
+    localStorage.setItem('din_activeTitle',activeTitle);
+    set(ref(db,'users6/'+uid+'/activeTitle'),activeTitle);
+    renderBag();refreshUI();
+    toast(activeTitle?'✅ تم تفعيل اللقب: '+activeTitle:'تم إلغاء تفعيل اللقب');
   }
 };
 
-$('pvtBack').addEventListener('click',()=>{ if(pvtUnsub){pvtUnsub();pvtUnsub=null;} goPage(prevPg); document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg===prevPg)); });
-
-function pvtSend(){ const txt=$('pvtIn').value.trim(); if(!txt||!curPvt.uid)return; const ck=[uid,curPvt.uid].sort().join('_'); push(ref(db,'pvt4/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname||'مجهول',simg:uimg,rid:curPvt.uid}); push(ref(db,'notifs4/'+curPvt.uid),{ts:Date.now(),fid:uid,fname:uname||'مجهول',fimg:uimg,prev:txt}); $('pvtIn').value=''; }
+$('pvtBack').addEventListener('click',()=>{if(pvtUnsub){pvtUnsub();pvtUnsub=null;}goPage(prevPg);document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg===prevPg));});
+function pvtSend(){const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'pvt6/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg,rid:curPvt.uid});push(ref(db,'notifs6/'+curPvt.uid),{ts:Date.now(),fid:uid,fname:uname,fimg:uimg,prev:txt});$('pvtIn').value='';addCoins(1);}
 $('pvtSend').addEventListener('click',pvtSend);
-$('pvtIn').addEventListener('keydown',e=>{ if(e.key==='Enter')pvtSend(); });
+$('pvtIn').addEventListener('keydown',e=>{if(e.key==='Enter')pvtSend();});
 
-// ── GROUP CHAT ────────────────────────────────────
-const gcRef=ref(db,'gc4');
+// ── GROUP CHAT ───────────────────────────────────────
+const gcRef=ref(db,'gc6');
 onValue(gcRef,snap=>{
-  let msgs=[]; snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);}); msgs.sort((a,b)=>a.ts-b.ts);
+  let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);
   const box=$('gcBox');
-  if(!msgs.length){box.innerHTML=`<div style="text-align:center;color:var(--text2);padding:30px">ابدأ المحادثة! 👋</div>`;return;}
+  if(!msgs.length){box.innerHTML=`<div style="text-align:center;color:var(--text2);padding:30px;font-size:15px">ابدأ المحادثة مع الجميع! 👋</div>`;return;}
   box.innerHTML=msgs.map(m=>{
-    const me=m.sid===uid, cp=m.sid!==uid&&m.sid!=='ROBOT';
-    return `<div class="gmsg" style="${me?'flex-direction:row-reverse':''}">
-      <img class="gmsgavt" src="${avt(m.simg,m.sname)}" ${cp?`onclick="WW.pvt('${m.sid}','${safeAttr(m.sname)}','${safeAttr(m.simg||'')}')"`:'style="cursor:default"'} alt="">
+    const me=m.sid===uid,cp=m.sid!==uid&&m.sid!=='ROBOT';
+    const bh=badge(m.sid,m.sname,m.sid===uid?null:{});
+    return`<div class="gmsg" style="${me?'flex-direction:row-reverse':''}">
+      <img class="gmsgavt" src="${avt(m.simg,m.sname)}" ${cp?`onclick="WW.pvt('${m.sid}','${safeA(m.sname)}','${safeA(m.simg||'')}')"`:'style="cursor:default"'} alt="">
       <div class="gmsgc" style="${me?'text-align:right':''}">
-        <div class="gmsgnm">${badge(m.sid,m.sname)} <span style="font-size:10px;color:var(--text2)">${ago(m.ts)}</span></div>
+        <div class="gmsgnm" id="gn_${m._k}">${bh} <span style="font-size:10px;color:var(--text2)">${ago(m.ts)}</span></div>
         <span class="gmsgb">${m.txt}</span>
       </div>
     </div>`;
   }).join('');
+  msgs.forEach(async m=>{
+    if(m.sid&&m.sid!=='ROBOT'&&m.sid!==uid){
+      const ud=await getUser(m.sid);
+      if(ud){const el=document.getElementById('gn_'+m._k);if(el)el.innerHTML=badge(m.sid,m.sname,ud)+` <span style="font-size:10px;color:var(--text2)">${ago(m.ts)}</span>`;}
+    }
+  });
   box.scrollTop=box.scrollHeight;
 });
-function gcSend(){ const inp=$('gcIn'), txt=inp.value.trim(); if(!txt)return; push(gcRef,{ts:Date.now(),txt,sid:uid,sname:uname||'مجهول',simg:uimg}); inp.value=''; }
+function gcSend(){const inp=$('gcIn'),txt=inp.value.trim();if(!txt)return;push(gcRef,{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});inp.value='';addCoins(1);}
 $('gcSend').addEventListener('click',gcSend);
-$('gcIn').addEventListener('keydown',e=>{ if(e.key==='Enter')gcSend(); });
+$('gcIn').addEventListener('keydown',e=>{if(e.key==='Enter')gcSend();});
 
-// ── NOTIFICATIONS ─────────────────────────────────
-function ndotUpdate(){ $('ndot').style.display=Object.keys(unread).length>0?'block':'none'; }
+// ── NOTIFICATIONS ────────────────────────────────────
+function ndotUpdate(){$('ndot').style.display=Object.keys(unread).length>0?'block':'none';}
 window.ndotUpdate=ndotUpdate;
-
-onValue(ref(db,'notifs4/'+uid),snap=>{
-  let nts=[]; snap.forEach(s=>{let o=s.val();o._k=s.key;nts.push(o);}); nts.sort((a,b)=>b.ts-a.ts);
+onValue(ref(db,'notifs6/'+uid),snap=>{
+  let nts=[];snap.forEach(s=>{let o=s.val();o._k=s.key;nts.push(o);});nts.sort((a,b)=>b.ts-a.ts);
   const last=parseInt(localStorage.getItem('din_ln_'+uid)||'0');
-  nts.filter(n=>n.ts>last).forEach(n=>{unread[n.fid]=true;}); ndotUpdate();
+  nts.filter(n=>n.ts>last).forEach(n=>{unread[n.fid]=true;});ndotUpdate();
   renderMsgs(nts);
 });
-
 function renderMsgs(nts){
   const box=$('msgsList');
-  if(!nts.length){box.innerHTML=`<div style="text-align:center;color:var(--text2);padding:30px">لا توجد رسائل بعد 💬</div>`;return;}
-  const seen={}, uniq=nts.filter(n=>{if(seen[n.fid])return false;seen[n.fid]=true;return true;});
-  box.innerHTML=uniq.map(n=>`<div class="cli" onclick="WW.pvt('${n.fid}','${safeAttr(n.fname)}','${safeAttr(n.fimg||'')}');localStorage.setItem('din_ln_${uid}',Date.now());delete window._unread&&delete window._unread['${n.fid}'];ndotUpdate()">
+  if(!nts.length){box.innerHTML=`<div style="text-align:center;color:var(--text2);padding:30px;font-size:14px">لا توجد رسائل خاصة بعد 💬</div>`;return;}
+  const seen={},uniq=nts.filter(n=>{if(seen[n.fid])return false;seen[n.fid]=true;return true;});
+  box.innerHTML=uniq.map(n=>`<div class="cli" onclick="WW.pvt('${n.fid}','${safeA(n.fname)}','${safeA(n.fimg||'')}');localStorage.setItem('din_ln_${uid}',Date.now());ndotUpdate()">
     <img class="clia" src="${avt(n.fimg,n.fname)}" alt="">
-    <div class="clin"><div class="clinm">${badge(n.fid,n.fname)}</div><div class="clip">${n.prev||''}</div></div>
+    <div class="clin"><div class="clinm">${badge(n.fid,n.fname,{})}</div><div class="clip">${n.prev||''}</div></div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
       <span class="clit">${ago(n.ts)}</span>
       ${unread[n.fid]?'<div class="udot"></div>':''}
@@ -578,42 +916,41 @@ function renderMsgs(nts){
   </div>`).join('');
 }
 
-// ── PRAYER TIMES ──────────────────────────────────
+// ── PRAYER TIMES ─────────────────────────────────────
 let robotDone=false;
 async function loadPrayers(){
   try{
     const d=new Date();
     const r=await fetch(`https://api.aladhan.com/v1/timingsByCity/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?city=Aswan&country=Egypt&method=5`);
-    const j=await r.json(); if(j.code!==200)throw 0;
+    const j=await r.json();if(j.code!==200)throw 0;
     const t=j.data.timings;
-    const prayers=[{nm:'الفجر',tm:t.Fajr,k:'Fajr'},{nm:'الشروق',tm:t.Sunrise,k:'Sunrise'},{nm:'الظهر',tm:t.Dhuhr,k:'Dhuhr'},{nm:'العصر',tm:t.Asr,k:'Asr'},{nm:'المغرب',tm:t.Maghrib,k:'Maghrib'},{nm:'العشاء',tm:t.Isha,k:'Isha'}];
-    const now=new Date(), nm=now.getHours()*60+now.getMinutes();
-    const mins=prayers.map(p=>{const[h,m]=p.tm.split(':').map(Number);return h*60+m;});
-    let nx=mins.findIndex(m=>m>nm); if(nx===-1)nx=0;
-    $('nxtP').textContent=`الصلاة القادمة: ${prayers[nx].nm} — ${prayers[nx].tm}`;
-    $('pGrid').innerHTML=prayers.map((p,i)=>`<div class="pit${i===nx?' nxt':''}"><div class="pnm">${p.nm}</div><div class="ptm">${p.tm}</div></div>`).join('');
-    if(!robotDone){robotDone=true;scheduleRobot(prayers,mins,nm);}
-  } catch(e){ $('nxtP').textContent='تعذر تحميل المواقيت ⚠️'; }
+    const pr=[{nm:'الفجر',tm:t.Fajr,k:'Fajr'},{nm:'الشروق',tm:t.Sunrise,k:'Sunrise'},{nm:'الظهر',tm:t.Dhuhr,k:'Dhuhr'},{nm:'العصر',tm:t.Asr,k:'Asr'},{nm:'المغرب',tm:t.Maghrib,k:'Maghrib'},{nm:'العشاء',tm:t.Isha,k:'Isha'}];
+    const now=new Date(),nm=now.getHours()*60+now.getMinutes();
+    const mins=pr.map(p=>{const[h,m]=p.tm.split(':').map(Number);return h*60+m;});
+    let nx=mins.findIndex(m=>m>nm);if(nx===-1)nx=0;
+    $('nxtP').textContent=`الصلاة القادمة: ${pr[nx].nm} — ${pr[nx].tm}`;
+    $('pGrid').innerHTML=pr.map((p,i)=>`<div class="pit${i===nx?' nxt':''}"><div class="pnm">${p.nm}</div><div class="ptm">${p.tm}</div></div>`).join('');
+    if(!robotDone){robotDone=true;scheduleRobot(pr,mins,nm);}
+  }catch(e){$('nxtP').textContent='تعذر تحميل المواقيت ⚠️';}
 }
-function scheduleRobot(prayers,mins,nm){
-  prayers.filter(p=>p.k!=='Sunrise').forEach(p=>{
-    const[h,m]=p.tm.split(':').map(Number), diff=((h*60+m)-nm)*60000;
-    if(diff>0&&diff<86400000) setTimeout(()=>{
-      const k='rp_'+p.k+'_'+new Date().toDateString(); if(localStorage.getItem(k))return; localStorage.setItem(k,'1');
+function scheduleRobot(pr,mins,nm){
+  pr.filter(p=>p.k!=='Sunrise').forEach(p=>{
+    const[h,m]=p.tm.split(':').map(Number),diff=((h*60+m)-nm)*60000;
+    if(diff>0&&diff<86400000)setTimeout(()=>{
+      const k='rp_'+p.k+'_'+new Date().toDateString();if(localStorage.getItem(k))return;localStorage.setItem(k,'1');
       push(postsRef,{type:'post',ts:Date.now(),text:`🕌 حان وقت صلاة ${p.nm} — أسوان\n\n«حَيَّ عَلَى الصَّلَاةِ، حَيَّ عَلَى الْفَلَاحِ»\n\nتقبل الله صلاتكم 🤍`,authorId:'ROBOT',authorName:'روبوت ديني',authorImg:'',img:'',likes:{},views:{},comments:{}});
     },diff);
   });
-  [[8*60,'🌿 صباح النور — أكثروا من الصلاة على النبي ﷺ\n\n«اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ» 💚'],[14*60,'☀️ تذكير الظهر — الصلاة على النبي ﷺ\n\n«مَنْ صَلَّى عَلَيَّ صَلَاةً صَلَّى اللَّهُ عَلَيْهِ عَشْرًا»'],[21*60,'🌙 ختام اليوم بالصلاة على سيدنا محمد ﷺ\n\n«اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَيْهِ»\n\nتصبحون على خير 🤍']].forEach(([t,txt],i)=>{
-    const diff=(t-nm)*60000;
-    if(diff>0) setTimeout(()=>{
-      const k='sp_'+i+'_'+new Date().toDateString(); if(localStorage.getItem(k))return; localStorage.setItem(k,'1');
+  [[8*60,'🌿 صباح النور — أكثروا من الصلاة على النبي ﷺ\n\n«اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ» 💚'],[14*60,'☀️ تذكير — الصلاة على النبي ﷺ\n\n«مَنْ صَلَّى عَلَيَّ صَلَاةً صَلَّى اللَّهُ عَلَيْهِ عَشْرًا»'],[21*60,'🌙 ختام اليوم بالصلاة على سيدنا محمد ﷺ\n\n«اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَيْهِ»\n\nتصبحون على خير 🤍']].forEach(([t,txt],i)=>{
+    const diff=(t-nm)*60000;if(diff>0)setTimeout(()=>{
+      const k='sp_'+i+'_'+new Date().toDateString();if(localStorage.getItem(k))return;localStorage.setItem(k,'1');
       push(postsRef,{type:'post',ts:Date.now(),text:txt,authorId:'ROBOT',authorName:'روبوت ديني',authorImg:'',img:'',likes:{},views:{},comments:{}});
     },diff);
   });
 }
-loadPrayers(); setInterval(loadPrayers,60000);
+loadPrayers();setInterval(loadPrayers,60000);
 
-// ── AZKAR ─────────────────────────────────────────
+// ── AZKAR ────────────────────────────────────────────
 const AZ={
   azS:[{t:'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ',r:1},{t:'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ',r:1},{t:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',r:100},{t:'لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',r:10}],
   azM:[{t:'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ',r:1},{t:'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ',r:1},{t:'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ',r:3}],
@@ -622,15 +959,36 @@ const AZ={
 const ZC={};
 Object.entries(AZ).forEach(([id,list])=>{
   ZC[id]=list.map(()=>0);
-  $(id).innerHTML=list.map((z,i)=>`<div class="zkcard" id="zk_${id}_${i}"><div class="zktxt">${z.t}</div><div class="zkcnt">التكرار: ${z.r} مرة</div><div class="zkrow"><button class="zkbtn" onclick="WW.zt('${id}',${i},${z.r})">+</button><div class="zknum" id="zn_${id}_${i}">0</div><button class="zkbtn" style="font-size:14px" onclick="WW.zr('${id}',${i})">↺</button></div></div>`).join('');
+  $(id).innerHTML=list.map((z,i)=>`<div class="zkcard" id="zk_${id}_${i}"><div class="zktxt">${z.t}</div><div class="zkcnt">اضغط + للعد — الهدف: ${z.r} مرة</div><div class="zkrow"><button class="zkbtn" onclick="WW.zt('${id}',${i},${z.r})">+</button><div class="zknum" id="zn_${id}_${i}">0</div><button class="zkbtn" style="font-size:14px" onclick="WW.zr('${id}',${i})">↺</button></div></div>`).join('');
 });
 Object.assign(window.WW,{
-  zt(c,i,max){ ZC[c][i]=Math.min(ZC[c][i]+1,max); $('zn_'+c+'_'+i).textContent=ZC[c][i]; if(ZC[c][i]>=max){$('zk_'+c+'_'+i).style.background='linear-gradient(135deg,#c9a84c,#f0c060)';toast('أحسنت! اكتملت التسبيحة 🌟');} },
-  zr(c,i){ ZC[c][i]=0; $('zn_'+c+'_'+i).textContent='0'; $('zk_'+c+'_'+i).style.background=''; }
+  zt(c,i,max){ZC[c][i]=Math.min(ZC[c][i]+1,max);$('zn_'+c+'_'+i).textContent=ZC[c][i];if(ZC[c][i]>=max){$('zk_'+c+'_'+i).style.background='linear-gradient(135deg,#c9a84c,#f0c060)';toast('أحسنت! اكتملت التسبيحة 🌟');}},
+  zr(c,i){ZC[c][i]=0;$('zn_'+c+'_'+i).textContent='0';$('zk_'+c+'_'+i).style.background='';}
 });
 
-// ── INIT ──────────────────────────────────────────
-refreshUI();
+// ── INIT ─────────────────────────────────────────────
+function init(){
+  dark=localStorage.getItem('din_dark')==='1';
+  isPrem=localStorage.getItem('din_prem')==='1';
+  uimg=localStorage.getItem('din_img')||'';
+  jooTitle=localStorage.getItem('din_joo')||'';
+  activeTitle=localStorage.getItem('din_activeTitle')||'';
+  myCoins=parseInt(localStorage.getItem('din_coins')||'0');
+  myBag=JSON.parse(localStorage.getItem('din_bag')||'[]');
+  if(dark){document.body.classList.add('dark');$('darkTog').checked=true;}
+  $('uidD').value=uid;
+  $('nmIn').value=uname;
+  if(jooTitle)$('jooIn').value=jooTitle;
+  // sync from firebase
+  onValue(ref(db,'users6/'+uid+'/coins'),s=>{if(s.val()!==null){myCoins=s.val();localStorage.setItem('din_coins',myCoins);updateCoinsUI();}});
+  onValue(ref(db,'users6/'+uid+'/bag'),s=>{if(s.val()!==null){myBag=Array.isArray(s.val())?s.val():Object.values(s.val()||{});localStorage.setItem('din_bag',JSON.stringify(myBag));renderShop();}});
+  onValue(ref(db,'users6/'+uid+'/joo'),s=>{if(s.val()!==null&&s.val()!==undefined){jooTitle=s.val()||'';localStorage.setItem('din_joo',jooTitle);if(jooTitle)$('jooIn').value=jooTitle;refreshUI();}});
+  onValue(ref(db,'users6/'+uid+'/activeTitle'),s=>{if(s.val()!==null&&s.val()!==undefined){activeTitle=s.val()||'';localStorage.setItem('din_activeTitle',activeTitle);refreshUI();}});
+  onValue(ref(db,'users6/'+uid+'/prem'),s=>{if(s.val()===true){isPrem=true;localStorage.setItem('din_prem','1');refreshUI();}});
+  refreshUI();renderShop();
+}
+
+checkSetup();
 </script>
 </body>
 </html>
