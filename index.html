@@ -3,991 +3,2262 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>اعرف عن دينك</title>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<title>🟡 Golden Server</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
+/* ══ MC PIXEL FONT ══ */
+@font-face{font-family:'MCFont';src:local('Press Start 2P');}
+
 :root{
-  --bg:#f4f1eb;--card:#ffffff;--primary:#1a5c38;--primary2:#2d8653;
-  --gold:#c9a84c;--gold2:#f0c060;--text:#1a1a1a;--text2:#555;
-  --border:#e0d9c8;--shadow:0 2px 16px rgba(26,92,56,.10);
-  --hdr:#1a5c38;--nav:#ffffff;--inp:#f9f7f2;
-  --silver:#8a9bb0;--blueb:#2563eb;--red:#e74c3c;
+  --bg:#1a1a1a;--card:#2d2d2d;--primary:#f0c040;--primary2:#e8a800;
+  --text:#e0e0e0;--text2:#999;--border:#444;
+  --shadow:0 4px 20px rgba(240,192,64,.2);
+  --hdr:#111;--nav:#1a1a1a;--inp:#222;
+  --red:#cc3333;--green:#55aa33;--gold:#f0c040;
+  --mc-brown:#5d3a1a;--mc-dark:#0d0d0d;
+  --mc-btn:#6b8e23;--mc-btn2:#4a6519;
+  --admin-color:#ff5555;--owner-color:#ffaa00;--vip-color:#55ffff;--member-color:#aaaaaa;
 }
-body.dark{
-  --bg:#0f1a14;--card:#1e2e22;--primary:#2d8653;--primary2:#3aad6e;
-  --gold:#f0c060;--gold2:#ffd77a;--text:#f0ebe0;--text2:#aaa;
-  --border:#2a3e30;--shadow:0 2px 16px rgba(0,0,0,.4);
-  --hdr:#0f1a14;--nav:#162218;--inp:#1e2e22;
-}
+
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+/* pixelated فقط للعناصر اللي محتاجاها */
+.mc-pixel{image-rendering:pixelated;image-rendering:crisp-edges;}
+/* الصور الشخصية تبقى واضحة */
+img{image-rendering:auto;}
 
-header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 14px;height:56px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.3)}
-.hlogo{font-family:'Amiri',serif;color:var(--gold);font-size:16px;font-weight:700;line-height:1.2}
-.hlogo small{font-size:9px;color:rgba(255,255,255,.65);display:block;font-family:'Cairo',sans-serif}
-.hright{display:flex;align-items:center;gap:6px}
-.icbtn{background:none;border:none;color:#fff;font-size:19px;cursor:pointer;padding:4px 5px;border-radius:8px;position:relative;transition:background .2s}
-.icbtn:hover{background:rgba(255,255,255,.1)}
-.ndot{position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:var(--red);display:none;border:2px solid var(--hdr)}
-.coins-badge{background:var(--gold);color:#1a1a1a;font-size:12px;font-weight:900;padding:3px 8px;border-radius:20px;cursor:default;user-select:none}
+/* ══ MC TEXTURES ══ */
+.mc-bg{
+  background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10');
+  background-size:64px 64px;
+  background-repeat:repeat;
+  image-rendering:pixelated;image-rendering:crisp-edges;
+}
 
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:var(--nav);border-top:1px solid var(--border);display:flex;height:58px;box-shadow:0 -2px 12px rgba(0,0,0,.08)}
-.nitem{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:'Cairo',sans-serif;flex:1;padding:4px 2px;transition:color .2s}
-.nitem .ni{font-size:19px;margin-bottom:1px}
-.nitem.active{color:var(--primary);font-weight:700}
+/* ══ MC PANEL ══ */
+.mc-panel{
+  background:#3c3c3c;
+  border:3px solid #000;
+  box-shadow:inset -3px -3px 0 #222,inset 3px 3px 0 #555;
+  border-radius:0;
+}
+.mc-panel-dark{
+  background:#1a1a1a;
+  border:3px solid #000;
+  box-shadow:inset -3px -3px 0 #111,inset 3px 3px 0 #2a2a2a;
+}
 
-.wrap{padding-top:60px;padding-bottom:66px;min-height:100vh}
-.page{display:none;padding:12px;animation:fi .3s ease}
-.page.active{display:block}
-@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* ══ MC BUTTON ══ */
+.mc-btn{
+  background:#5d7c15;
+  border:3px solid #000;
+  box-shadow:inset -3px -3px 0 #2d4a00,inset 3px 3px 0 #8aaa30;
+  color:#fff;
+  font-family:'Cairo',sans-serif;
+  font-weight:900;
+  font-size:14px;
+  padding:10px 18px;
+  cursor:pointer;
+  transition:all .1s;
+  display:inline-flex;align-items:center;gap:6px;
+  white-space:nowrap;
+  border-radius:2px;
+  text-shadow:1px 1px 0 #000;
+  letter-spacing:.5px;
+}
+.mc-btn:active{
+  box-shadow:inset 3px 3px 0 #2d4a00,inset -3px -3px 0 #8aaa30;
+  transform:translateY(1px);
+}
+.mc-btn:hover{background:#6b8e23;filter:brightness(1.1);}
+.mc-btn.danger{background:#8b1a1a;box-shadow:inset -3px -3px 0 #5a0000,inset 3px 3px 0 #c02020;}
+.mc-btn.gold{background:#b8860b;box-shadow:inset -3px -3px 0 #7a5800,inset 3px 3px 0 #daa520;}
+.mc-btn.small{font-size:11px;padding:6px 10px;}
 
-/* GUIDE BOX */
-.guide{background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:1.5px solid #a5d6a7;border-radius:14px;padding:14px 14px 12px;margin-bottom:14px}
-body.dark .guide{background:linear-gradient(135deg,#1b3a20,#1e3d1e);border-color:#2d6a35}
-.guide-title{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.guide-text{font-size:13px;color:var(--text2);line-height:1.7}
-.guide-steps{margin-top:8px;padding-right:4px}
-.guide-step{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;font-size:13px;color:var(--text)}
-.guide-num{background:var(--primary);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;flex-shrink:0;margin-top:1px}
+/* ══ MC INPUT ══ */
+.mc-input{
+  background:#000;
+  border:3px solid #555;
+  box-shadow:inset 2px 2px 0 #222;
+  color:#fff;
+  font-family:'Cairo',sans-serif;
+  font-size:14px;
+  padding:10px 12px;
+  width:100%;
+  outline:none;
+  margin-bottom:8px;
+  border-radius:2px;
+  caret-color:var(--primary);
+}
+.mc-input:focus{border-color:var(--primary);}
+.mc-input::placeholder{color:#555;}
 
-.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--border);transition:transform .2s}
-.card:hover{transform:translateY(-1px)}
+/* ══ HEADER ══ */
+header{
+  background:var(--hdr);
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  height:54px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 14px;
+  border-bottom:3px solid var(--primary);
+  box-shadow:0 2px 20px rgba(240,192,64,.3);
+}
+.hlogo{
+  font-family:'Cairo',sans-serif;
+  font-size:17px;font-weight:900;
+  color:var(--primary);
+  display:flex;align-items:center;gap:8px;
+  text-shadow:1px 1px 0 #000,2px 2px 0 #7a5800;
+}
+.hright{display:flex;align-items:center;gap:8px;}
+.icbtn{
+  background:#2d2d2d;border:2px solid #444;color:var(--text);
+  font-size:18px;cursor:pointer;padding:5px 8px;border-radius:3px;
+  position:relative;transition:all .15s;
+}
+.icbtn:hover{background:#3d3d3d;border-color:var(--primary);}
+.coins-hdr{
+  background:linear-gradient(135deg,#b8860b,#daa520);
+  color:#000;font-size:12px;font-weight:900;
+  padding:4px 10px;border-radius:2px;
+  border:2px solid #7a5800;
+  text-shadow:none;
+}
+.ndot{
+  position:absolute;top:2px;right:2px;width:9px;height:9px;
+  border-radius:50%;background:var(--red);display:none;border:2px solid var(--hdr);
+}
 
-/* NAME STYLES */
-.nn{color:var(--text);font-weight:600}
-.np{color:var(--gold);font-weight:900}
-.ns{color:var(--silver);font-weight:900}
-.nb{color:var(--blueb);font-weight:900}
-.bdg{font-size:10px;padding:2px 7px;border-radius:20px;margin-left:4px;font-weight:700;vertical-align:middle}
-.bdgp{background:var(--gold);color:#1a1a1a}
-.bdgs{background:var(--silver);color:#fff}
-.bdgb{background:var(--blueb);color:#fff}
-.joo-ttl{color:var(--gold);font-weight:900;font-size:11px;margin-left:5px;vertical-align:middle;font-family:'Amiri',serif}
+/* ══ TOP NAV ══ */
+.tnav{
+  position:fixed;top:54px;left:0;right:0;z-index:999;
+  background:#111;border-bottom:3px solid var(--primary);
+  display:flex;height:50px;overflow-x:auto;scrollbar-width:none;
+}
+.tnav::-webkit-scrollbar{display:none;}
+.tni{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:none;background:none;font-size:12px;cursor:pointer;
+  padding:0 12px;position:relative;flex-shrink:0;
+  transition:all .15s;color:var(--text2);
+  font-family:'Cairo',sans-serif;font-weight:700;gap:2px;
+}
+.tni span.icon{font-size:18px;}
+.tni::after{
+  content:'';position:absolute;bottom:0;left:10%;right:10%;
+  height:3px;background:var(--primary);opacity:0;transition:opacity .15s;
+}
+.tni.active{color:var(--primary);}
+.tni.active::after{opacity:1;}
+.nbadge{
+  position:absolute;top:3px;right:6px;background:var(--red);color:#fff;
+  font-size:9px;font-weight:900;padding:1px 4px;border-radius:2px;
+  min-width:14px;text-align:center;display:none;
+}
 
-/* HERO */
-.phero{background:linear-gradient(135deg,var(--primary),var(--primary2));border-radius:18px;padding:22px 16px 16px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden}
-.phero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
-.pavt{width:78px;height:78px;border-radius:50%;border:3px solid var(--gold);object-fit:cover;margin:0 auto 10px;display:block;cursor:pointer;position:relative;z-index:1;background:#aaa}
-.pname{font-size:17px;color:#fff;font-weight:700;margin-bottom:4px;position:relative;z-index:1}
-.pdiv{color:var(--gold2);font-size:15px;letter-spacing:4px;position:relative;z-index:1}
-.pstats{display:flex;justify-content:center;gap:14px;margin-top:12px;position:relative;z-index:1}
-.psnum{font-size:17px;font-weight:900;color:var(--gold2)}
-.pslbl{font-size:9px;color:rgba(255,255,255,.8)}
-.abtns{display:flex;gap:10px;margin-bottom:14px}
-.abtn{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
-.abtnp{background:var(--primary);color:#fff}.abtnp:hover{background:var(--primary2)}
-.abtng{background:var(--gold);color:#1a1a1a}.abtng:hover{background:var(--gold2)}
+/* ══ PAGES ══ */
+.wrap{padding-top:108px;padding-bottom:20px;min-height:100vh;overflow-x:hidden;}
+.page{display:none!important;padding:12px;animation:fi .25s ease;overflow-x:hidden;}
+.page.active{display:block!important;}
+.page.active.chat-page{display:flex!important;flex-direction:column;height:calc(100vh - 108px);padding:0;overflow:hidden;}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
-.stitle{font-family:'Amiri',serif;font-size:18px;font-weight:700;color:var(--primary);margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid var(--gold);display:flex;align-items:center;gap:8px}
+/* ══ CARDS ══ */
+.card{
+  background:#2a2a2a;border-radius:2px;padding:14px;margin-bottom:12px;
+  border:2px solid #444;box-shadow:var(--shadow);
+  overflow:hidden;word-break:break-word;
+}
+.stitle{
+  font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;
+  color:var(--primary);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+  padding-bottom:6px;border-bottom:2px solid var(--primary);
+  text-shadow:1px 1px 0 #000;
+}
 
-/* POSTS */
-.phead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.pavtp{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);cursor:pointer;flex-shrink:0;background:#aaa}
-.ptime{font-size:11px;color:var(--text2)}
-.ptxt{font-size:15px;line-height:1.7;margin-bottom:10px;white-space:pre-wrap;word-break:break-word}
-.pimg{width:100%;border-radius:10px;margin-bottom:10px;max-height:300px;object-fit:cover}
-.pacts{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:8px}
-.aibtn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:8px;font-family:'Cairo',sans-serif;transition:all .2s}
-.aibtn:hover{color:var(--primary);background:rgba(26,92,56,.08)}
-.aibtn.liked{color:var(--red)}
-.vcnt{font-size:11px;color:var(--text2);margin-right:auto}
+/* ══ HERO / PROFILE ══ */
+.phero{
+  background:linear-gradient(135deg,#1a1a1a,#2a2010);
+  border-radius:2px;padding:20px 16px 16px;text-align:center;
+  margin-bottom:14px;position:relative;overflow:hidden;
+  border:3px solid var(--primary);
+}
+.phero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top,rgba(240,192,64,.08) 0%,transparent 70%);
+}
+.pavt{
+  width:80px!important;height:80px!important;
+  border-radius:4px;border:3px solid var(--primary);
+  object-fit:cover;margin:0 auto 10px;display:block;
+  cursor:pointer;background:#222;position:relative;z-index:1;
+  image-rendering:auto;
+}
+.pname{font-size:16px;color:#fff;font-weight:900;margin-bottom:4px;position:relative;z-index:1;}
+.rank-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:2px;font-size:11px;font-weight:900;
+  border:2px solid;margin:3px;
+}
+.rank-admin{background:rgba(255,85,85,.2);color:var(--admin-color);border-color:var(--admin-color);}
+.rank-owner{background:rgba(255,170,0,.2);color:var(--owner-color);border-color:var(--owner-color);}
+.rank-vip{background:rgba(85,255,255,.2);color:var(--vip-color);border-color:var(--vip-color);}
+.rank-member{background:rgba(170,170,170,.2);color:var(--member-color);border-color:var(--member-color);}
+.pstats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;position:relative;z-index:1;}
+.psitem{background:rgba(0,0,0,.4);border:2px solid #444;padding:8px 2px;text-align:center;}
+.psnum{font-size:14px;font-weight:900;color:var(--primary);}
+.pslbl{font-size:9px;color:rgba(255,255,255,.6);}
 
-/* POLL */
-.pollopt{display:flex;align-items:center;gap:10px;background:var(--inp);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent;transition:all .2s;font-size:14px}
-.pollopt:hover{border-color:var(--primary2)}
-.pollopt.voted{border-color:var(--primary);background:rgba(26,92,56,.08)}
-.pbw{flex:1;background:var(--border);border-radius:4px;height:6px;overflow:hidden}
-.pb{height:100%;background:var(--primary2);border-radius:4px;transition:width .5s}
-.ppct{font-size:12px;color:var(--text2);min-width:32px;text-align:left}
+/* ══ POSTS ══ */
+.add-btns{display:flex;gap:6px;margin-bottom:12px;}
+.add-btn{
+  flex:1;padding:8px 4px;border:2px solid var(--primary);
+  background:#2a2010;color:var(--primary);
+  font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  min-width:0;border-radius:2px;
+}
+.add-btn:hover{background:var(--primary);color:#000;}
+.searchbar{position:relative;margin-bottom:12px;}
+.searchbar .mc-input{padding-right:36px;margin-bottom:0;}
+.searchbar .si{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);pointer-events:none;}
+.phead{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.pavtp{
+  width:42px!important;height:42px!important;border-radius:4px;
+  object-fit:cover;border:2px solid var(--border);cursor:pointer;
+  flex-shrink:0;background:#222;image-rendering:auto;
+}
+.ptime{font-size:11px;color:var(--text2);}
+.ptxt{font-size:14px;line-height:1.7;margin-bottom:10px;white-space:pre-wrap;word-break:break-word;}
+.pimg{width:100%;border-radius:2px;margin-bottom:10px;max-height:240px;object-fit:cover;border:2px solid #444;}
+.pvid{width:100%;border-radius:2px;margin-bottom:10px;max-height:220px;border:2px solid #444;}
+.pacts{display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-top:2px solid #333;padding-top:8px;}
+.aibtn{
+  background:#1a1a1a;border:2px solid #333;color:var(--text2);cursor:pointer;
+  font-size:12px;display:flex;align-items:center;gap:4px;padding:5px 8px;
+  font-family:'Cairo',sans-serif;transition:all .15s;border-radius:2px;
+}
+.aibtn:hover{border-color:var(--primary);color:var(--primary);}
+.aibtn.liked{color:var(--red)!important;border-color:var(--red)!important;}
+.vcnt{font-size:11px;color:var(--text2);margin-right:auto;}
+.cmtsec{margin-top:10px;border-top:2px solid #333;padding-top:8px;display:none;}
+.cmt{display:flex;gap:8px;margin-bottom:8px;}
+.cmtbbl{background:#1a1a1a;border:2px solid #333;border-radius:2px;padding:7px 10px;flex:1;}
+.cmtnm{font-size:11px;font-weight:700;margin-bottom:2px;color:var(--primary);}
+.cmttxt{font-size:13px;line-height:1.5;}
+.cmtrow{display:flex;gap:8px;align-items:center;margin-top:8px;}
+.cmtrow .mc-input{margin-bottom:0;flex:1;}
 
-/* COMMENTS */
-.cmtsec{margin-top:10px;border-top:1px solid var(--border);padding-top:8px;display:none}
-.cmt{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start}
-.cmtbbl{background:var(--inp);border-radius:10px;padding:6px 10px;flex:1;font-size:13px}
-.cmtnm{font-size:11px;font-weight:700;margin-bottom:2px}
-.cmtrow{display:flex;gap:8px;align-items:center;margin-top:6px}
-.cmtrow input{flex:1;margin-bottom:0}
+/* ══ POLL ══ */
+.pollopt{
+  display:flex;align-items:center;gap:8px;
+  background:#1a1a1a;border:2px solid #444;border-radius:2px;
+  padding:10px 12px;margin-bottom:6px;cursor:pointer;
+  transition:all .15s;font-size:13px;
+}
+.pollopt:hover{border-color:var(--primary);}
+.pollopt.voted{border-color:var(--primary);background:rgba(240,192,64,.08);}
+.pollopt.correct{border-color:var(--green)!important;background:rgba(85,170,51,.1)!important;}
+.pollopt.wrong{border-color:var(--red)!important;background:rgba(204,51,51,.1)!important;}
+.pbw{flex:1;background:#333;border-radius:2px;height:6px;overflow:hidden;}
+.pb{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2));border-radius:2px;transition:width .5s;}
+.ppct{font-size:11px;color:var(--text2);min-width:30px;text-align:left;}
 
-input,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--inp);color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;outline:none;transition:border .2s;margin-bottom:8px}
-input:focus,textarea:focus{border-color:var(--primary2)}
-textarea{resize:none;min-height:80px}
-input[type=file]{padding:6px}
-input:disabled{opacity:.6}
-.btn{background:var(--primary);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;transition:background .2s;white-space:nowrap}
-.btn:hover{background:var(--primary2)}
+/* ══ CHAT ══ */
+.gchat-scroll{flex:1;overflow-y:auto;padding:12px;background:var(--bg);}
+.gmsg{display:flex;gap:8px;margin-bottom:12px;align-items:flex-start;}
+.gmsgavt{width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0;cursor:pointer;background:#333;border:2px solid var(--border);}
+.gmsgc{max-width:75%;}
+.gmsgnm{font-size:11px;font-weight:700;margin-bottom:3px;color:var(--primary);}
+.gmsgb{
+  background:#2a2a2a;border:2px solid #444;border-radius:2px;
+  padding:8px 12px;font-size:14px;line-height:1.5;
+  display:inline-block;max-width:100%;white-space:pre-wrap;word-break:break-word;
+}
+.gmsg.mine{flex-direction:row-reverse;}
+.gmsg.mine .gmsgc{align-items:flex-end;display:flex;flex-direction:column;}
+.gmsg.mine .gmsgb{background:#3a2a00;border-color:var(--primary);color:#fff;}
+.msg-acts{display:flex;gap:4px;margin-top:3px;}
+.msgbtn{background:#1a1a1a;border:2px solid #333;color:var(--text2);font-size:11px;cursor:pointer;padding:2px 6px;font-family:'Cairo',sans-serif;border-radius:2px;}
+.msgbtn:hover{border-color:var(--primary);color:var(--primary);}
+.msgbtn.liked{color:var(--red);border-color:var(--red);}
+.reply-preview{background:rgba(240,192,64,.1);border-right:3px solid var(--primary);border-radius:2px;padding:4px 8px;font-size:11px;margin-bottom:4px;color:var(--text2);}
+.replying-to{
+  background:#1a1500;border:2px solid var(--primary);border-radius:2px;
+  padding:6px 10px;display:none;font-size:12px;
+  align-items:center;justify-content:space-between;gap:8px;flex-shrink:0;
+}
+.gcbar{background:#111;padding:8px 12px;display:flex;flex-direction:column;gap:6px;border-top:3px solid var(--primary);flex-shrink:0;}
+.gcbar-row{display:flex;gap:8px;align-items:center;}
+.gcbar-row .mc-input{margin-bottom:0;flex:1;}
+.send-icon-btn{
+  background:#5d7c15;border:3px solid #000;
+  box-shadow:inset -2px -2px 0 #2d4a00,inset 2px 2px 0 #8aaa30;
+  cursor:pointer;padding:6px 10px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;border-radius:2px;transition:all .1s;
+}
+.send-icon-btn:active{box-shadow:inset 2px 2px 0 #2d4a00,inset -2px -2px 0 #8aaa30;transform:translateY(1px);}
+.send-icon-btn img{width:28px;height:28px;image-rendering:pixelated;}
 
-/* MODAL */
-.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px}
-.moverlay.open{display:flex}
-.modal{background:var(--card);border-radius:18px;padding:20px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:fi .25s ease}
-.mtitle{font-size:17px;font-weight:700;margin-bottom:14px;color:var(--primary)}
-.mclose{float:left;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text2);line-height:1}
+/* ══ MESSAGES ══ */
+.cli{
+  display:flex;align-items:center;gap:12px;padding:12px;
+  border-radius:2px;cursor:pointer;transition:all .15s;
+  margin-bottom:4px;border:2px solid #333;background:#222;
+}
+.cli:hover{background:#2a2a2a;border-color:var(--primary);}
+.clia{width:48px!important;height:48px!important;border-radius:3px;object-fit:cover;flex-shrink:0;background:#333;border:2px solid #444;}
+.clin{flex:1;min-width:0;}
+.clinm{font-weight:700;font-size:14px;margin-bottom:2px;}
+.clip{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-/* CHAT */
-.cli{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;cursor:pointer;transition:background .2s;margin-bottom:4px}
-.cli:hover{background:var(--inp)}
-.clia{width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#aaa}
-.clin{flex:1;min-width:0}
-.clinm{font-weight:700;font-size:14px;margin-bottom:2px}
-.clip{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.clit{font-size:11px;color:var(--text2)}
-.udot{width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0}
+/* ══ PVT CHAT ══ */
+.pvt-bar{background:#111;padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--primary);flex-shrink:0;}
+.pvt-bar img{width:36px;height:36px;border-radius:3px;object-fit:cover;border:2px solid var(--primary);}
+.pvtmsgs{flex:1;overflow-y:auto;padding:12px;}
+.mbw{display:flex;margin-bottom:8px;}
+.mbw.mine{justify-content:flex-start;}
+.mbw.theirs{justify-content:flex-end;}
+.mbb{max-width:72%;padding:10px 14px;border-radius:2px;font-size:14px;line-height:1.5;word-break:break-word;border:2px solid;}
+.mbw.mine .mbb{background:#3a2a00;border-color:var(--primary);color:#fff;}
+.mbw.theirs .mbb{background:#2a2a2a;border-color:#444;}
+.mbt{font-size:10px;opacity:.7;margin-top:3px;}
+.pvt-input-bar{background:#111;padding:8px 12px;display:flex;gap:8px;align-items:center;border-top:3px solid var(--primary);flex-shrink:0;}
+.pvt-input-bar .mc-input{margin-bottom:0;flex:1;}
 
-/* PRIVATE CHAT */
-.chbar{position:fixed;top:56px;left:0;right:0;z-index:900;background:var(--hdr);padding:10px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.chbar img{width:36px;height:36px;border-radius:50%;object-fit:cover;background:#aaa}
-.chbarnm{color:#fff;font-weight:700;font-size:15px}
-.backbtn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0 4px}
-.mwrap{padding:120px 12px 80px;min-height:100vh}
-.mbw{display:flex;margin-bottom:10px}
-.mbw.mine{justify-content:flex-start}
-.mbw.theirs{justify-content:flex-end}
-.mbb{max-width:72%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.5;word-break:break-word}
-.mbw.mine .mbb{background:var(--primary);color:#fff;border-bottom-right-radius:4px}
-.mbw.theirs .mbb{background:var(--card);border:1px solid var(--border);border-bottom-left-radius:4px}
-.mbt{font-size:10px;opacity:.7;margin-top:3px}
-.minbar{position:fixed;bottom:58px;left:0;right:0;z-index:900;background:var(--nav);padding:10px 12px;display:flex;gap:8px;align-items:center;border-top:1px solid var(--border)}
-.minbar input{margin-bottom:0;flex:1}
+/* ══ MODALS ══ */
+.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:3000;display:none;align-items:flex-end;justify-content:center;padding:0;}
+.moverlay.open{display:flex;}
+.modal{
+  background:#2a2a2a;border-radius:0;
+  padding:20px;width:100%;max-width:520px;
+  max-height:85vh;overflow-y:auto;
+  animation:slideup .25s ease;
+  border-top:3px solid var(--primary);
+  border-left:3px solid #555;border-right:3px solid #555;
+}
+@keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mtitle{font-size:16px;font-weight:900;margin-bottom:14px;color:var(--primary);text-shadow:1px 1px 0 #000;}
+.mclose{float:left;background:#5a0000;border:2px solid #000;box-shadow:inset -2px -2px 0 #3a0000,inset 2px 2px 0 #882020;font-size:18px;cursor:pointer;color:#fff;line-height:1;padding:4px 8px;border-radius:2px;}
 
-/* GROUP CHAT */
-.gmsg{display:flex;gap:8px;margin-bottom:12px;align-items:flex-start}
-.gmsgavt{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;cursor:pointer;background:#aaa}
-.gmsgc{flex:1}
-.gmsgnm{font-size:12px;font-weight:700;margin-bottom:3px}
-.gmsgb{background:var(--card);border:1px solid var(--border);border-radius:14px;border-top-right-radius:4px;padding:10px 12px;font-size:14px;line-height:1.5;display:inline-block;max-width:100%;white-space:pre-wrap;word-break:break-word}
-.gcbar{position:fixed;bottom:58px;left:0;right:0;z-index:900;background:var(--nav);padding:8px 12px;display:flex;gap:8px;align-items:center;border-top:1px solid var(--border)}
-.gcbar input{margin-bottom:0;flex:1}
+/* ══ TOAST ══ */
+.toast{
+  position:fixed;top:70px;left:50%;transform:translateX(-50%);
+  background:#1a1a1a;color:#fff;padding:10px 20px;
+  border-radius:2px;font-size:13px;font-weight:700;z-index:4000;
+  display:none;white-space:nowrap;pointer-events:none;
+  max-width:90vw;text-align:center;
+  border:3px solid var(--primary);
+  box-shadow:0 4px 20px rgba(0,0,0,.6);
+  text-shadow:1px 1px 0 #000;
+}
+.toast.show{display:block;animation:ta 2.8s ease forwards;}
+@keyframes ta{0%{opacity:0;transform:translateX(-50%) translateY(-8px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}75%{opacity:1}100%{opacity:0}}
 
-/* PRAYER */
-.pcard{background:linear-gradient(135deg,var(--primary),var(--primary2));border-radius:16px;padding:16px;margin-bottom:12px;color:#fff}
-.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.pit{background:rgba(255,255,255,.12);border-radius:10px;padding:10px 6px;text-align:center}
-.pit.nxt{background:var(--gold);color:#1a1a1a}
-.pnm{font-size:12px;font-weight:700}
-.ptm{font-size:14px;font-weight:900;font-family:'Amiri',serif}
+/* ══ COIN POP ══ */
+.coin-pop{position:fixed;pointer-events:none;font-size:15px;font-weight:900;color:var(--primary);z-index:5000;animation:coinfly 1.2s ease forwards;text-shadow:1px 1px 0 #000;}
+@keyframes coinfly{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(1.2)}}
 
-/* AZKAR */
-.zkcard{background:linear-gradient(135deg,#1a5c38,#2d8653);border-radius:14px;padding:18px;margin-bottom:10px;color:#fff;text-align:center}
-.zktxt{font-family:'Amiri',serif;font-size:18px;line-height:1.8;margin-bottom:8px}
-.zkcnt{font-size:12px;opacity:.8}
-.zkrow{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:10px}
-.zknum{font-size:28px;font-weight:900;color:var(--gold2);font-family:'Amiri',serif;min-width:50px;text-align:center}
-.zkbtn{background:var(--gold);color:#1a1a1a;border:none;border-radius:50%;width:44px;height:44px;font-size:22px;cursor:pointer;font-weight:900;flex-shrink:0}
+/* ══ SETUP SCREEN ══ */
+.setup-screen{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;overflow-y:auto;
+}
+.setup-bg{
+  position:absolute;inset:0;
+  background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10');
+  background-size:64px 64px;image-rendering:pixelated;image-rendering:crisp-edges;
+  filter:brightness(.4);
+}
+.setup-box{
+  background:#2a2a2a;border:3px solid var(--primary);
+  box-shadow:inset -4px -4px 0 #1a1a1a,inset 4px 4px 0 #3a3a3a,0 0 40px rgba(240,192,64,.3);
+  padding:28px 20px;width:100%;max-width:420px;text-align:center;
+  color:var(--text);position:relative;z-index:1;
+}
+.slogo{
+  font-family:'Cairo',sans-serif;font-size:24px;font-weight:900;
+  color:var(--primary);margin-bottom:4px;
+  text-shadow:2px 2px 0 #000,3px 3px 0 #7a5800;
+}
+.ssub{font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.6;}
+.savt-wrap{display:block;cursor:pointer;margin-bottom:14px;}
+.savt{
+  width:90px;height:90px;border-radius:4px;
+  border:3px solid var(--primary);object-fit:cover;
+  display:block;margin:0 auto 8px;background:#222;
+  image-rendering:auto!important;
+}
+.setup-steps{display:flex;justify-content:center;gap:8px;margin-bottom:20px;}
+.sstep{width:24px;height:8px;background:#333;border:2px solid #555;transition:all .3s;}
+.sstep.active{background:var(--primary);border-color:var(--primary2);}
+.code-display{
+  background:#000;border:3px solid var(--primary);padding:16px;
+  margin-bottom:12px;font-size:28px;font-weight:900;
+  color:var(--primary);letter-spacing:8px;font-family:monospace;
+}
 
-/* SHOP */
-.shop-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)}
-.shop-icon{font-size:26px;flex-shrink:0}
-.shop-info{flex:1}
-.shop-title{font-weight:700;font-size:14px;color:var(--primary)}
-.shop-price{font-size:12px;color:var(--text2);margin-top:2px}
-.shop-btn{background:var(--gold);color:#1a1a1a;border:none;padding:8px 14px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;transition:background .2s}
-.shop-btn:hover{background:var(--gold2)}
-.shop-btn:disabled{background:var(--border);color:var(--text2);cursor:not-allowed}
-.bag-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)}
-.bag-btn{background:var(--primary);color:#fff;border:none;padding:8px 14px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;transition:background .2s}
-.bag-btn.on{background:var(--gold);color:#1a1a1a}
+/* ══ TABS ══ */
+.tab-btns{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;}
+.tab-btn{
+  flex:1;padding:8px 4px;border:2px solid #444;background:#1a1a1a;
+  color:var(--text2);font-family:'Cairo',sans-serif;font-size:11px;
+  font-weight:700;cursor:pointer;transition:all .15s;min-width:50px;
+  border-radius:2px;
+}
+.tab-btn.active{border-color:var(--primary);background:#2a2000;color:var(--primary);}
 
-/* SETTINGS */
-.slbl{font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:700;letter-spacing:.5px}
-.togrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
-.tog{position:relative;display:inline-block;width:46px;height:26px}
-.tog input{opacity:0;width:0;height:0}
-.togs{position:absolute;inset:0;background:var(--border);border-radius:26px;cursor:pointer;transition:.3s}
-.togs:before{content:'';position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
-.tog input:checked+.togs{background:var(--primary)}
-.tog input:checked+.togs:before{transform:translateX(20px)}
+/* ══ TOGGLE ══ */
+.togrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:2px solid #333;}
+.tog{position:relative;display:inline-block;width:46px;height:26px;}
+.tog input{opacity:0;width:0;height:0;}
+.togs{position:absolute;inset:0;background:#333;border:2px solid #555;cursor:pointer;transition:.3s;}
+.togs:before{content:'';position:absolute;height:18px;width:18px;left:2px;bottom:2px;background:#777;transition:.3s;}
+.tog input:checked+.togs{background:#2d4a00;border-color:var(--primary);}
+.tog input:checked+.togs:before{transform:translateX(20px);background:var(--primary);}
 
-/* TOAST */
-.toast{position:fixed;top:66px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:700;z-index:3000;display:none;box-shadow:0 4px 16px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center}
-.toast.show{display:block;animation:ta 2.5s ease forwards}
-@keyframes ta{0%{opacity:0;transform:translateX(-50%) translateY(-10px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}75%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+/* ══ NOTIF DROPDOWN ══ */
+.notif-drop{
+  position:fixed;top:57px;left:10px;right:10px;z-index:2000;
+  background:#2a2a2a;border:3px solid var(--primary);
+  box-shadow:0 8px 30px rgba(0,0,0,.7);
+  max-height:70vh;overflow-y:auto;display:none;
+}
+.notif-drop.open{display:block;animation:fi .2s ease;}
+.notif-drop-hdr{padding:12px 14px;border-bottom:2px solid #333;display:flex;align-items:center;justify-content:space-between;}
+.notif-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:2px solid #333;cursor:pointer;transition:background .15s;}
+.notif-item:hover{background:rgba(240,192,64,.08);}
+.notif-item.unread{background:rgba(240,192,64,.06);}
 
-/* SETUP SCREEN */
-.setup-screen{position:fixed;inset:0;background:linear-gradient(160deg,#1a5c38,#2d8653 60%,#c9a84c);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
-.setup-box{background:#fff;border-radius:24px;padding:28px 20px;width:100%;max-width:380px;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.35)}
-body.dark .setup-box{background:#1e2e22;color:var(--text)}
-.slogo{font-family:'Amiri',serif;font-size:26px;color:var(--primary);font-weight:700;margin-bottom:4px}
-.ssub{font-size:13px;color:#777;margin-bottom:20px;line-height:1.6}
-.savt{width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);object-fit:cover;margin:0 auto 8px;display:block;background:#ddd;cursor:pointer}
-.savt-lbl{font-size:13px;color:var(--primary);cursor:pointer;margin-bottom:16px;display:block;font-weight:700}
+/* ══ EMPTY STATE ══ */
+.empty-state{text-align:center;padding:40px 20px;color:var(--text2);}
+.empty-state .ei{font-size:40px;margin-bottom:10px;}
+
+/* ══ LEADERBOARD ══ */
+.lb-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:2px;margin-bottom:6px;background:#222;border:2px solid #333;}
+
+/* ══ SHOP ITEMS (CHEST STYLE) ══ */
+.chest-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.chest-item{
+  background:#1a1a1a;border:3px solid;border-radius:2px;
+  padding:12px 10px;text-align:center;cursor:pointer;
+  transition:all .15s;position:relative;overflow:hidden;
+}
+.chest-item:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4);}
+.chest-item .chest-icon{font-size:36px;margin-bottom:6px;display:block;}
+.chest-item .chest-name{font-size:11px;font-weight:700;margin-bottom:4px;}
+.chest-item .chest-price{font-size:12px;font-weight:900;}
+.chest-item.owned-chest{opacity:.7;cursor:default;}
+.chest-item.owned-chest::after{
+  content:'✅';position:absolute;top:4px;left:4px;font-size:16px;
+}
+
+/* ══ TASKS ══ */
+.task-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:2px;margin-bottom:6px;background:#1a1a1a;border:2px solid #333;}
+.task-done{opacity:.5;}
+.task-prog{flex:1;}
+.task-nm{font-size:13px;font-weight:600;}
+.task-bar{background:#333;border-radius:2px;height:6px;margin-top:4px;overflow:hidden;}
+.task-fill{height:100%;background:var(--primary);border-radius:2px;transition:width .3s;}
+
+/* ══ LAWS PAGE (MINECRAFT STYLE) ══ */
+.law-screen{
+  background:#1a1200;border:4px solid var(--primary);
+  box-shadow:inset -4px -4px 0 #0a0800,inset 4px 4px 0 #2a2000;
+  min-height:calc(100vh - 108px);
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start;padding:20px 16px;
+  background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10');
+  background-size:64px;image-rendering:pixelated;
+}
+.law-box{
+  background:rgba(20,15,0,.92);border:3px solid var(--primary);
+  box-shadow:inset -3px -3px 0 rgba(0,0,0,.5),inset 3px 3px 0 rgba(255,255,255,.05);
+  padding:24px 20px;width:100%;max-width:500px;text-align:center;
+}
+.law-title-header{
+  font-family:'Cairo',sans-serif;font-size:20px;font-weight:900;
+  color:var(--primary);margin-bottom:4px;
+  text-shadow:2px 2px 0 #000,3px 3px 0 #7a5800;
+}
+.law-number{
+  font-size:48px;font-weight:900;color:var(--primary);
+  text-shadow:3px 3px 0 #000,4px 4px 0 #7a5800;
+  line-height:1;margin-bottom:8px;
+}
+.law-separator{
+  font-family:monospace;color:#555;font-size:11px;
+  margin:10px 0;word-break:break-all;letter-spacing:2px;
+}
+.law-body{
+  font-size:14px;line-height:1.9;color:var(--text);
+  background:rgba(0,0,0,.3);border:2px solid #333;
+  padding:14px;border-radius:2px;text-align:right;
+  margin-bottom:16px;
+}
+.law-body b{color:var(--primary);}
+.law-body .red-text{color:#ff5555;}
+.law-nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.law-progress{
+  font-size:12px;color:var(--text2);margin-bottom:12px;
+}
+
+/* ══ TEAMS ══ */
+.team-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 8px;border-radius:2px;font-size:11px;font-weight:700;
+  border:2px solid;margin:2px;
+}
+.team-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#1a1a1a;border:2px solid #333;margin-bottom:6px;border-radius:2px;}
+.color-picker-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0;}
+.color-dot{
+  width:36px;height:36px;border-radius:2px;cursor:pointer;
+  border:3px solid transparent;transition:all .15s;
+}
+.color-dot.selected{border-color:#fff;transform:scale(1.15);}
+
+/* ══ EXPLORER/INFO PANELS ══ */
+.explore-combined{padding:10px;}
+.exp-tab-row{display:flex;gap:4px;margin-bottom:12px;border-bottom:3px solid var(--primary);padding-bottom:8px;}
+.exp-tab{
+  padding:8px 14px;background:#1a1a1a;border:2px solid #333;
+  color:var(--text2);font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;
+  cursor:pointer;border-radius:2px;transition:all .15s;
+}
+.exp-tab.active{background:#2a2000;border-color:var(--primary);color:var(--primary);}
+
+/* ══ USER PROFILE ══ */
+.up-cover{
+  position:relative;height:120px;overflow:hidden;
+  background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10');
+  background-size:64px;image-rendering:pixelated;
+  filter:brightness(.5);
+}
+.up-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.7));}
+
+/* ══ ONLINE DOT ══ */
+.avt-wrap{position:relative;display:inline-block;flex-shrink:0;}
+.online-indicator{position:absolute;bottom:0;right:0;width:10px;height:10px;border:2px solid var(--bg);z-index:2;}
+.online-indicator.on{background:#55aa33;}
+.online-indicator.off{background:#cc3333;}
+
+/* ══ SCROLLBAR ══ */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:#111;}
+::-webkit-scrollbar-thumb{background:#444;border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:var(--primary);}
+
+/* ══ SELECT ══ */
+select{
+  width:100%;padding:10px 12px;background:#000;border:3px solid #555;
+  color:#fff;font-family:'Cairo',sans-serif;font-size:14px;outline:none;
+  margin-bottom:8px;border-radius:2px;
+}
+select:focus{border-color:var(--primary);}
+textarea.mc-input{resize:none;min-height:80px;}
 </style>
 </head>
 <body>
 
 <!-- SETUP SCREEN -->
 <div class="setup-screen" id="setupScreen">
+  <div class="setup-bg"></div>
   <div class="setup-box">
-    <div class="slogo">🕌 اعرف عن دينك</div>
-    <div class="ssub">أهلاً بك! 👋<br>عشان تنشر وتشارك مع الناس،<br>لازم تعمل حسابك الأول</div>
-    <img class="savt" id="sAvtPreview" src="https://ui-avatars.com/api/?name=أنت&background=1a5c38&color=fff&size=120" alt="">
-    <label class="savt-lbl">📷 اضغط هنا تغير صورتك
-      <input type="file" accept="image/*" id="sAvtFile" style="display:none">
-    </label>
-    <input id="sName" placeholder="اكتب اسمك هنا..." style="text-align:center;font-size:16px;font-weight:700;margin-bottom:6px">
-    <div style="font-size:12px;color:#999;margin-bottom:18px">⚠️ لازم تكتب اسمك عشان تكمل</div>
-    <button class="btn" style="width:100%;font-size:16px;padding:14px;border-radius:14px" id="sDone">
-      ابدأ رحلتك 🌟
-    </button>
+    <div class="slogo">⚔️ Golden Server ⚔️</div>
+    <div class="ssub">🌿 سيرفر ماين كرافت الأول</div>
+    <div class="setup-steps">
+      <div class="sstep active" id="st1"></div>
+      <div class="sstep" id="st2"></div>
+    </div>
+
+    <!-- STEP 1: Info -->
+    <div id="setupStep1">
+      <div style="cursor:pointer;margin-bottom:14px;" onclick="document.getElementById('sAvtFile').click()">
+        <img id="sAvtPreview" src="https://ui-avatars.com/api/?name=Steve&background=5d3a1a&color=f0c040&size=90" alt=""
+          style="width:90px;height:90px;border-radius:4px;border:3px solid var(--primary);object-fit:cover;display:block;margin:0 auto 6px;background:#222;">
+        <span style="font-size:12px;color:var(--primary);font-weight:700;display:block;text-align:center;">🖼️ اضغط هنا لاختيار صورتك</span>
+      </div>
+      <input type="file" accept="image/*" id="sAvtFile" style="position:absolute;opacity:0;width:0;height:0;" onchange="handleSetupAvatar(this)">
+      <div style="font-size:12px;color:var(--text2);text-align:right;margin-bottom:4px">اسمك الحقيقي:</div>
+      <input class="mc-input" id="sName" placeholder="اسمك الحقيقي...">
+      <div style="font-size:12px;color:var(--text2);text-align:right;margin-bottom:4px">اسمك في اللعبة:</div>
+      <input class="mc-input" id="sMCName" placeholder="اسمك في ماين كرافت...">
+      <div style="font-size:12px;color:var(--text2);text-align:right;margin-bottom:4px">كلمة مرور السيرفر:</div>
+      <input class="mc-input" id="sServerPass" type="password" placeholder="كلمة مرور السيرفر...">
+      <button class="mc-btn" style="width:100%;margin-top:6px;justify-content:center;" id="sNext1">التالي ←</button>
+    </div>
+
+    <!-- STEP 2: Done -->
+    <div id="setupStep2" style="display:none">
+      <div style="font-size:50px;margin-bottom:12px">🎉</div>
+      <div style="font-size:18px;font-weight:900;color:var(--primary);margin-bottom:8px">مبروك! دخلت السيرفر</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:16px">هديتك الأولى:<br><span style="color:var(--primary);font-size:22px;font-weight:900">+50 🪙 ذهب</span></div>
+      <button class="mc-btn" style="width:100%;font-size:15px;justify-content:center;" id="sDone">ادخل السيرفر ⚔️</button>
+    </div>
   </div>
 </div>
 
+<!-- HEADER -->
 <header>
-  <div class="hlogo">🕌 اعرف عن دينك
-    <small>أحد تلاميذ مدرسة الجزيرة بنين — يوسف محمد</small>
+  <div class="hlogo">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10" style="width:28px;height:28px;image-rendering:pixelated;border-radius:2px;border:2px solid var(--primary);" alt="">
+    ⚔️ Golden Server
   </div>
   <div class="hright">
-    <span class="coins-badge" id="coinsBadge">🪙 0</span>
+    <span class="coins-hdr" id="coinsBadge">🪙 0</span>
     <button class="icbtn" id="notifBtn">🔔<span class="ndot" id="ndot"></span></button>
-    <button class="icbtn" id="darkBtn">🌙</button>
   </div>
 </header>
 
-<div class="wrap">
-
-  <!-- HOME -->
-  <div id="pg_home" class="page active">
-    <!-- GUIDE -->
-    <div class="guide">
-      <div class="guide-title">👋 مرحباً! إزاي تستخدم الصفحة الرئيسية؟</div>
-      <div class="guide-steps">
-        <div class="guide-step"><div class="guide-num">1</div><div>اضغط <b>أضف منشور</b> عشان تشارك حاجة دينية مع الناس</div></div>
-        <div class="guide-step"><div class="guide-num">2</div><div>اضغط <b>أضف تصويت</b> عشان تعمل استفتاء للناس يختاروا فيه</div></div>
-        <div class="guide-step"><div class="guide-num">3</div><div>اضغط ❤️ على أي منشور عشان تعجب بيه وتكسب عملة 🪙</div></div>
-        <div class="guide-step"><div class="guide-num">4</div><div>اضغط 💬 عشان تكتب تعليق على أي منشور</div></div>
-      </div>
-    </div>
-    <div class="phero">
-      <img class="pavt" id="heroAvt" src="" alt="">
-      <div class="pname" id="heroNm">—</div>
-      <div class="pdiv">✦ ✦ ✦</div>
-      <div class="pstats">
-        <div><div class="psnum" id="stP">0</div><div class="pslbl">منشور</div></div>
-        <div><div class="psnum" id="stL">0</div><div class="pslbl">إعجاب</div></div>
-        <div><div class="psnum" id="stC">0</div><div class="pslbl">تعليق</div></div>
-        <div><div class="psnum" id="stCoins">0</div><div class="pslbl">🪙 عملة</div></div>
-      </div>
-    </div>
-    <div class="abtns">
-      <button class="abtn abtnp" id="btnPost">✏️ أضف منشور</button>
-      <button class="abtn abtng" id="btnPoll">📊 أضف تصويت</button>
-    </div>
-    <div class="stitle">📰 المنشورات</div>
-    <input id="srch" placeholder="🔍 ابحث في المنشورات...">
-    <div id="postsBox"></div>
-  </div>
-
-  <!-- GROUP CHAT -->
-  <div id="pg_chat" class="page">
-    <div class="guide">
-      <div class="guide-title">💬 المحادثة الجماعية — إزاي تستخدمها؟</div>
-      <div class="guide-steps">
-        <div class="guide-step"><div class="guide-num">1</div><div>اكتب رسالتك في الخانة في الأسفل</div></div>
-        <div class="guide-step"><div class="guide-num">2</div><div>اضغط <b>إرسال</b> أو اضغط Enter وهتظهر للكل</div></div>
-        <div class="guide-step"><div class="guide-num">3</div><div>لو عايز تكلم حد خاص، اضغط على <b>صورته</b></div></div>
-      </div>
-    </div>
-    <div class="stitle">💬 المحادثة الجماعية</div>
-    <div id="gcBox" style="padding-bottom:72px"></div>
-    <div class="gcbar">
-      <img id="gcAvt" src="" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#aaa" alt="">
-      <input id="gcIn" placeholder="اكتب رسالتك هنا...">
-      <button class="btn" id="gcSend">إرسال</button>
-    </div>
-  </div>
-
-  <!-- MESSAGES -->
-  <div id="pg_msgs" class="page">
-    <div class="guide">
-      <div class="guide-title">✉️ الرسائل الخاصة — إزاي تشتغل؟</div>
-      <div class="guide-steps">
-        <div class="guide-step"><div class="guide-num">1</div><div>لو حد بعتلك رسالة هتلاقيها هنا</div></div>
-        <div class="guide-step"><div class="guide-num">2</div><div>عشان ترسل لحد، روح المنشورات أو المحادثة واضغط على <b>صورته</b></div></div>
-        <div class="guide-step"><div class="guide-num">3</div><div>الجرس 🔔 في فوق بيبقى فيه نقطة حمرا لما يجيلك رسالة جديدة</div></div>
-      </div>
-    </div>
-    <div class="stitle">✉️ الرسائل الخاصة</div>
-    <div id="msgsList"></div>
-    <p style="text-align:center;color:var(--text2);font-size:13px;margin-top:12px">اضغط على صورة أي شخص في المنشورات أو المحادثة لمراسلته 👆</p>
-  </div>
-
-  <!-- AZKAR -->
-  <div id="pg_azkar" class="page">
-    <div class="guide">
-      <div class="guide-title">📿 الأذكار — إزاي تستخدمها؟</div>
-      <div class="guide-steps">
-        <div class="guide-step"><div class="guide-num">1</div><div>شوف مواقيت الصلاة لمدينة أسوان في الكارت الأخضر فوق</div></div>
-        <div class="guide-step"><div class="guide-num">2</div><div>اضغط + في أي ذكر عشان تعد تسبيحاتك</div></div>
-        <div class="guide-step"><div class="guide-num">3</div><div>اضغط ↺ عشان ترجع العداد لـ صفر من أول</div></div>
-      </div>
-    </div>
-    <div class="stitle">📿 الأذكار ومواقيت الصلاة</div>
-    <div class="pcard">
-      <div style="font-size:13px;opacity:.8;margin-bottom:6px">مواقيت الصلاة — أسوان 🕌</div>
-      <div id="nxtP" style="font-size:15px;font-weight:700;color:var(--gold2)">جاري التحميل...</div>
-      <div class="pgrid" id="pGrid"></div>
-    </div>
-    <div class="stitle">🌅 أذكار الصباح</div><div id="azS"></div>
-    <div class="stitle">🌆 أذكار المساء</div><div id="azM"></div>
-    <div class="stitle">📿 أذكار متنوعة</div><div id="azX"></div>
-  </div>
-
-  <!-- SHOP -->
-  <div id="pg_shop" class="page">
-    <div class="guide">
-      <div class="guide-title">🛒 المتجر — إزاي تشتري لقب؟</div>
-      <div class="guide-steps">
-        <div class="guide-step"><div class="guide-num">1</div><div>كل ما تعمل لايك أو تعليق أو منشور بتاخد عملة 🪙</div></div>
-        <div class="guide-step"><div class="guide-num">2</div><div>اجمع 10 عملات وابدأ تشتري أي لقب من القايمة دي</div></div>
-        <div class="guide-step"><div class="guide-num">3</div><div>بعد الشراء روح <b>شنطتي</b> واضغط <b>استخدم</b> عشان اللقب يظهر جمب اسمك للكل</div></div>
-      </div>
-    </div>
-    <div class="stitle">🛒 متجر الألقاب</div>
-    <div class="card" style="background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border:none;margin-bottom:14px">
-      <div style="font-size:13px;opacity:.8">رصيدك الحالي من العملات</div>
-      <div style="font-size:36px;font-weight:900;color:var(--gold2)" id="shopCoins">0 🪙</div>
-      <div style="font-size:11px;opacity:.7;margin-top:4px">كل تفاعل = 🪙1 • كل لقب = 🪙10</div>
-    </div>
-    <button class="btn" id="bagBtn" style="background:var(--gold);color:#1a1a1a;width:100%;margin-bottom:14px;font-size:15px">
-      🎒 شنطتي — شوف ألقابك المشتراة
-    </button>
-    <div id="shopList"></div>
-  </div>
-
-  <!-- SETTINGS -->
-  <div id="pg_stgs" class="page">
-    <div class="guide">
-      <div class="guide-title">⚙️ الإعدادات — إزاي تغير بياناتك؟</div>
-      <div class="guide-steps">
-        <div class="guide-step"><div class="guide-num">1</div><div>اضغط على الصورة أو "تغيير الصورة" عشان تحط صورتك</div></div>
-        <div class="guide-step"><div class="guide-num">2</div><div>غير اسمك في خانة "تغيير الاسم"</div></div>
-        <div class="guide-step"><div class="guide-num">3</div><div>فعّل الوضع الليلي لو الشاشة بتأذي عينيك في الظلام</div></div>
-      </div>
-    </div>
-    <div class="stitle">⚙️ إعداداتي</div>
-    <div class="card">
-      <div class="slbl">الملف الشخصي</div>
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
-        <img id="stgsAvt" src="" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);background:#aaa;cursor:pointer" alt="" onclick="document.getElementById('avtFile').click()">
-        <div>
-          <div id="stgsNm" style="font-weight:700;font-size:15px;margin-bottom:6px"></div>
-          <label style="font-size:13px;color:var(--primary);cursor:pointer;font-weight:600;display:block;margin-bottom:4px">
-            📷 تغيير الصورة
-            <input type="file" accept="image/*" id="avtFile" style="display:none">
-          </label>
-        </div>
-      </div>
-      <div class="slbl">تغيير الاسم</div>
-      <input id="nmIn" placeholder="اكتب اسمك الجديد هنا">
-      <!-- HIDDEN JOO FIELD — triggered by secret tap -->
-      <div id="jooZone" style="display:none;margin-top:8px">
-        <div class="slbl">🏷️ لقب خاص (سري)</div>
-        <input id="jooIn" placeholder="اكتب لقبك المخصص هنا...">
-        <div id="jooMsg" style="font-size:12px;margin-top:-4px;margin-bottom:8px"></div>
-      </div>
-      <!-- SECRET TRIGGER: tap logo 5 times -->
-      <div id="secretTap" style="height:6px;cursor:default"></div>
-    </div>
-    <div class="card">
-      <div class="slbl">البريموكود 🌟</div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">لو عندك كود خاص، اكتبه هنا</div>
-      <input type="password" id="promoIn" placeholder="الكود الخاص...">
-      <div id="promoMsg" style="font-size:12px;margin-top:-4px;margin-bottom:8px"></div>
-    </div>
-    <div class="card">
-      <div class="slbl">المظهر</div>
-      <div class="togrow">
-        <span>الوضع الليلي 🌙 <small style="color:var(--text2);font-size:11px">(للاستخدام في الظلام)</small></span>
-        <label class="tog"><input type="checkbox" id="darkTog"><span class="togs"></span></label>
-      </div>
-    </div>
-    <div class="card">
-      <div class="slbl">معرّف جهازك (للدعم الفني)</div>
-      <input id="uidD" disabled style="font-size:11px">
-    </div>
-  </div>
-
-  <!-- PRIVATE CHAT -->
-  <div id="pg_pvt" class="page">
-    <div class="chbar">
-      <button class="backbtn" id="pvtBack">→</button>
-      <img id="pvtAvt" src="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;background:#aaa" alt="">
-      <span id="pvtNm" class="chbarnm"></span>
-    </div>
-    <div class="mwrap" id="pvtMsgs"></div>
-    <div class="minbar">
-      <input id="pvtIn" placeholder="اكتب رسالتك...">
-      <button class="btn" id="pvtSend">إرسال</button>
-    </div>
-  </div>
-
-</div>
-
-<!-- BOTTOM NAV -->
-<nav class="bnav">
-  <button class="nitem active" data-pg="home"><span class="ni">🏠</span>الرئيسية</button>
-  <button class="nitem" data-pg="chat"><span class="ni">💬</span>المحادثة</button>
-  <button class="nitem" data-pg="msgs"><span class="ni">✉️</span>الرسائل</button>
-  <button class="nitem" data-pg="azkar"><span class="ni">📿</span>الأذكار</button>
-  <button class="nitem" data-pg="shop"><span class="ni">🛒</span>المتجر</button>
-  <button class="nitem" data-pg="stgs"><span class="ni">⚙️</span>إعداداتي</button>
+<!-- TOP NAV -->
+<nav class="tnav">
+  <button class="tni active" data-pg="home"><span class="icon">🏠</span><span>المنشورات</span></button>
+  <button class="tni" data-pg="polls"><span class="icon">📊</span><span>تصويتات</span></button>
+  <button class="tni" data-pg="laws"><span class="icon">📜</span><span>القوانين</span></button>
+  <button class="tni" data-pg="explore"><span class="icon">🛒</span><span>استكشاف</span></button>
+  <button class="tni" data-pg="chat"><span class="icon">💬</span><span>شات</span></button>
+  <button class="tni" data-pg="msgs"><span class="icon">✉️</span><span>رسايل</span><span class="nbadge" id="msgBadge">0</span></button>
+  <button class="tni" data-pg="profile"><span class="icon">👤</span><span>بروفايل</span></button>
 </nav>
 
-<div class="toast" id="toast"></div>
+<!-- NOTIF DROPDOWN -->
+<div class="notif-drop" id="notifDrop">
+  <div class="notif-drop-hdr">
+    <span style="font-weight:900;font-size:14px;color:var(--primary)">🔔 الإشعارات</span>
+    <button onclick="clearAllNotifs()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:12px;font-weight:700">مسح الكل</button>
+  </div>
+  <div id="notifDropList"><div style="text-align:center;padding:20px;color:var(--text2);font-size:13px">لا توجد إشعارات</div></div>
+</div>
 
-<!-- POST MODAL -->
+<div class="wrap">
+
+<!-- ══════ HOME PAGE ══════ -->
+<div id="pg_home" class="page active">
+  <div class="add-btns">
+    <button class="add-btn" id="btnPost">📝 منشور</button>
+    <button class="add-btn" id="btnMedia">📸 صورة/فيديو</button>
+    <button class="add-btn" id="btnPollHome">📊 تصويت</button>
+  </div>
+  <div class="searchbar">
+    <input class="mc-input" id="srch" placeholder="ابحث في المنشورات..." style="margin-bottom:0">
+    <span class="si">🔍</span>
+  </div>
+  <div id="postsBox"></div>
+</div>
+
+<!-- ══════ POLLS PAGE (ADMIN ONLY) ══════ -->
+<div id="pg_polls" class="page">
+  <div id="adminPollCreate" style="display:none">
+    <div class="card" style="border-color:var(--primary);">
+      <div class="stitle">📊 نشر تصويت جديد (الإدارة)</div>
+      <input class="mc-input" id="apQ" placeholder="السؤال...">
+      <input class="mc-input" id="apO1" placeholder="الخيار الأول (مطلوب)">
+      <input class="mc-input" id="apO2" placeholder="الخيار الثاني (مطلوب)">
+      <input class="mc-input" id="apO3" placeholder="الخيار الثالث (اختياري)">
+      <input class="mc-input" id="apO4" placeholder="الخيار الرابع (اختياري)">
+      <input class="mc-input" id="apO5" placeholder="الخيار الخامس (اختياري)">
+      <input class="mc-input" id="apO6" placeholder="الخيار السادس (اختياري)">
+      <input class="mc-input" id="apO7" placeholder="الخيار السابع (اختياري)">
+      <input class="mc-input" id="apO8" placeholder="الخيار الثامن (اختياري)">
+      <input class="mc-input" id="apO9" placeholder="الخيار التاسع (اختياري)">
+      <input class="mc-input" id="apO10" placeholder="الخيار العاشر (اختياري)">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:700">الإجابة الصح (اختياري):</div>
+      <select id="apCorrect" style="margin-bottom:12px">
+        <option value="-1">بدون إجابة صح</option>
+        <option value="0">الخيار الأول</option>
+        <option value="1">الخيار الثاني</option>
+        <option value="2">الخيار الثالث</option>
+        <option value="3">الرابع</option><option value="4">الخامس</option>
+        <option value="5">السادس</option><option value="6">السابع</option>
+        <option value="7">الثامن</option><option value="8">التاسع</option>
+        <option value="9">العاشر</option>
+      </select>
+      <button class="mc-btn" style="width:100%;justify-content:center;" id="doAdminPoll">نشر التصويت 📊</button>
+    </div>
+  </div>
+  <div class="stitle">📊 التصويتات</div>
+  <div id="pollsBox"></div>
+</div>
+
+<!-- ══════ LAWS PAGE ══════ -->
+<div id="pg_laws" class="page" style="padding:0;">
+  <div class="law-screen" id="lawScreen">
+    <div class="law-box">
+      <div class="law-title-header">📜 قوانين السيرفر</div>
+      <div class="law-separator">━━━━━━━━━━━━━━━━</div>
+      <div class="law-number" id="lawNum">1</div>
+      <div class="law-progress" id="lawProgress">قانون 1 من 18</div>
+      <div class="law-body" id="lawBody">جاري التحميل...</div>
+      <div class="law-nav">
+        <button class="mc-btn" id="lawPrev" onclick="prevLaw()" style="display:none;">← السابق</button>
+        <button class="mc-btn gold" id="lawNext" onclick="nextLaw()">التالي →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ EXPLORE PAGE (Shop + Teams + Info tabs) ══════ -->
+<div id="pg_explore" class="page" style="padding:0;">
+  <div class="explore-combined">
+    <div class="exp-tab-row">
+      <button class="exp-tab active" onclick="switchExpTab('shop')">🛒 المتجر</button>
+      <button class="exp-tab" onclick="switchExpTab('teams')">⚔️ التيمات</button>
+      <button class="exp-tab" onclick="switchExpTab('lb')">🏆 المتصدرين</button>
+    </div>
+    <!-- SHOP -->
+    <div id="expTab_shop">
+      <div class="card" style="background:linear-gradient(135deg,#1a1200,#2a2000);border-color:var(--primary);text-align:center;">
+        <div style="color:var(--text2);font-size:13px;">رصيدك</div>
+        <div style="font-size:28px;font-weight:900;color:var(--primary);text-shadow:2px 2px 0 #000;" id="shopCoins">0 🪙</div>
+      </div>
+      <div class="stitle">🎁 صناديق الغنيمة</div>
+      <div class="chest-grid" id="shopList"></div>
+    </div>
+    <!-- TEAMS -->
+    <div id="expTab_teams" style="display:none;">
+      <div id="adminTeamCreate" style="display:none;">
+        <div class="card" style="border-color:var(--primary);">
+          <div class="stitle">➕ إنشاء تيم جديد</div>
+          <input class="mc-input" id="teamNameIn" placeholder="اسم التيم...">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:700">اختار لون التيم:</div>
+          <div class="color-picker-grid" id="colorPickerGrid"></div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:6px;" id="selectedColorLabel">لم يتم اختيار لون</div>
+          <button class="mc-btn" style="width:100%;justify-content:center;" id="doCreateTeam">إنشاء التيم ⚔️</button>
+        </div>
+      </div>
+      <div class="stitle">⚔️ التيمات</div>
+      <div id="teamsList"></div>
+    </div>
+    <!-- LEADERBOARD -->
+    <div id="expTab_lb" style="display:none;">
+      <div class="stitle">🏆 أعلى 10 لاعبين</div>
+      <div id="lbList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ GROUP CHAT ══════ -->
+<div id="pg_chat" class="page chat-page">
+  <div class="gchat-scroll" id="gcBox"></div>
+  <div class="gcbar">
+    <div class="replying-to" id="replyingTo">
+      <span id="replyingToText" style="font-size:12px;flex:1;"></span>
+      <button onclick="cancelReply()" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--text2);">✕</button>
+    </div>
+    <div class="gcbar-row">
+      <img id="gcAvt" src="" style="width:32px;height:32px;border-radius:3px;object-fit:cover;flex-shrink:0;border:2px solid var(--primary);" alt="">
+      <input class="mc-input" id="gcIn" placeholder="اكتب رسالتك..." style="margin-bottom:0;">
+      <button class="send-icon-btn" id="gcSend">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" alt="إرسال">
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MESSAGES ══════ -->
+<div id="pg_msgs" class="page">
+  <div class="stitle">✉️ الرسائل</div>
+  <div class="tab-btns">
+    <button class="tab-btn active" onclick="switchMsgTab('chats')">💬 المحادثات</button>
+    <button class="tab-btn" onclick="switchMsgTab('groups')">👥 المجموعات</button>
+    <button class="tab-btn" onclick="switchMsgTab('search')">🔍 بحث</button>
+  </div>
+  <div id="msgsChats"></div>
+  <div id="msgsGroups" style="display:none;">
+    <button class="mc-btn" id="btnNewGroup" style="width:100%;margin-bottom:12px;justify-content:center;">➕ مجموعة جديدة</button>
+    <div id="groupsList"></div>
+  </div>
+  <div id="msgsSearch" style="display:none;">
+    <input class="mc-input" id="userSearch" placeholder="ابحث عن لاعب...">
+    <div id="userSearchResults"></div>
+  </div>
+</div>
+
+<!-- ══════ PROFILE ══════ -->
+<div id="pg_profile" class="page">
+  <div class="phero">
+    <img class="pavt" id="heroAvt" src="" alt="" onclick="document.getElementById('avtFile').click()" style="cursor:pointer;border-radius:4px;">
+    <div class="pname" id="heroNm">—</div>
+    <div id="heroMCName" style="font-size:12px;color:var(--text2);margin-bottom:4px;position:relative;z-index:1;"></div>
+    <div id="heroRankBadge" style="margin-bottom:6px;position:relative;z-index:1;"></div>
+    <div id="heroTeamBadge" style="margin-bottom:6px;position:relative;z-index:1;"></div>
+    <div id="heroTitleDisp" style="margin-bottom:6px;position:relative;z-index:1;"></div>
+    <div class="pstats">
+      <div class="psitem"><div class="psnum" id="stP">0</div><div class="pslbl">منشور</div></div>
+      <div class="psitem"><div class="psnum" id="stL">0</div><div class="pslbl">لايك</div></div>
+      <div class="psitem"><div class="psnum" id="stF">0</div><div class="pslbl">متابع</div></div>
+      <div class="psitem"><div class="psnum" id="stCoins">0</div><div class="pslbl">🪙</div></div>
+    </div>
+  </div>
+
+  <div class="tab-btns">
+    <button class="tab-btn active" onclick="switchPTab('settings')">⚙️ إعدادات</button>
+    <button class="tab-btn" onclick="switchPTab('tasks')">🎯 مهام</button>
+    <button class="tab-btn" onclick="switchPTab('shop')">🛒 شنطة</button>
+  </div>
+
+  <div id="pTab_settings">
+    <div class="card">
+      <div style="font-size:12px;color:var(--text2);font-weight:700;margin-bottom:8px;">تغيير الاسم الحقيقي</div>
+      <input class="mc-input" id="nmIn" placeholder="اسمك الجديد...">
+      <div style="font-size:12px;color:var(--text2);font-weight:700;margin-bottom:6px;">اسمك في اللعبة</div>
+      <input class="mc-input" id="mcnmIn" placeholder="اسمك في ماين كرافت...">
+      <button class="mc-btn" style="width:100%;justify-content:center;" id="saveNm">حفظ ✅</button>
+    </div>
+    <div class="card">
+      <label style="font-size:13px;color:var(--primary);cursor:pointer;font-weight:700;display:block;">
+        🖼️ تغيير الصورة
+        <input type="file" accept="image/*" id="avtFile" style="display:none">
+      </label>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;color:var(--text2);font-weight:700;margin-bottom:8px;">🔑 البريموكود (رتبة خاصة)</div>
+      <input type="password" class="mc-input" id="promoIn" placeholder="الكود الخاص...">
+      <div id="promoMsg" style="font-size:12px;margin-top:-4px;margin-bottom:8px;"></div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;color:var(--text2);font-weight:700;margin-bottom:8px;">🎒 ألقابي المفعّلة</div>
+      <div id="bagList"></div>
+    </div>
+  </div>
+
+  <div id="pTab_tasks" style="display:none;">
+    <div class="card" style="border-color:var(--primary);">
+      <div style="color:var(--primary);font-size:14px;font-weight:900;margin-bottom:4px;">🎯 المهام اليومية</div>
+      <div style="color:var(--text2);font-size:12px;">أتمّ المهام واكسب ذهب! 🔄</div>
+    </div>
+    <div id="tasksList"></div>
+  </div>
+
+  <div id="pTab_shop" style="display:none;">
+    <div class="stitle">🎒 شنطتك</div>
+    <div id="profileBagList"></div>
+  </div>
+</div>
+
+<!-- ══════ PRIVATE CHAT ══════ -->
+<div id="pg_pvt" class="page chat-page">
+  <div class="pvt-bar">
+    <button onclick="WW.backFromPvt()" style="background:#5a0000;border:2px solid #000;color:#fff;font-size:18px;cursor:pointer;padding:4px 10px;border-radius:2px;">←</button>
+    <img id="pvtAvt" src="" alt="" style="border-radius:3px;">
+    <div>
+      <div id="pvtNm" style="font-weight:700;font-size:14px;"></div>
+      <div style="font-size:11px;color:var(--primary);">محادثة خاصة</div>
+    </div>
+  </div>
+  <div class="pvtmsgs" id="pvtMsgs"></div>
+  <div class="pvt-input-bar">
+    <input class="mc-input" id="pvtIn" placeholder="اكتب رسالتك...">
+    <button class="send-icon-btn" id="pvtSend">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" alt="إرسال">
+    </button>
+  </div>
+</div>
+
+<!-- ══════ GROUP CHAT VIEW ══════ -->
+<div id="pg_grp" class="page chat-page">
+  <div class="pvt-bar">
+    <button onclick="WW.backFromGrp()" style="background:#5a0000;border:2px solid #000;color:#fff;font-size:18px;cursor:pointer;padding:4px 10px;border-radius:2px;">←</button>
+    <div style="width:36px;height:36px;border-radius:3px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">👥</div>
+    <div style="flex:1;"><div id="grpNm" style="font-weight:700;font-size:14px;"></div><div id="grpCount" style="font-size:11px;color:var(--text2);"></div></div>
+  </div>
+  <div class="pvtmsgs" id="grpMsgs"></div>
+  <div class="pvt-input-bar">
+    <input class="mc-input" id="grpIn" placeholder="اكتب رسالتك...">
+    <button class="send-icon-btn" id="grpSend">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" alt="إرسال">
+    </button>
+  </div>
+</div>
+
+<!-- ══════ USER PROFILE VIEW ══════ -->
+<div id="pg_userprofile" class="page" style="padding:0;overflow-y:auto;max-height:calc(100vh - 108px);">
+  <div class="up-cover">
+    <div class="up-overlay"></div>
+    <button onclick="WW.backFromUserProfile()" style="position:absolute;top:12px;right:12px;z-index:10;background:rgba(0,0,0,.6);border:2px solid #555;color:#fff;font-size:18px;cursor:pointer;width:34px;height:34px;display:flex;align-items:center;justify-content:center;">←</button>
+    <div style="position:absolute;bottom:10px;left:12px;font-size:24px;opacity:.4;">⚔️ 🌿 ⛏️ 🗡️</div>
+  </div>
+  <div style="padding:0 14px 20px;position:relative;">
+    <div style="position:relative;margin-top:-44px;margin-bottom:10px;display:flex;align-items:flex-end;justify-content:space-between;">
+      <img id="upAvt" src="" alt="" style="width:80px;height:80px;border-radius:4px;object-fit:cover;border:3px solid var(--primary);background:#222;display:block;flex-shrink:0;">
+      <div style="display:flex;gap:8px;padding-bottom:6px;">
+        <button id="upFollow" class="mc-btn small" style="border-radius:2px;">+ متابعة</button>
+        <button id="upMsg" class="mc-btn small" style="background:#1a1a2a;box-shadow:inset -2px -2px 0 #0a0a1a,inset 2px 2px 0 #2a2a3a;border-radius:2px;">💬 راسله</button>
+      </div>
+    </div>
+    <div id="upNm" style="font-size:18px;font-weight:900;margin-bottom:2px;color:var(--text);"></div>
+    <div id="upMCName" style="font-size:13px;color:var(--text2);margin-bottom:4px;"></div>
+    <div id="upRank" style="margin-bottom:4px;"></div>
+    <div id="upTeam" style="margin-bottom:8px;"></div>
+    <div id="upTitle" style="margin-bottom:8px;"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">
+      <div style="background:#222;border:2px solid #333;padding:10px 6px;text-align:center;">
+        <div style="font-size:15px;font-weight:900;color:var(--primary);" id="upP">0</div>
+        <div style="font-size:10px;color:var(--text2);">منشور</div>
+      </div>
+      <div style="background:#222;border:2px solid #333;padding:10px 6px;text-align:center;">
+        <div style="font-size:15px;font-weight:900;color:var(--primary);" id="upF">0</div>
+        <div style="font-size:10px;color:var(--text2);">متابع</div>
+      </div>
+      <div style="background:#222;border:2px solid #333;padding:10px 6px;text-align:center;">
+        <div style="font-size:15px;font-weight:900;color:var(--primary);" id="upCoins">0</div>
+        <div style="font-size:10px;color:var(--text2);">🪙</div>
+      </div>
+    </div>
+    <div class="stitle">📝 منشوراته</div>
+    <div id="upPosts" style="padding-bottom:20px;"></div>
+  </div>
+</div>
+
+</div><!-- end wrap -->
+
+<!-- ══════ MODALS ══════ -->
+<!-- NEW POST -->
 <div class="moverlay" id="mPost">
   <div class="modal">
     <button class="mclose" id="mPostClose">×</button>
-    <div class="mtitle">✏️ منشور جديد</div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">اكتب أي حاجة دينية تحب تشاركها مع الناس — آية، حديث، دعاء، نصيحة...</div>
-    <textarea id="postTxt" placeholder="اكتب هنا..."></textarea>
-    <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">📷 ضيف صورة (اختياري)</label>
-    <input type="file" accept="image/*" id="postImg">
-    <button class="btn" style="width:100%;margin-top:6px" id="doPost">انشر ✨</button>
+    <div class="mtitle">📝 منشور جديد</div>
+    <textarea class="mc-input" id="postTxt" placeholder="شارك سؤالك أو رأيك..."></textarea>
+    <button class="mc-btn" style="width:100%;justify-content:center;" id="doPost">نشر ✨ (+5 🪙)</button>
   </div>
 </div>
 
-<!-- POLL MODAL -->
-<div class="moverlay" id="mPoll">
+<!-- MEDIA POST -->
+<div class="moverlay" id="mMedia">
   <div class="modal">
-    <button class="mclose" id="mPollClose">×</button>
+    <button class="mclose" id="mMediaClose">×</button>
+    <div class="mtitle">📸 صورة أو فيديو</div>
+    <textarea class="mc-input" id="mediaTxt" placeholder="وصف (اختياري)..."></textarea>
+    <input type="file" accept="image/*,video/*" class="mc-input" id="mediaFile">
+    <div id="mediaPreview" style="margin-bottom:8px;"></div>
+    <button class="mc-btn" style="width:100%;justify-content:center;" id="doMedia">نشر (+5 🪙)</button>
+  </div>
+</div>
+
+<!-- HOME POLL MODAL -->
+<div class="moverlay" id="mPollHome">
+  <div class="modal">
+    <button class="mclose" onclick="document.getElementById('mPollHome').classList.remove('open')">×</button>
     <div class="mtitle">📊 تصويت جديد</div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">اكتب سؤالك وحط الخيارات عشان الناس تصوت</div>
-    <input id="pQ" placeholder="السؤال — مثال: أيه أفضل وقت للأذكار؟">
-    <input id="pO1" placeholder="الخيار الأول">
-    <input id="pO2" placeholder="الخيار الثاني">
-    <input id="pO3" placeholder="الخيار الثالث (اختياري)">
-    <input id="pO4" placeholder="الخيار الرابع (اختياري)">
-    <button class="btn" style="width:100%;margin-top:6px" id="doPoll">انشر التصويت 📊</button>
+    <input class="mc-input" id="phQ" placeholder="السؤال...">
+    <textarea class="mc-input" id="phDesc" placeholder="وصف (اختياري)..." style="min-height:60px;"></textarea>
+    <input class="mc-input" id="phO1" placeholder="الخيار الأول (مطلوب)">
+    <input class="mc-input" id="phO2" placeholder="الخيار الثاني (مطلوب)">
+    <input class="mc-input" id="phO3" placeholder="خيار 3 (اختياري)">
+    <input class="mc-input" id="phO4" placeholder="خيار 4 (اختياري)">
+    <input class="mc-input" id="phO5" placeholder="خيار 5 (اختياري)">
+    <input class="mc-input" id="phO6" placeholder="خيار 6 (اختياري)">
+    <input class="mc-input" id="phO7" placeholder="خيار 7 (اختياري)">
+    <input class="mc-input" id="phO8" placeholder="خيار 8 (اختياري)">
+    <input class="mc-input" id="phO9" placeholder="خيار 9 (اختياري)">
+    <input class="mc-input" id="phO10" placeholder="خيار 10 (اختياري)">
+    <div style="font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:700;">الإجابة الصح (اختياري):</div>
+    <select id="phCorrect" style="margin-bottom:12px;">
+      <option value="-1">بدون إجابة صح</option>
+      <option value="0">الخيار الأول</option><option value="1">الثاني</option>
+      <option value="2">الثالث</option><option value="3">الرابع</option>
+      <option value="4">الخامس</option><option value="5">السادس</option>
+      <option value="6">السابع</option><option value="7">الثامن</option>
+      <option value="8">التاسع</option><option value="9">العاشر</option>
+    </select>
+    <button class="mc-btn" style="width:100%;justify-content:center;" id="doPollHome">نشر التصويت 📊 (+5 🪙)</button>
   </div>
 </div>
 
-<!-- BAG MODAL -->
-<div class="moverlay" id="mBag">
+<!-- NEW GROUP MODAL -->
+<div class="moverlay" id="mNewGroup">
   <div class="modal">
-    <button class="mclose" id="mBagClose">×</button>
-    <div class="mtitle">🎒 شنطتي — ألقابي المشتراة</div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:12px">اضغط <b>استخدم</b> على أي لقب عشان يظهر جمب اسمك للكل ✨</div>
-    <div id="bagList"></div>
+    <button class="mclose" id="mNewGroupClose">×</button>
+    <div class="mtitle">👥 مجموعة جديدة</div>
+    <input class="mc-input" id="grpNameIn" placeholder="اسم المجموعة...">
+    <div style="font-size:13px;color:var(--text2);margin-bottom:6px;">اختار الأعضاء:</div>
+    <input class="mc-input" id="grpSearchIn" placeholder="🔍 ابحث عن عضو..." style="margin-bottom:8px;" oninput="renderGrpMembersList(this.value)">
+    <div id="grpMembersList" style="max-height:250px;overflow-y:auto;"></div>
+    <button class="mc-btn" style="width:100%;margin-top:8px;justify-content:center;" id="doCreateGroup">إنشاء 👥</button>
   </div>
 </div>
+
+<!-- CHEST OPEN MODAL -->
+<div class="moverlay" id="mChest">
+  <div class="modal" style="text-align:center;">
+    <div class="mtitle" id="chestModalTitle">🎁 فتح الصندوق</div>
+    <div id="chestOpenAnim" style="font-size:80px;margin:20px 0;">🎁</div>
+    <div id="chestResult" style="display:none;">
+      <div style="font-size:40px;margin-bottom:8px;" id="chestItemIcon">⚔️</div>
+      <div style="font-size:16px;font-weight:900;color:var(--primary);margin-bottom:4px;" id="chestItemName"></div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:16px;" id="chestItemDesc"></div>
+    </div>
+    <button class="mc-btn" style="width:100%;justify-content:center;display:none;" id="chestOkBtn" onclick="document.getElementById('mChest').classList.remove('open')">حلو! ✅</button>
+  </div>
+</div>
+
+<!-- TEAM MEMBERS MODAL -->
+<div class="moverlay" id="mTeamMembers">
+  <div class="modal">
+    <button class="mclose" onclick="document.getElementById('mTeamMembers').classList.remove('open')">×</button>
+    <div class="mtitle" id="teamMembersTitle">أعضاء التيم</div>
+    <div id="teamMembersContent"></div>
+    <div id="addTeamMemberSection" style="display:none;margin-top:12px;">
+      <input class="mc-input" id="teamMemberSearch" placeholder="ابحث عن لاعب..." oninput="searchTeamMember(this.value)">
+      <div id="teamMemberSearchResults"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, push, set, onValue, get } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import{getDatabase,ref,push,set,onValue,get,remove}from"https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+const app=initializeApp({apiKey:"AIzaSyDgi3--q8nDGfps5MV4AmC8B4PYPMfAPZo",authDomain:"yousef-a3438.firebaseapp.com",projectId:"yousef-a3438",storageBucket:"yousef-a3438.firebasestorage.app",messagingSenderId:"645915709487",appId:"1:645915709487:web:588dae85e94d33daa636da"});
+const db=getDatabase(app);
 
-const app = initializeApp({
-  apiKey:"AIzaSyDgi3--q8nDGfps5MV4AmC8B4PYPMfAPZo",
-  authDomain:"yousef-a3438.firebaseapp.com",
-  projectId:"yousef-a3438",
-  storageBucket:"yousef-a3438.firebasestorage.app",
-  messagingSenderId:"645915709487",
-  appId:"1:645915709487:web:588dae85e94d33daa636da"
-});
-const db = getDatabase(app);
+// ══ SERVER PASSWORD ══
+const SERVER_PASSWORD="golden2024";
 
-// ── SHOP ITEMS ─────────────────────────────────────
-const SHOP = [
-  {id:'s1',icon:'🌙',title:'نور الليل'},{id:'s2',icon:'🌟',title:'نجم الإيمان'},
-  {id:'s3',icon:'🕌',title:'خادم المسجد'},{id:'s4',icon:'📿',title:'صاحب التسبيح'},
-  {id:'s5',icon:'🌹',title:'محب النبي ﷺ'},{id:'s6',icon:'💎',title:'جوهرة الأمة'},
-  {id:'s7',icon:'🦁',title:'أسد الإيمان'},{id:'s8',icon:'🕊️',title:'حمامة السلام'},
-  {id:'s9',icon:'🌿',title:'ورقة التوبة'},{id:'s10',icon:'⭐',title:'نجم الهداية'},
-  {id:'s11',icon:'🔥',title:'شعلة الدعوة'},{id:'s12',icon:'🌊',title:'بحر العلم'},
-  {id:'s13',icon:'🏆',title:'بطل الصبر'},{id:'s14',icon:'🌺',title:'زهرة الجنة'},
-  {id:'s15',icon:'🦋',title:'فراشة النور'},{id:'s16',icon:'🌈',title:'قوس قزح الإيمان'},
-  {id:'s17',icon:'⚡',title:'برق الحق'},{id:'s18',icon:'🏅',title:'ميدالية التقوى'},
-  {id:'s19',icon:'🎯',title:'صاحب القبلة'},{id:'s20',icon:'🌙',title:'هلال رمضان'},
-  {id:'s21',icon:'📖',title:'تالي القرآن'},{id:'s22',icon:'🤲',title:'رافع الأيدي'},
-  {id:'s23',icon:'🕋',title:'عاشق الكعبة'},{id:'s24',icon:'🌸',title:'بستان الخير'},
-  {id:'s25',icon:'👑',title:'تاج الصالحين'},{id:'s26',icon:'🌍',title:'داعية الإسلام'},
-  {id:'s27',icon:'💫',title:'ضياء السنة'},{id:'s28',icon:'🎋',title:'حكيم الأمة'},
-  {id:'s29',icon:'🦅',title:'نسر الإيمان'},{id:'s30',icon:'🌠',title:'نيزك الخير'},
+// ══ RANK CODES ══
+const RANK_CODES={
+  "admin12345":{rank:"admin",label:"Admin",color:"#ff5555"},
+  "owner12345":{rank:"owner",label:"Owner",color:"#ffaa00"},
+  "vip12345":{rank:"vip",label:"VIP",color:"#55ffff"},
+};
+
+// ══ TEAM COLORS ══
+const TEAM_COLORS=[
+  {name:"أخضر",hex:"#55aa33"},{name:"أحمر",hex:"#cc3333"},
+  {name:"أزرق",hex:"#3399ff"},{name:"أصفر",hex:"#ffdd00"},
+  {name:"بنفسجي",hex:"#aa44ff"},{name:"برتقالي",hex:"#ff8800"},
+  {name:"وردي",hex:"#ff55aa"},{name:"سماوي",hex:"#00dddd"},
+  {name:"أبيض",hex:"#eeeeee"},{name:"رمادي",hex:"#888888"},
+  {name:"بني",hex:"#8b4513"},{name:"ذهبي",hex:"#f0c040"},
 ];
 
-// ── STATE ───────────────────────────────────────────
-let uid='',uname='',uimg='',isPrem=false,dark=false;
-let jooTitle='',activeTitle='',myCoins=0,myBag=[];
-let allPosts=[],prevPg='home',curPvt={uid:'',name:'',img:''};
-let pvtUnsub=null,unread={};
-let usersCache={};
-let secretTaps=0,secretTimer=null;
+// ══ LAWS DATA ══
+const LAWS=[
+  {num:1,title:"الاحترام أولًا",body:`<b>احترام جميع اللاعبين والإدارة واجب.</b>\n\nيُمنع السب، العنصرية أو أي سلوك مسيء.`},
+  {num:2,title:"اللعب النظيف",body:`<b>يُمنع استخدام أي هاكات أو مودات تعطي أفضلية غير عادلة</b> مثل:\n\n<span class="red-text">X-Ray، KillAura، AutoClicker</span>\n\nالعقوبة: حظر دائم + مصادرة المكاسب.`},
+  {num:3,title:"CPS غير الطبيعي",body:`يُمنع استخدام طرق غير طبيعية لزيادة CPS مثل:\n\n<span class="red-text">Drag Click، Butterfly Abuse، Double Click Exploits أو ماوس معدل</span>`},
+  {num:4,title:"الثغرات والأخطاء",body:`يُمنع استغلال أي خلل في السيرفر أو اللعبة أو الإضافات.\n\n<b>يجب الإبلاغ عنها فورًا.</b>`},
+  {num:5,title:"السبام والإعلانات",body:`يُمنع السبام أو الترويج لسيرفرات أخرى.`},
+  {num:6,title:"التخريب والبناء",body:`يُمنع تخريب المناطق أو البناء العشوائي بالقرب من المناطق المحمية أو مناطق اللاعبين.`},
+  {num:7,title:"السرقة",body:`يُمنع تدمير أو سرقة ممتلكات اللاعبين.`},
+  {num:8,title:"استغلال الجليتش",body:`يُمنع استخدام الجليتش للحصول على أفضلية أو للقتل.\n\n<span class="red-text">اللوت الناتج عن ذلك غير مسموح.</span>`},
+  {num:9,title:"الأسماء والسكنات",body:`يُمنع استخدام أسماء أو سكنات غير لائقة أو مسيئة.`},
+  {num:10,title:"استغلال الثقة",body:`يُمنع استغلال الثقة أو رتبة الإدارة أو الصداقات للسرقة أو التخريب.`},
+  {num:11,title:"احترام الإدارة",body:`<b>قرارات الإدارة نهائية.</b>`},
+  {num:14,title:"أخذ اللوت",body:`<b>مسموح</b> في القتال العادل أو إذا مات اللاعب بدون Keep Inventory.`},
+  {num:15,title:"التعويض",body:`يتم فقط في حالة:\n\n• وجود جليتش واضح\n• سرقة مخالفة للقوانين\n• مع وجود دليل`},
+  {num:16,title:"الحسابات الوهمية",body:`<span class="red-text">استخدام حسابات بديلة للتحايل = حظر جميع الحسابات.</span>`},
+  {num:17,title:"الشحاذة",body:`يُمنع طلب الموارد أو الأموال بشكل متكرر.`},
+  {num:18,title:"الانتحال",body:`يُمنع انتحال شخصية إداري أو لاعب آخر.`},
+];
+let lawIndex=0;
+
+// ══ CHEST ITEMS ══
+const CHESTS=[
+  {id:"c1",name:"صندوق فضي",color:"#aaaaaa",border:"#888",price:5,items:[
+    {icon:"🪨",name:"حجارة الحماية",desc:"حجارة لحماية منطقتك"},
+    {icon:"🌿",name:"عشب الحياة",desc:"يمنحك نقاط صحة إضافية"},
+    {icon:"🍞",name:"خبز السيرفر",desc:"طعام يملأ الجوع"},
+  ]},
+  {id:"c2",name:"صندوق أزرق",color:"#5599ff",border:"#3377dd",price:10,items:[
+    {icon:"🏹",name:"قوس الصياد",desc:"لصيد المخلوقات"},
+    {icon:"🛡️",name:"درع الخشب",desc:"حماية أساسية"},
+    {icon:"⚒️",name:"معول الحجر",desc:"لتعدين أسرع"},
+  ]},
+  {id:"c3",name:"صندوق أخضر",color:"#55cc44",border:"#339922",price:15,items:[
+    {icon:"🗡️",name:"سيف الحديد",desc:"سلاح قوي للقتال"},
+    {icon:"🛡️",name:"درع الحديد",desc:"حماية متوسطة قوية"},
+    {icon:"💎",name:"قطعة لازورد",desc:"مادة نادرة للتعديل"},
+  ]},
+  {id:"c4",name:"صندوق برتقالي",color:"#ff8800",border:"#cc6600",price:20,items:[
+    {icon:"⚔️",name:"سيف الذهب",desc:"سيف نادر بلمسة ذهبية"},
+    {icon:"🏹",name:"قوس الصواعق",desc:"يطلق سهام مشحونة"},
+    {icon:"🧪",name:"جرعة القوة",desc:"تضاعف قوتك لفترة"},
+  ]},
+  {id:"c5",name:"صندوق أصفر",color:"#ffdd00",border:"#ccaa00",price:25,items:[
+    {icon:"💎",name:"معول الألماس",desc:"أسرع معول في اللعبة"},
+    {icon:"🛡️",name:"درع الذهب",desc:"درع نادر بتعديلات خاصة"},
+    {icon:"🗺️",name:"خريطة الكنوز",desc:"تكشف أماكن الكنوز المخفية"},
+  ]},
+  {id:"c6",name:"صندوق أرجواني",color:"#aa44ff",border:"#8822cc",price:40,items:[
+    {icon:"🔮",name:"كرة التليبورت",desc:"تنقلك فورياً لأي مكان"},
+    {icon:"⚔️",name:"سيف الألماس",desc:"أقوى سيف في السيرفر"},
+    {icon:"🧲",name:"مغناطيس اللوت",desc:"يسحب اللوت تلقائياً"},
+  ]},
+  {id:"c7",name:"صندوق أحمر",color:"#cc3333",border:"#aa1111",price:70,items:[
+    {icon:"🔥",name:"سيف اللهب",desc:"يحرق الأعداء عند الضرب"},
+    {icon:"🦅",name:"جناح النسر",desc:"يمنحك القدرة على الطيران"},
+    {icon:"💣",name:"قنبلة TNT",desc:"للتفجيرات الضخمة"},
+  ]},
+  {id:"c8",name:"صندوق ملكي",color:"#f0c040",border:"#c8960c",price:100,items:[
+    {icon:"👑",name:"تاج الملك",desc:"يُظهر لقب ملكي بجانب اسمك"},
+    {icon:"🏰",name:"رخصة القلعة",desc:"حق بناء قلعة خاصة"},
+    {icon:"⚡",name:"سيف البرق",desc:"يصعق الأعداء بالكهرباء"},
+  ]},
+  {id:"c9",name:"صندوق الأسطورة",color:"#ff55aa",border:"#cc1177",price:150,items:[
+    {icon:"🌟",name:"نجمة الخلود",desc:"تحميك من الموت مرة واحدة"},
+    {icon:"🐉",name:"بيضة التنين",desc:"تستدعي تنيناً للقتال معك"},
+    {icon:"🌈",name:"درع قوس قزح",desc:"أقوى درع في التاريخ"},
+  ]},
+  {id:"c10",name:"صندوق الإله",color:"#ff8800",border:"#cc6600",price:300,items:[
+    {icon:"⚡",name:"صولجان الرعد",desc:"أسطع سلاح يُنشئ صواعق"},
+    {icon:"🔱",name:"رمح الآلهة",desc:"يخترق أي درع"},
+    {icon:"💫",name:"درع الكون",desc:"يمنحك قوى خارقة"},
+  ]},
+];
+
+// ══ TASKS ══
+const DAILY_TASKS=[
+  {id:'post1',label:'انشر منشور',goal:1,reward:5,action:'post'},
+  {id:'like5',label:'اعمل لايك على 5 منشورات',goal:5,reward:10,action:'like'},
+  {id:'cmt3',label:'اكتب 3 تعليقات',goal:3,reward:15,action:'comment'},
+  {id:'vote1',label:'شارك في تصويت',goal:1,reward:8,action:'vote'},
+  {id:'gc1',label:'بعت رسالة في الشات',goal:1,reward:5,action:'gc'},
+];
+
+// ══ STATE ══
+let uid='',uname='',umcname='',uimg='',myCoins=0,myBag=[],myRank='member';
+let activeTitle='',isPrem=false;
+let allPosts=[],usersCache={};
+let myFollowers={},myFollowing={};
+let prevPg='home',curPvt={uid:'',name:'',img:''};
+let curGrpId='',curGrpData={};
+let pvtUnsub=null,grpUnsub=null,activePvtUid='';
+let taskProgress={};
+let replyTarget=null;
+let selectedTeamColor=null;
+let currentTeamId=null;
 
 const $=id=>document.getElementById(id);
 
-// ── SETUP ───────────────────────────────────────────
-let setupImg='';
-$('sAvtFile').addEventListener('change',function(){
-  const f=this.files[0];if(!f)return;
-  const r=new FileReader();r.onload=()=>{setupImg=r.result;$('sAvtPreview').src=r.result;};r.readAsDataURL(f);
-});
-$('sDone').addEventListener('click',()=>{
-  const nm=$('sName').value.trim();
-  if(!nm){toast('⚠️ لازم تكتب اسمك الأول!');return;}
-  uid='u_'+Date.now(); uname=nm; uimg=setupImg||'';
-  localStorage.setItem('din_uid',uid);
-  localStorage.setItem('din_name',uname);
-  localStorage.setItem('din_img',uimg);
-  set(ref(db,'users6/'+uid),{name:uname,img:uimg,coins:0,bag:[],prem:false,joo:'',activeTitle:''});
-  $('setupScreen').style.display='none';
-  init();
-});
-
-function checkSetup(){
-  uid=localStorage.getItem('din_uid')||'';
-  uname=localStorage.getItem('din_name')||'';
-  if(uid&&uname){$('setupScreen').style.display='none';init();}
-}
-
-// ── HELPERS ─────────────────────────────────────────
-function toast(m){const t=$('toast');t.textContent=m;t.className='toast show';setTimeout(()=>t.className='toast',2700);}
-function avt(img,nm){return(img&&img.length>10)?img:`https://ui-avatars.com/api/?name=${encodeURIComponent(nm||'م')}&background=1a5c38&color=fff&size=80`;}
-function ago(ts){const d=Date.now()-ts;if(d<60000)return'الآن';if(d<3600000)return Math.floor(d/60000)+' د';if(d<86400000)return Math.floor(d/3600000)+' س';return Math.floor(d/86400000)+' يوم';}
+// ══ HELPERS ══
+function toast(m){const t=$('toast');t.textContent=m;t.className='toast show';setTimeout(()=>t.className='toast',2900);}
+function avt(img,nm){return(img&&img.length>10)?img:`https://ui-avatars.com/api/?name=${encodeURIComponent(nm||'؟')}&background=2d2d2d&color=f0c040&size=80`;}
+function ago(ts){const d=Date.now()-ts;if(d<60000)return'الآن';if(d<3600000)return Math.floor(d/60000)+' د';if(d<86400000)return Math.floor(d/3600000)+' س';return Math.floor(d/86400000)+' ي';}
 function fmt(ts){return new Date(ts).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});}
-function safeA(s){return(s||'').replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
-
-function sumLikes(ownerUid){
-  let n=0;
-  allPosts.forEach(p=>{
-    if(p.authorId===ownerUid){if(p.likes)n+=Object.keys(p.likes).length;}
-    if(p.options&&p.authorId===ownerUid)Object.values(p.options).forEach(o=>{if(o.votes)n+=Object.keys(o.votes).length;});
-  });
-  return n;
+function safeA(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,"&#39;").replace(/"/g,'&quot;');}
+function renderMentions(txt){return safeA(txt).replace(/@([\u0600-\u06FFa-zA-Z0-9_]+)/g,'<span style="color:var(--primary);font-weight:900">@$1</span>');}
+function coinPop(n,el){
+  const p=document.createElement('div');p.className='coin-pop';p.textContent='+'+n+'🪙';
+  const r=el?el.getBoundingClientRect():{top:window.innerHeight/2,left:window.innerWidth/2};
+  p.style.cssText=`top:${r.top+window.scrollY-20}px;left:${r.left+window.scrollX}px`;
+  document.body.appendChild(p);setTimeout(()=>p.remove(),1300);
 }
+function isAdmin(){return myRank==='admin'||myRank==='owner';}
 
+function getRankBadge(rank){
+  if(rank==='admin')return`<span class="rank-badge rank-admin">⚔️ Admin</span>`;
+  if(rank==='owner')return`<span class="rank-badge rank-owner">👑 Owner</span>`;
+  if(rank==='vip')return`<span class="rank-badge rank-vip">💎 VIP</span>`;
+  return`<span class="rank-badge rank-member">🌿 عضو</span>`;
+}
+function getRankColor(rank){
+  if(rank==='admin')return'var(--admin-color)';
+  if(rank==='owner')return'var(--owner-color)';
+  if(rank==='vip')return'var(--vip-color)';
+  return'var(--member-color)';
+}
+function renderUN(aId,nm,mcnm,ud){
+  const rank=aId===uid?myRank:(ud?.rank||'member');
+  const rankColor=getRankColor(rank);
+  const rankLabel=rank==='admin'?'[Admin]':rank==='owner'?'[Owner]':rank==='vip'?'[VIP]':'[عضو]';
+  const aT=aId===uid?activeTitle:(ud?.activeTitle||'');
+  let html=`<span style="color:${rankColor};font-weight:900;font-size:10px;">${rankLabel}</span> <span style="font-weight:700">${safeA(nm||'مجهول')}</span>`;
+  if(mcnm||ud?.mcname)html+=` <span style="color:var(--text2);font-size:11px;">(${safeA(mcnm||ud?.mcname||'')})</span>`;
+  if(aT)html+=` <span style="background:rgba(240,192,64,.2);color:var(--primary);font-size:10px;padding:1px 6px;border:1px solid var(--primary);border-radius:2px;">${safeA(aT)}</span>`;
+  return html;
+}
 async function getUser(aId){
   if(usersCache[aId])return usersCache[aId];
-  try{const s=await get(ref(db,'users6/'+aId));if(s.exists()){usersCache[aId]=s.val();return s.val();}}catch(e){}
+  try{const s=await get(ref(db,'cy_users/'+aId));if(s.exists()){usersCache[aId]=s.val();return s.val();}}catch(e){}
   return null;
 }
 
-function badge(aId,nm,uData){
-  if(aId==='ROBOT')return`<span class="nn">🤖 روبوت ديني</span>`;
-  const esc=(nm||'مجهول').replace(/</g,'&lt;');
-  const isMe=aId===uid;
-  const pr=isMe?isPrem:(uData?uData.prem:false);
-  const joo=isMe?jooTitle:(uData?uData.joo:'');
-  const aTitle=isMe?activeTitle:(uData?uData.activeTitle:'');
-  const lk=sumLikes(aId);
-  const jooHtml=joo?`<span class="joo-ttl">${joo}</span>`:'';
-  const titleHtml=aTitle?`<span class="joo-ttl">${aTitle}</span>`:'';
-  if(pr)return`<span class="bdg bdgp">مصمم الموقع</span><span class="np">${esc}</span>${jooHtml}${titleHtml}`;
-  if(lk>=500)return`<span class="bdg bdgb">مساهم قديم</span><span class="nb">${esc}</span>${jooHtml}${titleHtml}`;
-  if(lk>=200)return`<span class="bdg bdgs">مساهم نجومي</span><span class="ns">${esc}</span>${jooHtml}${titleHtml}`;
-  return`<span class="nn">${esc}</span>${jooHtml}${titleHtml}`;
-}
-
-// ── COINS ────────────────────────────────────────────
-function addCoins(n){
-  myCoins+=n;
-  localStorage.setItem('din_coins',myCoins);
-  set(ref(db,'users6/'+uid+'/coins'),myCoins);
-  updateCoinsUI();
+// ══ COINS ══
+function addCoins(n,el){
+  myCoins+=n;localStorage.setItem('cy_coins',myCoins);
+  set(ref(db,'cy_users/'+uid+'/coins'),myCoins);
+  updateCoinsUI();if(el)coinPop(n,el);
 }
 function updateCoinsUI(){
   $('coinsBadge').textContent='🪙 '+myCoins;
-  $('shopCoins').textContent=myCoins+' 🪙';
-  $('stCoins').textContent=myCoins;
+  if($('shopCoins'))$('shopCoins').textContent=myCoins+' 🪙';
+  if($('stCoins'))$('stCoins').textContent=myCoins;
 }
 
-// ── NAVIGATION ───────────────────────────────────────
+// ══ SETUP ══
+let sImg='';
+let sImgReady=true; // true by default (صورة اختيارية)
+
+// دالة عالمية تشتغل قبل module
+window.handleSetupAvatar=function(input){
+  const f=input.files[0];if(!f)return;
+  const prev=document.getElementById('sAvtPreview');
+  if(f.size>5*1024*1024){
+    alert('الصورة كبيرة جداً! اختار أصغر من 5MB');return;
+  }
+  sImgReady=false;
+  prev.style.opacity='0.5';
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const img=new Image();
+    img.onload=function(){
+      const canvas=document.createElement('canvas');
+      const MAX=250;
+      let w=img.width,h=img.height;
+      if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}
+      else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
+      canvas.width=w;canvas.height=h;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      sImg=canvas.toDataURL('image/jpeg',0.85);
+      prev.src=sImg;
+      prev.style.opacity='1';
+      sImgReady=true;
+    };
+    img.onerror=function(){
+      // fallback: use raw result
+      sImg=e.target.result;
+      prev.src=sImg;
+      prev.style.opacity='1';
+      sImgReady=true;
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(f);
+};
+$('sNext1').addEventListener('click',async()=>{
+  const nm=$('sName').value.trim();
+  const mcnm=$('sMCName').value.trim();
+  const pass=$('sServerPass').value.trim();
+  if(!nm){toast('⚠️ اكتب اسمك!');return;}
+  if(!mcnm){toast('⚠️ اكتب اسمك في اللعبة!');return;}
+  if(pass!==SERVER_PASSWORD){toast('❌ كلمة مرور السيرفر غلط!');return;}
+  // Check unique names
+  $('sNext1').textContent='جاري التحقق...';$('sNext1').disabled=true;
+  try{
+    const snap=await get(ref(db,'cy_users'));
+    let nameTaken=false,mcTaken=false;
+    snap.forEach(s=>{
+      const u=s.val();
+      if((u?.name||'').toLowerCase()===nm.toLowerCase())nameTaken=true;
+      if((u?.mcname||'').toLowerCase()===mcnm.toLowerCase())mcTaken=true;
+    });
+    if(nameTaken){toast('❌ الاسم مأخوذ!');$('sNext1').textContent='التالي ←';$('sNext1').disabled=false;return;}
+    if(mcTaken){toast('❌ اسم اللعبة مأخوذ!');$('sNext1').textContent='التالي ←';$('sNext1').disabled=false;return;}
+  }catch(e){}
+  $('setupStep1').style.display='none';$('setupStep2').style.display='block';
+  $('st1').classList.remove('active');$('st2').classList.add('active');
+  $('sNext1').textContent='التالي ←';$('sNext1').disabled=false;
+});
+$('sDone').addEventListener('click',async()=>{
+  // لو الصورة لسه بتتحمل استنى
+  if(!sImgReady){
+    toast('⚠️ الصورة لسه بتتحمل، استنى ثانية...');return;
+  }
+  uid='u_'+Date.now();
+  uname=$('sName').value.trim()||'لاعب';
+  umcname=$('sMCName').value.trim()||'Steve';
+  uimg=sImg||'';myCoins=50;myRank='member';
+  localStorage.setItem('cy_uid',uid);localStorage.setItem('cy_name',uname);
+  localStorage.setItem('cy_mcname',umcname);localStorage.setItem('cy_img',uimg);
+  localStorage.setItem('cy_coins','50');localStorage.setItem('cy_rank','member');
+  set(ref(db,'cy_users/'+uid),{name:uname,mcname:umcname,img:uimg,coins:50,bag:[],rank:'member',activeTitle:'',ts:Date.now()});
+  $('setupScreen').style.cssText='display:none!important';
+  goPage('home');init();
+});
+
+function checkSetup(){
+  uid=localStorage.getItem('cy_uid')||'';uname=localStorage.getItem('cy_name')||'';
+  if(uid&&uname){$('setupScreen').style.cssText='display:none!important';init();}
+}
+
+// ══ LAWS ══
+function renderLaw(){
+  const l=LAWS[lawIndex];
+  if(!l)return;
+  $('lawNum').textContent=l.num;
+  $('lawProgress').textContent=`قانون ${lawIndex+1} من ${LAWS.length}`;
+  $('lawBody').innerHTML=l.body.replace(/\n/g,'<br>');
+  const title=l.title?`<div style="font-size:14px;color:var(--gold);font-weight:700;margin-bottom:8px;">⚔️ ${safeA(l.title)}</div>`:'';
+  $('lawBody').insertAdjacentHTML('afterbegin',title);
+  $('lawPrev').style.display=lawIndex>0?'':'none';
+  if(lawIndex===LAWS.length-1){
+    $('lawNext').textContent='🏠 للمتجر ←';
+    $('lawNext').onclick=()=>{goPage('explore');};
+  }else{
+    $('lawNext').textContent='التالي →';
+    $('lawNext').onclick=nextLaw;
+  }
+}
+window.nextLaw=()=>{if(lawIndex<LAWS.length-1){lawIndex++;renderLaw();}};
+window.prevLaw=()=>{if(lawIndex>0){lawIndex--;renderLaw();}};
+
+// ══ NAVIGATION ══
 function goPage(pg){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const el=$('pg_'+pg);if(el)el.classList.add('active');
-  document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg===pg));
+  document.querySelectorAll('.tni').forEach(n=>n.classList.toggle('active',n.dataset.pg===pg));
+  window.scrollTo(0,0);
+  if(pg==='laws'){lawIndex=0;renderLaw();}
 }
-document.querySelectorAll('.nitem').forEach(btn=>{
-  btn.addEventListener('click',()=>{prevPg=btn.dataset.pg;goPage(btn.dataset.pg);});
+document.querySelectorAll('.tni').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const pg=btn.dataset.pg;
+    if(!['home','polls','laws','explore','chat','msgs','profile'].includes(pg))return;
+    prevPg=pg;goPage(pg);
+    if(pg==='msgs'){loadMsgsList();loadGroupsList();}
+    if(pg==='polls'){renderPollsPage();}
+    if(pg==='explore'){renderShop();renderTeams();}
+  });
 });
-$('notifBtn').addEventListener('click',()=>{prevPg='msgs';goPage('msgs');document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg==='msgs'));});
-$('heroAvt').addEventListener('click',()=>{prevPg='stgs';goPage('stgs');document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg==='stgs'));});
+$('notifBtn').addEventListener('click',()=>toggleNotifDropdown());
 
-// ── DARK ─────────────────────────────────────────────
-function applyDark(v){dark=v;document.body.classList.toggle('dark',v);$('darkTog').checked=v;localStorage.setItem('din_dark',v?'1':'0');}
-$('darkBtn').addEventListener('click',()=>applyDark(!dark));
-$('darkTog').addEventListener('change',()=>applyDark($('darkTog').checked));
-
-// ── MODALS ───────────────────────────────────────────
-$('btnPost').addEventListener('click',()=>$('mPost').classList.add('open'));
-$('btnPoll').addEventListener('click',()=>$('mPoll').classList.add('open'));
-$('mPostClose').addEventListener('click',()=>$('mPost').classList.remove('open'));
-$('mPollClose').addEventListener('click',()=>$('mPoll').classList.remove('open'));
-$('mBagClose').addEventListener('click',()=>$('mBag').classList.remove('open'));
-$('mPost').addEventListener('click',e=>{if(e.target===$('mPost'))$('mPost').classList.remove('open');});
-$('mPoll').addEventListener('click',e=>{if(e.target===$('mPoll'))$('mPoll').classList.remove('open');});
-$('bagBtn').addEventListener('click',()=>{renderBag();$('mBag').classList.add('open');});
-
-// ── SECRET JOO TRIGGER ───────────────────────────────
-// Tap the small empty strip 5 times fast to reveal joo field
-$('secretTap').addEventListener('click',()=>{
-  secretTaps++;
-  clearTimeout(secretTimer);
-  secretTimer=setTimeout(()=>secretTaps=0,2000);
-  if(secretTaps>=5){
-    secretTaps=0;
-    const z=$('jooZone');
-    z.style.display=z.style.display==='none'?'block':'none';
-    if(z.style.display==='block')toast('🔐 منطقة سرية — اللقب الخاص');
+// ══ NOTIFICATIONS ══
+function pushNotif(tUid,icon,text,key,linkObj){
+  if(!tUid||tUid===uid)return;
+  const data={ts:Date.now(),icon,text,unread:true,link:JSON.stringify(linkObj||{type:'home'})};
+  if(key){set(ref(db,'cy_notifs/'+tUid+'/'+key),data);}
+  else{const nid=push(ref(db,'cy_notifs/'+tUid));set(nid,data);}
+}
+function markNotifsReadOnView(){
+  get(ref(db,'cy_notifs/'+uid)).then(snap=>{
+    snap.forEach(s=>{if(s.val()?.unread===true)set(ref(db,'cy_notifs/'+uid+'/'+s.key+'/unread'),false);});
+  });
+  $('ndot').style.display='none';
+}
+onValue(ref(db,'cy_notifs/'+uid),snap=>{
+  let nts=[];snap.forEach(s=>{let o=s.val();o._k=s.key;nts.push(o);});
+  nts.sort((a,b)=>b.ts-a.ts);
+  const unread=nts.filter(n=>n.unread===true).length;
+  $('ndot').style.display=unread>0?'block':'none';
+  const dropBox=$('notifDropList');
+  if(dropBox){
+    if(!nts.length){dropBox.innerHTML='<div style="text-align:center;padding:20px;color:var(--text2);font-size:13px">لا توجد إشعارات</div>';}
+    else{
+      dropBox.innerHTML='';
+      nts.slice(0,30).forEach(n=>{
+        const div=document.createElement('div');
+        div.className='notif-item'+(n.unread?' unread':'');
+        div.innerHTML=`<div style="font-size:20px;flex-shrink:0">${n.icon||'🔔'}</div>
+          <div style="flex:1"><div style="font-size:13px;line-height:1.5;font-weight:${n.unread?700:400}">${safeA(n.text)}</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px">${ago(n.ts)}</div></div>`;
+        div.addEventListener('click',()=>{
+          $('notifDrop').classList.remove('open');
+          remove(ref(db,'cy_notifs/'+uid+'/'+n._k));
+          try{const l=JSON.parse(n.link||'{}');if(l.type==='pvt'&&l.uid)WW.pvt(l.uid,l.name||'',l.img||'');else goPage('home');}catch(e){goPage('home');}
+        });
+        dropBox.appendChild(div);
+      });
+    }
   }
 });
-
-// ── JOO INPUT ────────────────────────────────────────
-$('jooIn').addEventListener('input',()=>{
-  const v=$('jooIn').value.trim(),msg=$('jooMsg');
-  if(v.length>0){
-    jooTitle=v;
-    localStorage.setItem('din_joo',jooTitle);
-    set(ref(db,'users6/'+uid+'/joo'),jooTitle);
-    msg.innerHTML=`<span style="color:var(--gold);font-weight:700">✅ اللقب: "${jooTitle}" — يظهر للكل جمب اسمك 🌟</span>`;
-    refreshUI();
-  } else {
-    jooTitle='';
-    localStorage.setItem('din_joo','');
-    set(ref(db,'users6/'+uid+'/joo'),'');
-    msg.innerHTML='';
-    refreshUI();
-  }
-});
-
-// ── PROFILE UI ───────────────────────────────────────
-function refreshUI(){
-  const nm=uname||'—',a=avt(uimg,nm);
-  $('heroAvt').src=$('stgsAvt').src=$('gcAvt').src=a;
-  $('heroNm').textContent=nm;
-  $('nmIn').value=nm;
-  $('stgsNm').innerHTML=badge(uid,nm,null);
-  updateCoinsUI();
-  const mp=allPosts.filter(p=>p.authorId===uid);
-  $('stP').textContent=mp.length;
-  $('stL').textContent=sumLikes(uid);
-  let tc=0;allPosts.forEach(p=>{if(p.comments)Object.values(p.comments).forEach(c=>{if(c.authorId===uid)tc++;});});
-  $('stC').textContent=tc;
+async function clearAllNotifs(){
+  const snap=await get(ref(db,'cy_notifs/'+uid));
+  snap.forEach(s=>remove(ref(db,'cy_notifs/'+uid+'/'+s.key)));
+  $('ndot').style.display='none';
+  const box=$('notifDropList');
+  if(box)box.innerHTML='<div style="text-align:center;padding:20px;color:var(--text2);font-size:13px">لا توجد إشعارات</div>';
+  toast('✅ تم مسح الإشعارات');
 }
+window.clearAllNotifs=clearAllNotifs;
 
-$('nmIn').addEventListener('input',()=>{uname=$('nmIn').value;localStorage.setItem('din_name',uname);set(ref(db,'users6/'+uid+'/name'),uname);refreshUI();});
-$('promoIn').addEventListener('input',()=>{
-  const v=$('promoIn').value,msg=$('promoMsg');
-  if(v==='joo5555'){isPrem=true;localStorage.setItem('din_prem','1');set(ref(db,'users6/'+uid+'/prem'),true);msg.innerHTML=`<span style="color:var(--gold);font-weight:700">✅ تم التفعيل! أنت مصمم الموقع 🌟</span>`;refreshUI();}
-  else if(v.length>=7)msg.innerHTML=`<span style="color:var(--red)">❌ الكود غير صحيح</span>`;
-  else msg.innerHTML='';
-});
-$('avtFile').addEventListener('change',function(){
-  const f=this.files[0];if(!f)return;
-  const r=new FileReader();r.onload=()=>{uimg=r.result;localStorage.setItem('din_img',uimg);set(ref(db,'users6/'+uid+'/img'),uimg);refreshUI();};r.readAsDataURL(f);
-});
-
-// ── SHOP & BAG ───────────────────────────────────────
-function renderShop(){
-  $('shopList').innerHTML=SHOP.map(item=>{
-    const owned=myBag.includes(item.id);
-    return`<div class="shop-item">
-      <div class="shop-icon">${item.icon}</div>
-      <div class="shop-info">
-        <div class="shop-title">${item.icon} ${item.title}</div>
-        <div class="shop-price">السعر: 10 🪙</div>
-        ${owned?'<div style="font-size:11px;color:var(--primary);font-weight:700;margin-top:2px">✅ في شنطتك بالفعل</div>':''}
-      </div>
-      <button class="shop-btn" ${owned||myCoins<10?'disabled':''} onclick="WW.buy('${item.id}','${safeA(item.title)}','${item.icon}')">
-        ${owned?'مشتري 🎒':'اشتري 🪙'}
-      </button>
-    </div>`;
-  }).join('');
-}
-
-function renderBag(){
-  const owned=SHOP.filter(i=>myBag.includes(i.id));
-  if(!owned.length){
-    $('bagList').innerHTML=`<div style="text-align:center;color:var(--text2);padding:20px;font-size:14px">شنطتك فاضية دلوقتي 😊<br><br>روح المتجر واشتري أي لقب بـ 10 عملات</div>`;
-    return;
-  }
-  $('bagList').innerHTML=owned.map(item=>`
-    <div class="bag-item">
-      <div style="font-size:24px">${item.icon}</div>
-      <div style="flex:1"><div style="font-weight:700;font-size:14px">${item.icon} ${item.title}</div></div>
-      <button class="bag-btn ${activeTitle===item.icon+' '+item.title?'on':''}" onclick="WW.useTitle('${item.icon}','${safeA(item.title)}')">
-        ${activeTitle===item.icon+' '+item.title?'✅ مفعّل':'استخدم'}
-      </button>
-    </div>`).join('');
-}
-
-// ── POSTS ────────────────────────────────────────────
-const postsRef=ref(db,'posts6');
+// ══ POSTS ══
+const postsRef=ref(db,'cy_posts');
 onValue(postsRef,snap=>{
   allPosts=[];snap.forEach(s=>{let o=s.val();o._k=s.key;allPosts.push(o);});
   allPosts.sort((a,b)=>b.ts-a.ts);
-  renderPosts();refreshUI();renderShop();
+  renderPosts();renderPollsPage();refreshStats();
 });
-
 $('srch').addEventListener('input',renderPosts);
 
 function renderPosts(){
-  const q=$('srch').value||'',box=$('postsBox');
-  const list=allPosts.filter(p=>(p.text||'').includes(q));
-  if(!list.length){box.innerHTML=`<div style="text-align:center;color:var(--text2);padding:40px;font-size:15px">لا توجد منشورات بعد 🌿<br><small>كن أول من ينشر!</small></div>`;return;}
-  box.innerHTML=list.map(p=>postCard(p)).join('');
-  // async badge update for others
-  list.forEach(async p=>{
-    if(p.authorId&&p.authorId!=='ROBOT'&&p.authorId!==uid){
-      const ud=await getUser(p.authorId);
-      if(ud){const el=document.getElementById('ph_'+p._k);if(el)el.innerHTML=badge(p.authorId,p.authorName,ud);}
-    }
-  });
-  list.forEach(p=>{if(!p.views||!p.views[uid])set(ref(db,'posts6/'+p._k+'/views/'+uid),true);});
+  const q=($('srch').value||'').toLowerCase();const box=$('postsBox');
+  const list=allPosts.filter(p=>p.type!=='adminpoll'&&(p.text||'').toLowerCase().includes(q));
+  if(!list.length){box.innerHTML='<div class="empty-state"><div class="ei">📝</div><p>لا توجد منشورات بعد</p></div>';return;}
+  box.innerHTML=list.map(p=>postCard(p,false)).join('');
+  list.forEach(async p=>{if(!p.views||!p.views[uid])set(ref(db,'cy_posts/'+p._k+'/views/'+uid),true);});
 }
 
-function postCard(p){
-  const a=avt(p.authorImg,p.authorName);
-  const bh=badge(p.authorId,p.authorName,p.authorId===uid?null:{});
+function postCard(p,isPollPage=false){
   const lc=p.likes?Object.keys(p.likes).length:0;
   const vc=p.views?Object.keys(p.views).length:0;
   const cc=p.comments?Object.keys(p.comments).length:0;
   const liked=p.likes&&p.likes[uid];
-  const canPvt=p.authorId!=='ROBOT'&&p.authorId!==uid;
-  let body='';
-  if(p.type==='poll'&&p.options){
+  const canPvt=p.authorId!==uid;
+  let media='';
+  if((p.type==='poll'||p.type==='adminpoll')&&p.options){
     const total=Object.values(p.options).reduce((s,o)=>s+(o.votes?Object.keys(o.votes).length:0),0);
-    body=Object.entries(p.options).map(([k,o])=>{
-      const vc2=o.votes?Object.keys(o.votes).length:0,pct=total?Math.round(vc2/total*100):0,voted=o.votes&&o.votes[uid];
-      return`<div class="pollopt${voted?' voted':''}" onclick="WW.vote('${p._k}','${k}')">
-        <span>${voted?'✅':'⭕'}</span><span style="flex:1">${o.text}</span>
-        <div class="pbw"><div class="pb" style="width:${pct}%"></div></div>
-        <span class="ppct">${pct}%</span><span style="font-size:11px;color:var(--text2)">${vc2}</span>
+    const correctIdx=p.correctIdx!==undefined&&p.correctIdx!==null?parseInt(p.correctIdx):null;
+    const myVoteKey=Object.keys(p.options).find(k=>p.options[k].votes&&p.options[k].votes[uid]);
+    const hasVoted=!!myVoteKey;
+    const myVoteIdx=myVoteKey!==undefined?parseInt(myVoteKey.replace('o','')):null;
+    const isCorrect=correctIdx!==null&&myVoteIdx===correctIdx;
+    let rewardHtml='';
+    if(hasVoted&&correctIdx!==null){
+      if(isCorrect)rewardHtml=`<div style="font-size:12px;color:var(--green);font-weight:700;margin:6px 0">🎉 إجابة صح! كسبت +10 🪙</div>`;
+      else rewardHtml=`<div style="font-size:12px;color:var(--red);margin:6px 0">❌ إجابة غلط — الصح: "${safeA(p.options?.['o'+correctIdx]?.text||'')}"</div>`;
+    }
+    const opts=Object.entries(p.options).map(([k,o],i)=>{
+      const vc2=o.votes?Object.keys(o.votes).length:0;
+      const pct=total?Math.round(vc2/total*100):0;
+      const isMyVote=k===myVoteKey;
+      const isC=correctIdx!==null&&i===correctIdx;
+      let cls='pollopt';
+      if(hasVoted){if(isC)cls+=' correct';else if(isMyVote)cls+=' wrong';}
+      const fn=isPollPage?'WW.voteAdminPoll':'WW.votePost';
+      return`<div class="${cls}" onclick="${fn}('${p._k}','${k}',${correctIdx},this)">
+        <span>${isMyVote?'🔵':'⭕'}</span>
+        <span style="flex:1">${safeA(o.text)}</span>
+        ${hasVoted?`<div class="pbw"><div class="pb" style="width:${pct}%"></div></div><span class="ppct">${pct}%</span>`:''}
       </div>`;
-    }).join('')+`<div style="font-size:11px;color:var(--text2);margin-top:4px">إجمالي الأصوات: ${total}</div>`;
-  } else if(p.img){body=`<img class="pimg" src="${p.img}" loading="lazy">`;}
+    }).join('');
+    media=`<div style="margin-bottom:10px">${opts}${rewardHtml}<div style="font-size:11px;color:var(--text2)">إجمالي الأصوات: ${total}</div></div>`;
+  } else if(p.img){
+    media=`<img class="pimg" src="${p.img}" loading="lazy" alt="">`;
+  } else if(p.video){
+    media=`<video class="pvid" controls preload="metadata" playsinline><source src="${p.video}"></video>`;
+  }
+  const desc=p.desc?`<div style="font-size:12px;color:var(--text2);margin-bottom:8px;font-style:italic;">${safeA(p.desc)}</div>`:'';
   const cmts=p.comments?Object.entries(p.comments).map(([k,c])=>`
     <div class="cmt">
-      <img src="${avt(c.authorImg,c.authorName)}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0;${c.authorId!==uid&&c.authorId!=='ROBOT'?'cursor:pointer':''}" ${c.authorId!==uid&&c.authorId!=='ROBOT'?`onclick="WW.pvt('${c.authorId}','${safeA(c.authorName)}','${safeA(c.authorImg||'')}')"`:''}  alt="">
-      <div class="cmtbbl"><div class="cmtnm" id="cn_${k}">${badge(c.authorId,c.authorName,c.authorId===uid?null:{})}</div>${c.text}</div>
+      <img src="${avt(c.authorImg,c.authorName)}" style="width:28px;height:28px;border-radius:3px;object-fit:cover;flex-shrink:0;${c.authorId!==uid?'cursor:pointer':''}" ${c.authorId!==uid?`onclick="WW.pvt('${c.authorId}','${safeA(c.authorName)}','${safeA(c.authorImg||'')}')"`:''}  alt="">
+      <div class="cmtbbl">
+        <div class="cmtnm">${safeA(c.authorName)}</div>
+        <div class="cmttxt">${renderMentions(c.text)}</div>
+        <div class="cmtacts" style="display:flex;gap:6px;margin-top:4px;">
+          <button class="aibtn ${c.likes&&c.likes[uid]?'liked':''}" style="font-size:11px;padding:3px 6px;" onclick="WW.likeCmt('${p._k}','${k}')">❤️ ${c.likes?Object.keys(c.likes).length:0}</button>
+        </div>
+      </div>
     </div>`).join(''):'';
-  return`<div class="card">
+  return`<div class="card" style="border-color:${(p.type==='poll'||p.type==='adminpoll')?'var(--primary)':'var(--border)'};">
     <div class="phead">
-      <img class="pavtp" src="${a}" ${canPvt?`onclick="WW.pvt('${p.authorId}','${safeA(p.authorName)}','${safeA(p.authorImg||'')}')"`:'style="cursor:default"'} alt="">
-      <div><div id="ph_${p._k}">${bh}</div><div class="ptime">${ago(p.ts)}</div></div>
+      <div class="avt-wrap">
+        <img class="pavtp" src="${avt(p.authorImg,p.authorName)}" alt="" ${canPvt?`onclick="WW.viewProfile('${p.authorId}')" style="cursor:pointer;"`:''}> 
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;">${renderUN(p.authorId,p.authorName,p.authorMCName,null)}</div>
+        <div class="ptime">${ago(p.ts)}</div>
+      </div>
+      ${canPvt?`<button class="aibtn" style="font-size:14px;" onclick="WW.pvt('${p.authorId}','${safeA(p.authorName)}','${safeA(p.authorImg||'')}')">💬</button>`:''}
     </div>
-    <div class="ptxt">${p.text}</div>
-    ${body}
+    ${(p.type==='poll'||p.type==='adminpoll')?`<div style="font-size:12px;background:rgba(240,192,64,.1);color:var(--primary);padding:3px 8px;border-radius:2px;margin-bottom:6px;display:inline-block;border:1px solid var(--primary);">📊 ${p.type==='adminpoll'?'تصويت الإدارة':'تصويت'}</div>`:''}
+    <div class="ptxt">${renderMentions(p.text)}</div>
+    ${desc}${media}
     <div class="pacts">
-      <button class="aibtn${liked?' liked':''}" onclick="WW.like('${p._k}','${p.authorId}')">❤️ ${lc}</button>
-      <button class="aibtn" onclick="WW.cmts('${p._k}')">💬 ${cc} تعليق</button>
+      <button class="aibtn ${liked?'liked':''}" onclick="WW.like('${p._k}','${p.authorId}',this)">❤️ ${lc}</button>
+      <button class="aibtn" onclick="WW.toggleCmts('${p._k}')">💬 ${cc}</button>
       <span class="vcnt">👁 ${vc}</span>
     </div>
     <div class="cmtsec" id="cs_${p._k}">
       ${cmts}
       <div class="cmtrow">
-        <img src="${avt(uimg,uname)}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0" alt="">
-        <input placeholder="اكتب تعليقك هنا..." id="ci_${p._k}">
-        <button class="btn" style="padding:6px 10px;font-size:12px" onclick="WW.cmt('${p._k}','${p.authorId}')">إرسال</button>
+        <img src="${avt(uimg,uname)}" style="width:28px;height:28px;border-radius:3px;object-fit:cover;" alt="">
+        <input class="mc-input" placeholder="اكتب تعليقك..." id="ci_${p._k}" style="margin-bottom:0;">
+        <button class="send-icon-btn" style="padding:4px 8px;" onclick="WW.cmt('${p._k}','${p.authorId}',this)">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" style="width:22px;height:22px;" alt="">
+        </button>
       </div>
     </div>
   </div>`;
 }
 
-$('doPost').addEventListener('click',()=>{
-  const txt=$('postTxt').value.trim();if(!txt){toast('⚠️ اكتب شيئاً قبل النشر!');return;}
-  const f=$('postImg').files[0];
-  const go=img=>{push(postsRef,{type:'post',ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorImg:uimg,img:img||'',likes:{},views:{},comments:{}});$('postTxt').value='';$('postImg').value='';$('mPost').classList.remove('open');toast('تم النشر بنجاح ✨');addCoins(1);};
-  if(f){const r=new FileReader();r.onload=()=>go(r.result);r.readAsDataURL(f);}else go('');
-});
-
-$('doPoll').addEventListener('click',()=>{
-  const q=$('pQ').value.trim(),o1=$('pO1').value.trim(),o2=$('pO2').value.trim();
-  if(!q||!o1||!o2){toast('⚠️ اكتب السؤال وخيارين على الأقل!');return;}
-  const opts={};[o1,o2,$('pO3').value.trim(),$('pO4').value.trim()].filter(Boolean).forEach((t,i)=>{opts['o'+i]={text:t,votes:{}};});
-  push(postsRef,{type:'poll',ts:Date.now(),text:q,authorId:uid,authorName:uname,authorImg:uimg,options:opts,likes:{},views:{},comments:{}});
-  ['pQ','pO1','pO2','pO3','pO4'].forEach(id=>$(id).value='');$('mPoll').classList.remove('open');toast('تم نشر التصويت 📊');addCoins(1);
-});
-
-// ── GLOBAL ACTIONS ───────────────────────────────────
-window.WW={
-  like(k,postAuthorId){
-    const p=allPosts.find(x=>x._k===k);if(!p)return;
-    const already=p.likes&&p.likes[uid];
-    set(ref(db,'posts6/'+k+'/likes/'+uid),already?null:true);
-    if(!already){
-      addCoins(1);
-      if(postAuthorId&&postAuthorId!==uid&&postAuthorId!=='ROBOT'){
-        get(ref(db,'users6/'+postAuthorId+'/coins')).then(s=>{set(ref(db,'users6/'+postAuthorId+'/coins'),(s.val()||0)+1);});
-      }
-    }
-  },
-  vote(pk,ok){
-    const p=allPosts.find(x=>x._k===pk);if(!p||p.type!=='poll')return;
-    Object.keys(p.options).forEach(k=>{if(p.options[k].votes&&p.options[k].votes[uid])set(ref(db,'posts6/'+pk+'/options/'+k+'/votes/'+uid),null);});
-    set(ref(db,'posts6/'+pk+'/options/'+ok+'/votes/'+uid),true);addCoins(1);
-  },
-  cmts(k){const el=$('cs_'+k);if(el)el.style.display=el.style.display==='block'?'none':'block';},
-  cmt(k,postAuthorId){
-    const inp=$('ci_'+k);const txt=inp?inp.value.trim():'';if(!txt)return;
-    push(ref(db,'posts6/'+k+'/comments'),{ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorImg:uimg});
-    if(inp)inp.value='';addCoins(1);
-    if(postAuthorId&&postAuthorId!==uid&&postAuthorId!=='ROBOT'){
-      get(ref(db,'users6/'+postAuthorId+'/coins')).then(s=>{set(ref(db,'users6/'+postAuthorId+'/coins'),(s.val()||0)+1);});
-    }
-  },
-  pvt(oUid,oNm,oImg){
-    if(!oUid||oUid===uid||oUid==='ROBOT')return;
-    curPvt={uid:oUid,name:oNm,img:oImg};
-    $('pvtAvt').src=avt(oImg,oNm);$('pvtNm').textContent=oNm;
-    if(unread[oUid]){delete unread[oUid];ndotUpdate();}
-    goPage('pvt');
-    if(pvtUnsub){pvtUnsub();pvtUnsub=null;}
-    const ck=[uid,oUid].sort().join('_');
-    pvtUnsub=onValue(ref(db,'pvt6/'+ck),snap=>{
-      let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);
-      const w=$('pvtMsgs');
-      w.innerHTML=msgs.map(m=>`<div class="mbw ${m.sid===uid?'mine':'theirs'}"><div class="mbb">${m.txt}<div class="mbt">${fmt(m.ts)}</div></div></div>`).join('');
-      w.scrollTop=w.scrollHeight;
-    });
-  },
-  buy(itemId,title,icon){
-    if(myCoins<10){toast('⚠️ عملاتك مش كافية! تحتاج 10 🪙');return;}
-    if(myBag.includes(itemId)){toast('عندك اللقب ده بالفعل في شنطتك!');return;}
-    myCoins-=10;myBag=[...myBag,itemId];
-    localStorage.setItem('din_coins',myCoins);localStorage.setItem('din_bag',JSON.stringify(myBag));
-    set(ref(db,'users6/'+uid+'/coins'),myCoins);set(ref(db,'users6/'+uid+'/bag'),myBag);
-    updateCoinsUI();renderShop();
-    toast('تم الشراء! 🎉 '+icon+' '+title+' في شنطتك — افتح شنطتك واستخدمه');
-  },
-  useTitle(icon,title){
-    const full=icon+' '+title;
-    activeTitle=activeTitle===full?'':full;
-    localStorage.setItem('din_activeTitle',activeTitle);
-    set(ref(db,'users6/'+uid+'/activeTitle'),activeTitle);
-    renderBag();refreshUI();
-    toast(activeTitle?'✅ تم تفعيل اللقب: '+activeTitle:'تم إلغاء تفعيل اللقب');
+// ══ POLLS PAGE ══
+function renderPollsPage(){
+  const adminSection=$('adminPollCreate');
+  if(adminSection)adminSection.style.display=isAdmin()?'block':'none';
+  const box=$('pollsBox');if(!box)return;
+  const polls=allPosts.filter(p=>p.type==='adminpoll');
+  if(!polls.length){
+    box.innerHTML='<div class="empty-state"><div class="ei">📊</div><p>لا توجد تصويتات بعد</p></div>';return;
   }
-};
+  box.innerHTML=polls.map(p=>postCard(p,true)).join('');
+}
+$('doAdminPoll').addEventListener('click',()=>{
+  if(!isAdmin()){toast('❌ الأدمن والأونر بس!');return;}
+  const q=$('apQ').value.trim();
+  if(!q){toast('⚠️ اكتب السؤال!');return;}
+  const opts={};let count=0;
+  for(let i=1;i<=10;i++){const v=$(`apO${i}`)?.value?.trim();if(v){opts['o'+count]={text:v,votes:{}};count++;}}
+  if(count<2){toast('⚠️ محتاج خيارين على الأقل!');return;}
+  const correctIdx=parseInt($('apCorrect').value);
+  const postData={type:'adminpoll',ts:Date.now(),text:q,authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,options:opts,likes:{},views:{},comments:{}};
+  if(correctIdx>=0)postData.correctIdx=correctIdx;
+  push(postsRef,postData);
+  for(let i=1;i<=10;i++){const el=$(`apO${i}`);if(el)el.value='';}
+  $('apQ').value='';$('apCorrect').value='-1';
+  addCoins(5);checkTask('post');toast('✅ تم نشر التصويت!');
+});
 
-$('pvtBack').addEventListener('click',()=>{if(pvtUnsub){pvtUnsub();pvtUnsub=null;}goPage(prevPg);document.querySelectorAll('.nitem').forEach(n=>n.classList.toggle('active',n.dataset.pg===prevPg));});
-function pvtSend(){const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'pvt6/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg,rid:curPvt.uid});push(ref(db,'notifs6/'+curPvt.uid),{ts:Date.now(),fid:uid,fname:uname,fimg:uimg,prev:txt});$('pvtIn').value='';addCoins(1);}
-$('pvtSend').addEventListener('click',pvtSend);
-$('pvtIn').addEventListener('keydown',e=>{if(e.key==='Enter')pvtSend();});
-
-// ── GROUP CHAT ───────────────────────────────────────
-const gcRef=ref(db,'gc6');
+// ══ GROUP CHAT ══
+const gcRef=ref(db,'cy_gc');
 onValue(gcRef,snap=>{
-  let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);
-  const box=$('gcBox');
-  if(!msgs.length){box.innerHTML=`<div style="text-align:center;color:var(--text2);padding:30px;font-size:15px">ابدأ المحادثة مع الجميع! 👋</div>`;return;}
+  let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});
+  msgs.sort((a,b)=>a.ts-b.ts);
+  const box=$('gcBox');if(!box)return;
+  if(!msgs.length){box.innerHTML='<div class="empty-state"><div class="ei">💬</div><p>ابدأ المحادثة!</p></div>';return;}
   box.innerHTML=msgs.map(m=>{
-    const me=m.sid===uid,cp=m.sid!==uid&&m.sid!=='ROBOT';
-    const bh=badge(m.sid,m.sname,m.sid===uid?null:{});
-    return`<div class="gmsg" style="${me?'flex-direction:row-reverse':''}">
-      <img class="gmsgavt" src="${avt(m.simg,m.sname)}" ${cp?`onclick="WW.pvt('${m.sid}','${safeA(m.sname)}','${safeA(m.simg||'')}')"`:'style="cursor:default"'} alt="">
-      <div class="gmsgc" style="${me?'text-align:right':''}">
-        <div class="gmsgnm" id="gn_${m._k}">${bh} <span style="font-size:10px;color:var(--text2)">${ago(m.ts)}</span></div>
-        <span class="gmsgb">${m.txt}</span>
+    const me=m.sid===uid;
+    const lc=m.likes?Object.keys(m.likes).length:0;
+    const replyHtml=m.replyTo?`<div class="reply-preview">↩️ رد على ${safeA(m.replyTo.name)}: ${safeA((m.replyTo.text||'').substring(0,40))}</div>`:'';
+    return`<div class="gmsg ${me?'mine':''}">
+      ${!me?`<img class="gmsgavt" src="${avt(m.simg,m.sname)}" alt="" onclick="WW.viewProfile('${m.sid}')">`:'' }
+      <div class="gmsgc">
+        <div class="gmsgnm">${safeA(m.sname)} <span style="font-size:10px;color:var(--text2);">${ago(m.ts)}</span></div>
+        <span class="gmsgb">${replyHtml}${renderMentions(m.txt)}</span>
+        <div class="msg-acts">
+          <button class="msgbtn ${m.likes&&m.likes[uid]?'liked':''}" onclick="WW.likeGC('${m._k}',this)">❤️ ${lc}</button>
+          <button class="msgbtn" onclick="WW.replyGC('${m._k}','${safeA(m.sname)}','${safeA((m.txt||'').substring(0,50))}')">↩️ رد</button>
+        </div>
       </div>
     </div>`;
   }).join('');
-  msgs.forEach(async m=>{
-    if(m.sid&&m.sid!=='ROBOT'&&m.sid!==uid){
-      const ud=await getUser(m.sid);
-      if(ud){const el=document.getElementById('gn_'+m._k);if(el)el.innerHTML=badge(m.sid,m.sname,ud)+` <span style="font-size:10px;color:var(--text2)">${ago(m.ts)}</span>`;}
-    }
-  });
-  box.scrollTop=box.scrollHeight;
+  setTimeout(()=>{if(box)box.scrollTop=box.scrollHeight;},50);
 });
-function gcSend(){const inp=$('gcIn'),txt=inp.value.trim();if(!txt)return;push(gcRef,{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});inp.value='';addCoins(1);}
+function gcSend(){
+  const inp=$('gcIn'),txt=inp.value.trim();if(!txt)return;
+  const msg={ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg};
+  if(replyTarget){msg.replyTo=replyTarget;}
+  push(gcRef,msg);inp.value='';replyTarget=null;$('replyingTo').style.display='none';
+  addCoins(1);checkTask('gc');
+}
 $('gcSend').addEventListener('click',gcSend);
 $('gcIn').addEventListener('keydown',e=>{if(e.key==='Enter')gcSend();});
+window.cancelReply=()=>{replyTarget=null;$('replyingTo').style.display='none';};
 
-// ── NOTIFICATIONS ────────────────────────────────────
-function ndotUpdate(){$('ndot').style.display=Object.keys(unread).length>0?'block':'none';}
-window.ndotUpdate=ndotUpdate;
-onValue(ref(db,'notifs6/'+uid),snap=>{
-  let nts=[];snap.forEach(s=>{let o=s.val();o._k=s.key;nts.push(o);});nts.sort((a,b)=>b.ts-a.ts);
-  const last=parseInt(localStorage.getItem('din_ln_'+uid)||'0');
-  nts.filter(n=>n.ts>last).forEach(n=>{unread[n.fid]=true;});ndotUpdate();
-  renderMsgs(nts);
+// ══ MESSAGES LIST ══
+function loadMsgsList(){
+  onValue(ref(db,'cy_pvt_idx/'+uid),snap=>{
+    const box=$('msgsChats');if(!box)return;
+    let convs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;convs.push(o);});
+    convs.sort((a,b)=>b.ts-a.ts);
+    const unread=convs.filter(c=>c.unread).length;
+    const mb=$('msgBadge');
+    if(mb){if(unread>0){mb.style.display='inline';mb.textContent=unread;}else mb.style.display='none';}
+    if(!convs.length){box.innerHTML='<div class="empty-state"><div class="ei">✉️</div><p>لا توجد محادثات</p></div>';return;}
+    box.innerHTML='';
+    convs.forEach(c=>{
+      const div=document.createElement('div');div.className='cli';
+      const img=document.createElement('img');img.className='clia';img.alt='';img.src=avt(c.img,c.name);
+      const info=document.createElement('div');info.className='clin';
+      info.innerHTML=`<div class="clinm" style="${c.unread?'color:var(--primary);':''}">${safeA(c.name)}</div><div class="clip">${safeA(c.last||'')}</div>`;
+      const meta=document.createElement('div');
+      meta.style.cssText='display:flex;flex-direction:column;align-items:flex-end;gap:4px;';
+      meta.innerHTML=`<span style="font-size:11px;color:var(--text2);">${ago(c.ts)}</span>${c.unread?'<div style="width:8px;height:8px;background:var(--primary);border-radius:50%;"></div>':''}`;
+      div.appendChild(img);div.appendChild(info);div.appendChild(meta);
+      div.style.cssText+='cursor:pointer;';
+      div.addEventListener('click',()=>{
+        set(ref(db,'cy_pvt_idx/'+uid+'/'+c._k+'/unread'),false);
+        prevPg='msgs';WW.pvt(c.uid,c.name,c.img||'');
+      });
+      box.appendChild(div);
+    });
+  });
+}
+function loadGroupsList(){
+  onValue(ref(db,'cy_grp_idx/'+uid),snap=>{
+    const box=$('groupsList');if(!box)return;
+    let grps=[];snap.forEach(s=>{let o=s.val();o._k=s.key;grps.push(o);});
+    if(!grps.length){box.innerHTML='<div class="empty-state"><div class="ei">👥</div><p>لا توجد مجموعات</p></div>';return;}
+    box.innerHTML='';
+    grps.forEach(g=>{
+      const div=document.createElement('div');div.className='cli';
+      div.innerHTML=`<div style="width:48px;height:48px;border-radius:3px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2px solid #7a5800;">👥</div>
+        <div class="clin"><div class="clinm">${safeA(g.name)}</div><div class="clip">${g.count||0} أعضاء</div></div>`;
+      div.addEventListener('click',()=>WW.openGrp(g._k));
+      box.appendChild(div);
+    });
+  });
+}
+window.switchMsgTab=(tab)=>{
+  $('msgsChats').style.display=tab==='chats'?'block':'none';
+  $('msgsGroups').style.display=tab==='groups'?'block':'none';
+  $('msgsSearch').style.display=tab==='search'?'block':'none';
+  document.querySelectorAll('#pg_msgs .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chats','groups','search'][i]===tab));
+  if(tab==='groups')loadGroupsList();
+};
+$('userSearch').addEventListener('input',async function(){
+  const q=this.value.trim().toLowerCase();const box=$('userSearchResults');
+  if(!q){box.innerHTML='';return;}
+  const snap=await get(ref(db,'cy_users'));let results=[];
+  snap.forEach(s=>{const u=s.val();if(s.key!==uid&&(u.name||'').toLowerCase().includes(q))results.push({...u,_k:s.key});});
+  if(!results.length){box.innerHTML='<div style="text-align:center;color:var(--text2);padding:16px;font-size:13px;">لا توجد نتائج</div>';return;}
+  box.innerHTML='';
+  results.forEach(u=>{
+    const div=document.createElement('div');div.className='cli';
+    const img=document.createElement('img');img.className='clia';img.src=avt(u.img,u.name);img.alt='';
+    const info=document.createElement('div');info.className='clin';
+    info.innerHTML=`<div class="clinm">${safeA(u.name)}</div><div class="clip">${safeA(u.mcname||'')}</div>`;
+    div.appendChild(img);div.appendChild(info);
+    div.addEventListener('click',()=>{prevPg='msgs';WW.pvt(u._k,u.name,u.img||'');});
+    box.appendChild(div);
+  });
 });
-function renderMsgs(nts){
-  const box=$('msgsList');
-  if(!nts.length){box.innerHTML=`<div style="text-align:center;color:var(--text2);padding:30px;font-size:14px">لا توجد رسائل خاصة بعد 💬</div>`;return;}
-  const seen={},uniq=nts.filter(n=>{if(seen[n.fid])return false;seen[n.fid]=true;return true;});
-  box.innerHTML=uniq.map(n=>`<div class="cli" onclick="WW.pvt('${n.fid}','${safeA(n.fname)}','${safeA(n.fimg||'')}');localStorage.setItem('din_ln_${uid}',Date.now());ndotUpdate()">
-    <img class="clia" src="${avt(n.fimg,n.fname)}" alt="">
-    <div class="clin"><div class="clinm">${badge(n.fid,n.fname,{})}</div><div class="clip">${n.prev||''}</div></div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-      <span class="clit">${ago(n.ts)}</span>
-      ${unread[n.fid]?'<div class="udot"></div>':''}
+
+// ══ PRIVATE CHAT ══
+function openPvt(oUid,oNm,oImg){
+  if(!oUid||oUid===uid)return;
+  if(pvtUnsub){pvtUnsub();pvtUnsub=null;}
+  activePvtUid=oUid;curPvt={uid:oUid,name:oNm,img:oImg};
+  $('pvtAvt').src=avt(oImg,oNm);$('pvtNm').textContent=oNm;
+  goPage('pvt');
+  const ck=[uid,oUid].sort().join('_');
+  pvtUnsub=onValue(ref(db,'cy_pvt/'+ck),snap=>{
+    let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});
+    msgs.sort((a,b)=>a.ts-b.ts);
+    const w=$('pvtMsgs');if(!w)return;
+    w.innerHTML=msgs.length?msgs.map(m=>`<div class="mbw ${m.sid===uid?'mine':'theirs'}"><div class="mbb">${renderMentions(m.txt)}<div class="mbt">${fmt(m.ts)}</div></div></div>`).join(''):'<div style="text-align:center;padding:30px;color:var(--text2);">ابدأ المحادثة! 💬</div>';
+    setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);
+  });
+}
+$('pvtSend').addEventListener('click',pvtSend);
+$('pvtIn').addEventListener('keydown',e=>{if(e.key==='Enter')pvtSend();});
+function pvtSend(){
+  const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;
+  const ck=[uid,curPvt.uid].sort().join('_');
+  push(ref(db,'cy_pvt/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});
+  set(ref(db,'cy_pvt_idx/'+uid+'/'+curPvt.uid),{uid:curPvt.uid,name:curPvt.name,img:curPvt.img,last:txt,ts:Date.now(),unread:false});
+  set(ref(db,'cy_pvt_idx/'+curPvt.uid+'/'+uid),{uid,name:uname,img:uimg,last:txt,ts:Date.now(),unread:true});
+  $('pvtIn').value='';addCoins(1);
+  pushNotif(curPvt.uid,'✉️',uname+' بعتلك رسالة','',{type:'pvt',uid,name:uname,img:uimg||''});
+}
+
+// ══ GROUP CHAT VIEW ══
+$('grpSend').addEventListener('click',grpSend);
+$('grpIn').addEventListener('keydown',e=>{if(e.key==='Enter')grpSend();});
+function grpSend(){
+  const txt=$('grpIn').value.trim();if(!txt||!curGrpId)return;
+  push(ref(db,'cy_grp_msgs/'+curGrpId),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});
+  set(ref(db,'cy_grp_idx/'+uid+'/'+curGrpId),{name:curGrpData.name,count:Object.keys(curGrpData.members||{}).length,ts:Date.now()});
+  $('grpIn').value='';addCoins(1);
+}
+
+// ══ NEW GROUP ══
+let allUsersForGrp=[];
+$('btnNewGroup').addEventListener('click',async()=>{
+  const snap=await get(ref(db,'cy_users'));allUsersForGrp=[];
+  snap.forEach(s=>{if(s.key!==uid)allUsersForGrp.push({...s.val(),_k:s.key});});
+  renderGrpMembersList('');
+  $('mNewGroup').classList.add('open');
+});
+window.renderGrpMembersList=function(q){
+  const box=$('grpMembersList');if(!box)return;
+  const filtered=q?allUsersForGrp.filter(u=>(u.name||'').toLowerCase().includes(q.toLowerCase())):allUsersForGrp;
+  box.innerHTML='';
+  filtered.forEach(u=>{
+    const lbl=document.createElement('label');
+    lbl.style.cssText='display:flex;align-items:center;gap:8px;padding:8px;border:2px solid #333;margin-bottom:4px;cursor:pointer;background:#1a1a1a;border-radius:2px;';
+    const cb=document.createElement('input');cb.type='checkbox';cb.value=u._k;cb.style.cssText='width:auto;margin:0;flex-shrink:0;';
+    const img=document.createElement('img');img.style.cssText='width:30px;height:30px;border-radius:3px;object-fit:cover;';img.src=avt(u.img,u.name);
+    const nm=document.createElement('span');nm.style.fontSize='13px';nm.textContent=u.name||'مجهول';
+    lbl.appendChild(cb);lbl.appendChild(img);lbl.appendChild(nm);box.appendChild(lbl);
+  });
+  if(!filtered.length)box.innerHTML='<div style="text-align:center;color:var(--text2);padding:14px;font-size:13px;">لا توجد نتائج</div>';
+};
+$('mNewGroupClose').addEventListener('click',()=>$('mNewGroup').classList.remove('open'));
+$('doCreateGroup').addEventListener('click',()=>{
+  const nm=$('grpNameIn').value.trim();if(!nm){toast('⚠️ اكتب اسم المجموعة!');return;}
+  const selected=[...document.querySelectorAll('#grpMembersList input:checked')].map(i=>i.value);
+  if(!selected.length){toast('⚠️ اختار عضو واحد على الأقل!');return;}
+  const members={[uid]:true};selected.forEach(m=>members[m]=true);
+  const grpId='g_'+Date.now();
+  set(ref(db,'cy_groups/'+grpId),{name:nm,members,owner:uid,ts:Date.now()});
+  Object.keys(members).forEach(m=>{
+    set(ref(db,'cy_grp_idx/'+m+'/'+grpId),{name:nm,count:Object.keys(members).length,ts:Date.now()});
+    if(m!==uid)pushNotif(m,'👥',uname+' أضافك لمجموعة: "'+nm+'"','',{type:'msgs'});
+  });
+  $('mNewGroup').classList.remove('open');$('grpNameIn').value='';
+  toast('✅ تم إنشاء المجموعة!');WW.openGrp(grpId);
+});
+
+// ══ SHOP / CHESTS ══
+function renderShop(){
+  const box=$('shopList');if(!box)return;
+  updateCoinsUI();
+  const colors=['#aaaaaa','#5599ff','#55cc44','#ff8800','#ffdd00','#aa44ff','#cc3333','#f0c040','#ff55aa','#ff8800'];
+  const borders=['#888','#3377dd','#339922','#cc6600','#ccaa00','#8822cc','#aa1111','#c8960c','#cc1177','#cc6600'];
+  box.innerHTML=CHESTS.map((c,i)=>{
+    const owned=myBag.includes(c.id);
+    return`<div class="chest-item ${owned?'owned-chest':''}" style="border-color:${borders[i]};background:linear-gradient(135deg,#1a1a1a,#0d0d0d);"
+      onclick="${owned?'':' WW.openChest(\''+c.id+'\')'}" >
+      <div style="font-size:48px;margin-bottom:6px;">🎁</div>
+      <div style="font-size:10px;font-weight:900;color:${colors[i]};margin-bottom:4px;">${c.name}</div>
+      <div style="font-size:14px;font-weight:900;color:${owned?'var(--green)':'var(--gold)'};">${owned?'مفتوح ✅':c.price+' 🪙'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ TEAMS ══
+function initColorPicker(){
+  const grid=$('colorPickerGrid');if(!grid)return;
+  grid.innerHTML=TEAM_COLORS.map((c,i)=>
+    `<div class="color-dot" style="background:${c.hex};" onclick="selectTeamColor(${i})" title="${c.name}"></div>`
+  ).join('');
+}
+window.selectTeamColor=function(i){
+  selectedTeamColor=TEAM_COLORS[i];
+  document.querySelectorAll('.color-dot').forEach((d,j)=>d.classList.toggle('selected',j===i));
+  $('selectedColorLabel').textContent='اللون المختار: '+TEAM_COLORS[i].name;
+  $('selectedColorLabel').style.color=TEAM_COLORS[i].hex;
+};
+$('doCreateTeam').addEventListener('click',async()=>{
+  if(!isAdmin()){toast('❌ الأدمن والأونر بس يقدروا يعملوا تيمات!');return;}
+  const nm=$('teamNameIn').value.trim();
+  if(!nm){toast('⚠️ اكتب اسم التيم!');return;}
+  if(!selectedTeamColor){toast('⚠️ اختار لون التيم!');return;}
+  // Check duplicates
+  const snap=await get(ref(db,'cy_teams'));
+  let nameTaken=false,colorTaken=false;
+  snap.forEach(s=>{
+    const t=s.val();
+    if((t.name||'').toLowerCase()===nm.toLowerCase())nameTaken=true;
+    if(t.color===selectedTeamColor.hex)colorTaken=true;
+  });
+  if(nameTaken){toast('❌ اسم التيم مأخوذ!');return;}
+  if(colorTaken){toast('❌ اللون ده مأخوذ!');return;}
+  const tid='t_'+Date.now();
+  set(ref(db,'cy_teams/'+tid),{name:nm,color:selectedTeamColor.hex,colorName:selectedTeamColor.name,members:{},owner:uid,ts:Date.now()});
+  $('teamNameIn').value='';selectedTeamColor=null;
+  document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));
+  $('selectedColorLabel').textContent='لم يتم اختيار لون';$('selectedColorLabel').style.color='';
+  toast('✅ تم إنشاء تيم: '+nm);renderTeams();
+});
+function renderTeams(){
+  const adminSec=$('adminTeamCreate');if(adminSec)adminSec.style.display=isAdmin()?'block':'none';
+  initColorPicker();
+  const box=$('teamsList');if(!box)return;
+  onValue(ref(db,'cy_teams'),snap=>{
+    let teams=[];snap.forEach(s=>{let o=s.val();o._k=s.key;teams.push(o);});
+    if(!teams.length){box.innerHTML='<div class="empty-state"><div class="ei">⚔️</div><p>لا توجد تيمات بعد</p></div>';return;}
+    box.innerHTML=teams.map(t=>{
+      const mc=t.members?Object.keys(t.members).length:0;
+      return`<div class="team-item" style="border-color:${t.color};">
+        <div style="width:36px;height:36px;background:${t.color};border-radius:2px;border:2px solid #000;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">⚔️</div>
+        <div style="flex:1;">
+          <div style="font-weight:900;font-size:14px;color:${t.color};">${safeA(t.name)}</div>
+          <div style="font-size:12px;color:var(--text2);">${mc} أعضاء • ${t.colorName||''}</div>
+        </div>
+        ${isAdmin()?`<button class="mc-btn small" onclick="WW.openTeam('${t._k}')" style="border-radius:2px;">إدارة</button>`:'<button class="mc-btn small" onclick="WW.viewTeam(\''+t._k+'\')" style="border-radius:2px;background:#1a1a2a;box-shadow:inset -2px -2px 0 #0a0a1a,inset 2px 2px 0 #2a2a3a;">عرض</button>'}
+      </div>`;
+    }).join('');
+  });
+}
+
+// ══ PROFILE ══
+function refreshStats(){
+  const nm=uname||'—';const a=avt(uimg,nm);
+  if($('heroAvt'))$('heroAvt').src=a;
+  if($('gcAvt'))$('gcAvt').src=a;
+  if($('heroNm'))$('heroNm').innerHTML=`<span style="color:${getRankColor(myRank)};font-weight:900;font-size:11px;">[${myRank==='admin'?'Admin':myRank==='owner'?'Owner':myRank==='vip'?'VIP':'عضو'}]</span> ${safeA(nm)}`;
+  if($('heroMCName'))$('heroMCName').textContent='🎮 '+umcname;
+  if($('heroRankBadge'))$('heroRankBadge').innerHTML=getRankBadge(myRank);
+  if($('heroTitleDisp')&&activeTitle)$('heroTitleDisp').innerHTML=`<span style="background:rgba(240,192,64,.15);color:var(--primary);font-size:10px;padding:2px 8px;border:1px solid var(--primary);border-radius:2px;">${safeA(activeTitle)}</span>`;
+  if($('nmIn'))$('nmIn').value=nm;
+  if($('mcnmIn'))$('mcnmIn').value=umcname;
+  updateCoinsUI();
+  if($('stP'))$('stP').textContent=allPosts.filter(p=>p.authorId===uid&&p.type!=='adminpoll').length;
+  const totalLikes=allPosts.filter(p=>p.authorId===uid).reduce((s,p)=>s+(p.likes?Object.keys(p.likes).length:0),0);
+  if($('stL'))$('stL').textContent=totalLikes;
+  if($('stF'))$('stF').textContent=Object.keys(myFollowers).length;
+  // Team badge
+  get(ref(db,'cy_teams')).then(snap=>{
+    snap.forEach(s=>{
+      const t=s.val();
+      if(t.members&&t.members[uid]){
+        if($('heroTeamBadge'))$('heroTeamBadge').innerHTML=`<span class="team-badge" style="color:${t.color};border-color:${t.color};">⚔️ ${safeA(t.name)}</span>`;
+      }
+    });
+  });
+  renderBag();renderTasks();renderProfileBag();
+}
+$('saveNm').addEventListener('click',async()=>{
+  const nm=$('nmIn').value.trim();const mcnm=$('mcnmIn').value.trim();
+  if(!nm){toast('⚠️ اكتب اسمك!');return;}
+  if(nm===uname&&mcnm===umcname){toast('⚠️ لم تتغير أي بيانات!');return;}
+  try{
+    const snap=await get(ref(db,'cy_users'));let ntaken=false,mctaken=false;
+    snap.forEach(s=>{
+      if(s.key===uid)return;
+      if(nm.toLowerCase()===(s.val()?.name||'').toLowerCase())ntaken=true;
+      if(mcnm.toLowerCase()===(s.val()?.mcname||'').toLowerCase())mctaken=true;
+    });
+    if(ntaken){toast('❌ الاسم مأخوذ!');return;}
+    if(mctaken){toast('❌ اسم اللعبة مأخوذ!');return;}
+  }catch(e){}
+  uname=nm;umcname=mcnm||umcname;
+  localStorage.setItem('cy_name',uname);localStorage.setItem('cy_mcname',umcname);
+  set(ref(db,'cy_users/'+uid+'/name'),uname);
+  set(ref(db,'cy_users/'+uid+'/mcname'),umcname);
+  set(ref(db,'cy_users/'+uid+'/ts'),Date.now());
+  refreshStats();toast('✅ تم الحفظ!');
+});
+$('avtFile').addEventListener('change',function(){
+  const f=this.files[0];if(!f)return;
+  if(f.size>5*1024*1024){toast('⚠️ الصورة كبيرة جداً! اختار أصغر من 5MB');return;}
+  toast('⏳ جاري رفع الصورة...');
+  const r=new FileReader();
+  r.onload=()=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      const MAX=300;
+      let w=img.width,h=img.height;
+      if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}
+      else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
+      canvas.width=w;canvas.height=h;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      uimg=canvas.toDataURL('image/jpeg',0.85);
+      localStorage.setItem('cy_img',uimg);
+      set(ref(db,'cy_users/'+uid+'/img'),uimg);
+      set(ref(db,'cy_users/'+uid+'/ts'),Date.now());
+      refreshStats();toast('✅ تم تغيير الصورة!');
+    };
+    img.src=r.result;
+  };
+  r.readAsDataURL(f);
+});
+$('promoIn').addEventListener('input',()=>{
+  const v=$('promoIn').value,msg=$('promoMsg');
+  const found=RANK_CODES[v];
+  if(found){
+    myRank=found.rank;localStorage.setItem('cy_rank',myRank);
+    set(ref(db,'cy_users/'+uid+'/rank'),myRank);
+    set(ref(db,'cy_users/'+uid+'/ts'),Date.now());
+    msg.innerHTML=`<span style="color:${found.color};font-weight:900;">✅ رتبة ${found.label} مفعّلة!</span>`;
+    refreshStats();renderPollsPage();renderTeams();
+    $('adminPollCreate').style.display=isAdmin()?'block':'none';
+    $('adminTeamCreate').style.display=isAdmin()?'block':'none';
+  } else if(v.length>=7){msg.innerHTML=`<span style="color:var(--red);">❌ كود غلط</span>`;}
+  else msg.innerHTML='';
+});
+window.switchPTab=(tab)=>{
+  ['settings','tasks','shop'].forEach(t=>{const el=$('pTab_'+t);if(el)el.style.display=t===tab?'block':'none';});
+  document.querySelectorAll('#pg_profile .tab-btn').forEach((b,i)=>b.classList.toggle('active',['settings','tasks','shop'][i]===tab));
+};
+
+// ══ TASKS ══
+function loadTasks(){
+  const today=new Date().toDateString();
+  taskProgress=JSON.parse(localStorage.getItem('cy_tasks_'+today)||'{}');
+  renderTasks();
+}
+function checkTask(action,n=1){
+  const today=new Date().toDateString();
+  DAILY_TASKS.forEach(t=>{
+    if(t.action!==action||taskProgress[t.id]>=t.goal)return;
+    taskProgress[t.id]=(taskProgress[t.id]||0)+n;
+    localStorage.setItem('cy_tasks_'+today,JSON.stringify(taskProgress));
+    if(taskProgress[t.id]>=t.goal){addCoins(t.reward);toast('🎯 مهمة مكتملة! +'+t.reward+'🪙');}
+  });
+  renderTasks();
+}
+function renderTasks(){
+  const box=$('tasksList');if(!box)return;
+  box.innerHTML=DAILY_TASKS.map(t=>{
+    const prog=Math.min(taskProgress[t.id]||0,t.goal);const done=prog>=t.goal;
+    return`<div class="task-item ${done?'task-done':''}">
+      <div style="font-size:20px;">${done?'✅':'🎯'}</div>
+      <div class="task-prog">
+        <div class="task-nm">${t.label}</div>
+        <div class="task-bar"><div class="task-fill" style="width:${(prog/t.goal)*100}%;"></div></div>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px;">${prog}/${t.goal}</div>
+      </div>
+      <div style="font-size:12px;color:var(--primary);font-weight:700;white-space:nowrap;">+${t.reward}🪙</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ BAG ══
+function renderBag(){
+  const box=$('bagList');if(!box)return;
+  if(!myBag.length){box.innerHTML='<div style="color:var(--text2);font-size:13px;text-align:center;padding:10px;">شنطتك فاضية</div>';return;}
+  const owned=CHESTS.filter(c=>myBag.includes(c.id));
+  box.innerHTML=owned.map(c=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:2px solid #333;">
+      <span style="font-size:18px;">🎁</span>
+      <span style="flex:1;font-size:13px;font-weight:700;">${c.name}</span>
+      <span style="font-size:11px;color:var(--green);">✅ مفتوح</span>
+    </div>`).join('');
+}
+function renderProfileBag(){
+  const box=$('profileBagList');if(!box)return;
+  if(!myBag.length){box.innerHTML='<div class="empty-state"><div class="ei">🎒</div><p>شنطتك فاضية</p></div>';return;}
+  const owned=CHESTS.filter(c=>myBag.includes(c.id));
+  box.innerHTML=owned.map(c=>`
+    <div class="card">
+      <div style="font-size:28px;margin-bottom:6px;">🎁</div>
+      <div style="font-weight:900;font-size:14px;color:var(--primary);">${c.name}</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px;">الأدوات المحتملة:</div>
+      ${c.items.map(i=>`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px;">${i.icon} ${i.name}</div>`).join('')}
+    </div>`).join('');
+}
+
+// ══ LEADERBOARD ══
+async function loadLeaderboard(){
+  const box=$('lbList');if(!box)return;
+  box.innerHTML='<div style="text-align:center;padding:20px;color:var(--text2);">جاري التحميل...</div>';
+  const snap=await get(ref(db,'cy_users'));let users=[];
+  snap.forEach(s=>{const u=s.val();users.push({...u,_k:s.key});});
+  users.sort((a,b)=>(b.coins||0)-(a.coins||0));
+  const ranks=['🥇','🥈','🥉'];
+  box.innerHTML=users.slice(0,10).map((u,i)=>`<div class="lb-item">
+    <div style="font-size:16px;font-weight:900;min-width:30px;text-align:center;">${ranks[i]||('#'+(i+1))}</div>
+    <img src="${avt(u.img,u.name)}" style="width:36px;height:36px;border-radius:3px;object-fit:cover;border:2px solid #333;" alt="">
+    <div style="flex:1;">
+      <div style="font-weight:700;font-size:13px;">${safeA(u.name||'مجهول')} ${u.mcname?`<span style="color:var(--text2);font-size:11px;">(${safeA(u.mcname)})</span>`:''} ${u._k===uid?'(أنت)':''}</div>
+      <div style="font-size:12px;color:var(--primary);">${u.coins||0} 🪙</div>
     </div>
+    <span style="font-size:11px;color:${getRankColor(u.rank||'member')};">${u.rank==='admin'?'Admin':u.rank==='owner'?'Owner':u.rank==='vip'?'VIP':'عضو'}</span>
   </div>`).join('');
 }
 
-// ── PRAYER TIMES ─────────────────────────────────────
-let robotDone=false;
-async function loadPrayers(){
-  try{
-    const d=new Date();
-    const r=await fetch(`https://api.aladhan.com/v1/timingsByCity/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?city=Aswan&country=Egypt&method=5`);
-    const j=await r.json();if(j.code!==200)throw 0;
-    const t=j.data.timings;
-    const pr=[{nm:'الفجر',tm:t.Fajr,k:'Fajr'},{nm:'الشروق',tm:t.Sunrise,k:'Sunrise'},{nm:'الظهر',tm:t.Dhuhr,k:'Dhuhr'},{nm:'العصر',tm:t.Asr,k:'Asr'},{nm:'المغرب',tm:t.Maghrib,k:'Maghrib'},{nm:'العشاء',tm:t.Isha,k:'Isha'}];
-    const now=new Date(),nm=now.getHours()*60+now.getMinutes();
-    const mins=pr.map(p=>{const[h,m]=p.tm.split(':').map(Number);return h*60+m;});
-    let nx=mins.findIndex(m=>m>nm);if(nx===-1)nx=0;
-    $('nxtP').textContent=`الصلاة القادمة: ${pr[nx].nm} — ${pr[nx].tm}`;
-    $('pGrid').innerHTML=pr.map((p,i)=>`<div class="pit${i===nx?' nxt':''}"><div class="pnm">${p.nm}</div><div class="ptm">${p.tm}</div></div>`).join('');
-    if(!robotDone){robotDone=true;scheduleRobot(pr,mins,nm);}
-  }catch(e){$('nxtP').textContent='تعذر تحميل المواقيت ⚠️';}
-}
-function scheduleRobot(pr,mins,nm){
-  pr.filter(p=>p.k!=='Sunrise').forEach(p=>{
-    const[h,m]=p.tm.split(':').map(Number),diff=((h*60+m)-nm)*60000;
-    if(diff>0&&diff<86400000)setTimeout(()=>{
-      const k='rp_'+p.k+'_'+new Date().toDateString();if(localStorage.getItem(k))return;localStorage.setItem(k,'1');
-      push(postsRef,{type:'post',ts:Date.now(),text:`🕌 حان وقت صلاة ${p.nm} — أسوان\n\n«حَيَّ عَلَى الصَّلَاةِ، حَيَّ عَلَى الْفَلَاحِ»\n\nتقبل الله صلاتكم 🤍`,authorId:'ROBOT',authorName:'روبوت ديني',authorImg:'',img:'',likes:{},views:{},comments:{}});
-    },diff);
+// ══ USER PROFILE VIEW ══
+async function loadUserProfile(tUid){
+  goPage('userprofile');
+  const ud=await getUser(tUid)||{name:'مجهول',img:'',coins:0,rank:'member'};
+  $('upAvt').src=avt(ud.img,ud.name);
+  $('upNm').textContent=ud.name||'مجهول';
+  $('upMCName').textContent=ud.mcname?'🎮 '+ud.mcname:'';
+  $('upRank').innerHTML=getRankBadge(ud.rank||'member');
+  $('upTitle').innerHTML=ud.activeTitle?`<span style="background:rgba(240,192,64,.15);color:var(--primary);font-size:11px;padding:2px 8px;border:1px solid var(--primary);border-radius:2px;">${safeA(ud.activeTitle)}</span>`:'';
+  const userPosts=allPosts.filter(p=>p.authorId===tUid&&p.type!=='adminpoll');
+  $('upP').textContent=userPosts.length;
+  const fCount=ud.followers?Object.keys(ud.followers).length:0;
+  $('upF').textContent=fCount;
+  $('upCoins').textContent=ud.coins||0;
+  // Team
+  get(ref(db,'cy_teams')).then(snap=>{
+    snap.forEach(s=>{const t=s.val();if(t.members&&t.members[tUid])$('upTeam').innerHTML=`<span class="team-badge" style="color:${t.color};border-color:${t.color};">⚔️ ${safeA(t.name)}</span>`;});
   });
-  [[8*60,'🌿 صباح النور — أكثروا من الصلاة على النبي ﷺ\n\n«اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ» 💚'],[14*60,'☀️ تذكير — الصلاة على النبي ﷺ\n\n«مَنْ صَلَّى عَلَيَّ صَلَاةً صَلَّى اللَّهُ عَلَيْهِ عَشْرًا»'],[21*60,'🌙 ختام اليوم بالصلاة على سيدنا محمد ﷺ\n\n«اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَيْهِ»\n\nتصبحون على خير 🤍']].forEach(([t,txt],i)=>{
-    const diff=(t-nm)*60000;if(diff>0)setTimeout(()=>{
-      const k='sp_'+i+'_'+new Date().toDateString();if(localStorage.getItem(k))return;localStorage.setItem(k,'1');
-      push(postsRef,{type:'post',ts:Date.now(),text:txt,authorId:'ROBOT',authorName:'روبوت ديني',authorImg:'',img:'',likes:{},views:{},comments:{}});
-    },diff);
-  });
+  const isFollowing=myFollowing[tUid];
+  const followBtn=$('upFollow');
+  if(followBtn){
+    if(tUid===uid){followBtn.style.display='none';}
+    else{
+      followBtn.style.display='';
+      followBtn.textContent=isFollowing?'✅ تتابعه':'+ متابعة';
+      followBtn.style.background=isFollowing?'#1a1a1a':'';
+      followBtn.onclick=()=>WW.follow(tUid);
+    }
+  }
+  const msgBtn=$('upMsg');
+  if(msgBtn){
+    if(tUid===uid){msgBtn.style.display='none';}
+    else{msgBtn.style.display='';msgBtn.onclick=()=>{prevPg='userprofile';WW.pvt(tUid,ud.name||'مجهول',ud.img||'');};}
+  }
+  $('upPosts').innerHTML=userPosts.length?userPosts.map(p=>postCard(p,false)).join(''):'<div class="empty-state"><div class="ei">📝</div><p>لا توجد منشورات</p></div>';
 }
-loadPrayers();setInterval(loadPrayers,60000);
 
-// ── AZKAR ────────────────────────────────────────────
-const AZ={
-  azS:[{t:'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ',r:1},{t:'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ',r:1},{t:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',r:100},{t:'لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',r:10}],
-  azM:[{t:'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ',r:1},{t:'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ',r:1},{t:'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ',r:3}],
-  azX:[{t:'سُبْحَانَ اللَّهِ',r:33},{t:'الْحَمْدُ لِلَّهِ',r:33},{t:'اللَّهُ أَكْبَرُ',r:34},{t:'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ',r:10},{t:'أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ وَأَتُوبُ إِلَيْهِ',r:100}]
+// ══ FOLLOW ══
+function loadFollowData(){
+  onValue(ref(db,'cy_users/'+uid+'/followers'),s=>{myFollowers=s.val()||{};refreshStats();});
+  onValue(ref(db,'cy_users/'+uid+'/following'),s=>{myFollowing=s.val()||{};});
+}
+
+// ══ DAILY LOGIN ══
+function checkDailyLogin(){
+  const today=new Date().toDateString();const last=localStorage.getItem('cy_lastLogin')||'';
+  if(last===today)return;
+  localStorage.setItem('cy_lastLogin',today);
+  addCoins(10);toast('🎉 تسجيل يومي! +10🪙');
+}
+
+// ══ NOTIF DROPDOWN ══
+function toggleNotifDropdown(){
+  const drop=$('notifDrop');
+  if(drop.classList.contains('open')){drop.classList.remove('open');}
+  else{drop.classList.add('open');markNotifsReadOnView();}
+}
+document.addEventListener('click',e=>{
+  const drop=$('notifDrop');
+  if(drop&&drop.classList.contains('open')&&!drop.contains(e.target)&&e.target.id!=='notifBtn')drop.classList.remove('open');
+});
+
+// ══ EXPLORE TABS ══
+window.switchExpTab=function(tab){
+  ['shop','teams','lb'].forEach(t=>{const el=$('expTab_'+t);if(el)el.style.display=t===tab?'block':'none';});
+  document.querySelectorAll('.exp-tab').forEach((b,i)=>b.classList.toggle('active',['shop','teams','lb'][i]===tab));
+  if(tab==='lb')loadLeaderboard();
+  if(tab==='teams')renderTeams();
 };
-const ZC={};
-Object.entries(AZ).forEach(([id,list])=>{
-  ZC[id]=list.map(()=>0);
-  $(id).innerHTML=list.map((z,i)=>`<div class="zkcard" id="zk_${id}_${i}"><div class="zktxt">${z.t}</div><div class="zkcnt">اضغط + للعد — الهدف: ${z.r} مرة</div><div class="zkrow"><button class="zkbtn" onclick="WW.zt('${id}',${i},${z.r})">+</button><div class="zknum" id="zn_${id}_${i}">0</div><button class="zkbtn" style="font-size:14px" onclick="WW.zr('${id}',${i})">↺</button></div></div>`).join('');
+
+// ══ MODALS ══
+$('btnPost').addEventListener('click',()=>$('mPost').classList.add('open'));
+$('mPostClose').addEventListener('click',()=>$('mPost').classList.remove('open'));
+$('doPost').addEventListener('click',()=>{
+  const txt=$('postTxt').value.trim();if(!txt){toast('⚠️ اكتب شيئاً!');return;}
+  push(postsRef,{type:'post',ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,likes:{},views:{},comments:{}});
+  $('postTxt').value='';$('mPost').classList.remove('open');
+  addCoins(5);checkTask('post');toast('✨ تم النشر! +5🪙');
+  Object.keys(myFollowing).forEach(fId=>pushNotif(fId,'📝',uname+' نشر منشور جديد','',{type:'home'}));
 });
-Object.assign(window.WW,{
-  zt(c,i,max){ZC[c][i]=Math.min(ZC[c][i]+1,max);$('zn_'+c+'_'+i).textContent=ZC[c][i];if(ZC[c][i]>=max){$('zk_'+c+'_'+i).style.background='linear-gradient(135deg,#c9a84c,#f0c060)';toast('أحسنت! اكتملت التسبيحة 🌟');}},
-  zr(c,i){ZC[c][i]=0;$('zn_'+c+'_'+i).textContent='0';$('zk_'+c+'_'+i).style.background='';}
+$('btnMedia').addEventListener('click',()=>$('mMedia').classList.add('open'));
+$('mMediaClose').addEventListener('click',()=>$('mMedia').classList.remove('open'));
+$('mediaFile').addEventListener('change',function(){
+  const f=this.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{
+    const prev=$('mediaPreview');
+    if(f.type.startsWith('image/'))prev.innerHTML=`<img src="${r.result}" style="width:100%;border-radius:2px;max-height:180px;object-fit:cover;border:2px solid #444;">`;
+    else prev.innerHTML=`<video src="${r.result}" controls style="width:100%;border-radius:2px;max-height:180px;border:2px solid #444;"></video>`;
+  };r.readAsDataURL(f);
+});
+$('doMedia').addEventListener('click',()=>{
+  const txt=$('mediaTxt').value.trim();const f=$('mediaFile').files[0];
+  if(!txt&&!f){toast('⚠️ اختار ملف أو اكتب وصف!');return;}
+  const go=(media,type)=>{
+    const post={type:'post',ts:Date.now(),text:txt||'',authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,likes:{},views:{},comments:{}};
+    if(type==='img')post.img=media;if(type==='vid')post.video=media;
+    push(postsRef,post);$('mediaTxt').value='';$('mediaFile').value='';$('mediaPreview').innerHTML='';$('mMedia').classList.remove('open');
+    addCoins(5);checkTask('post');toast('✨ تم النشر! +5🪙');
+  };
+  if(f){const r=new FileReader();r.onload=()=>go(r.result,f.type.startsWith('image/')?'img':'vid');r.readAsDataURL(f);}
+  else go('','');
+});
+$('btnPollHome').addEventListener('click',()=>$('mPollHome').classList.add('open'));
+$('doPollHome').addEventListener('click',()=>{
+  const q=$('phQ').value.trim();const desc=$('phDesc').value.trim();
+  if(!q){toast('⚠️ اكتب السؤال!');return;}
+  const opts={};let count=0;
+  for(let i=1;i<=10;i++){const v=$(`phO${i}`)?.value?.trim();if(v){opts['o'+count]={text:v,votes:{}};count++;}}
+  if(count<2){toast('⚠️ محتاج خيارين على الأقل!');return;}
+  const correctIdx=parseInt($('phCorrect').value);
+  const postData={type:'poll',ts:Date.now(),text:q,desc:desc||'',authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,options:opts,likes:{},views:{},comments:{}};
+  if(correctIdx>=0)postData.correctIdx=correctIdx;
+  push(postsRef,postData);
+  for(let i=1;i<=10;i++){const el=$(`phO${i}`);if(el)el.value='';}
+  $('phQ').value='';$('phDesc').value='';$('phCorrect').value='-1';
+  $('mPollHome').classList.remove('open');
+  addCoins(5);checkTask('post');toast('✅ تم نشر التصويت! +5🪙');
+  Object.keys(myFollowing).forEach(fId=>pushNotif(fId,'📊',uname+' نشر تصويت جديد','',{type:'home'}));
 });
 
-// ── INIT ─────────────────────────────────────────────
-function init(){
-  dark=localStorage.getItem('din_dark')==='1';
-  isPrem=localStorage.getItem('din_prem')==='1';
-  uimg=localStorage.getItem('din_img')||'';
-  jooTitle=localStorage.getItem('din_joo')||'';
-  activeTitle=localStorage.getItem('din_activeTitle')||'';
-  myCoins=parseInt(localStorage.getItem('din_coins')||'0');
-  myBag=JSON.parse(localStorage.getItem('din_bag')||'[]');
-  if(dark){document.body.classList.add('dark');$('darkTog').checked=true;}
-  $('uidD').value=uid;
-  $('nmIn').value=uname;
-  if(jooTitle)$('jooIn').value=jooTitle;
-  // sync from firebase
-  onValue(ref(db,'users6/'+uid+'/coins'),s=>{if(s.val()!==null){myCoins=s.val();localStorage.setItem('din_coins',myCoins);updateCoinsUI();}});
-  onValue(ref(db,'users6/'+uid+'/bag'),s=>{if(s.val()!==null){myBag=Array.isArray(s.val())?s.val():Object.values(s.val()||{});localStorage.setItem('din_bag',JSON.stringify(myBag));renderShop();}});
-  onValue(ref(db,'users6/'+uid+'/joo'),s=>{if(s.val()!==null&&s.val()!==undefined){jooTitle=s.val()||'';localStorage.setItem('din_joo',jooTitle);if(jooTitle)$('jooIn').value=jooTitle;refreshUI();}});
-  onValue(ref(db,'users6/'+uid+'/activeTitle'),s=>{if(s.val()!==null&&s.val()!==undefined){activeTitle=s.val()||'';localStorage.setItem('din_activeTitle',activeTitle);refreshUI();}});
-  onValue(ref(db,'users6/'+uid+'/prem'),s=>{if(s.val()===true){isPrem=true;localStorage.setItem('din_prem','1');refreshUI();}});
-  refreshUI();renderShop();
+// ══ FIREBASE SYNC ══
+function syncFromFirebase(){
+  onValue(ref(db,'cy_users/'+uid+'/coins'),s=>{if(s.val()!==null){myCoins=s.val();localStorage.setItem('cy_coins',myCoins);updateCoinsUI();}});
+  onValue(ref(db,'cy_users/'+uid+'/bag'),s=>{if(s.val()!==null){myBag=Array.isArray(s.val())?s.val():Object.values(s.val()||{});localStorage.setItem('cy_bag',JSON.stringify(myBag));renderBag();renderProfileBag();}});
+  onValue(ref(db,'cy_users/'+uid+'/activeTitle'),s=>{if(s.val()!==null){activeTitle=s.val()||'';localStorage.setItem('cy_activeTitle',activeTitle);}});
+  onValue(ref(db,'cy_users/'+uid+'/rank'),s=>{if(s.val()){myRank=s.val();localStorage.setItem('cy_rank',myRank);refreshStats();}});
 }
 
+// ══ GLOBAL WW ══
+window.WW={
+  like(k,postAuthorId,el){
+    const p=allPosts.find(x=>x._k===k);if(!p)return;
+    if(p.likes&&p.likes[uid]){toast('❌ اللايك مش بيتشالش!');return;}
+    set(ref(db,'cy_posts/'+k+'/likes/'+uid),true);
+    addCoins(1,el);checkTask('like');
+    if(postAuthorId&&postAuthorId!==uid){
+      get(ref(db,'cy_users/'+postAuthorId+'/coins')).then(s=>{set(ref(db,'cy_users/'+postAuthorId+'/coins'),(s.val()||0)+2);});
+      pushNotif(postAuthorId,'❤️',uname+' عمل لايك على منشورك','like_'+k+'_'+uid,{type:'home'});
+    }
+  },
+  likeCmt(pk,ck){
+    const p=allPosts.find(x=>x._k===pk);if(!p)return;
+    const c=p.comments&&p.comments[ck];if(!c)return;
+    if(c.likes&&c.likes[uid]){toast('❌ اللايك مش بيتشالش!');return;}
+    set(ref(db,'cy_posts/'+pk+'/comments/'+ck+'/likes/'+uid),true);
+    if(c.authorId&&c.authorId!==uid)pushNotif(c.authorId,'❤️',uname+' عمل لايك على تعليقك','',{type:'home'});
+  },
+  likeGC(mk,el){
+    if(el.classList.contains('liked')){toast('❌ اللايك مش بيتشالش!');return;}
+    set(ref(db,'cy_gc/'+mk+'/likes/'+uid),true);addCoins(1,el);
+  },
+  toggleCmts(k){const el=$('cs_'+k);if(el)el.style.display=el.style.display==='block'?'none':'block';},
+  cmt(k,postAuthorId,el){
+    const inp=$('ci_'+k);const txt=inp?inp.value.trim():'';if(!txt)return;
+    push(ref(db,'cy_posts/'+k+'/comments'),{ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,likes:{}});
+    if(inp)inp.value='';addCoins(1,el);checkTask('comment');
+    if(postAuthorId&&postAuthorId!==uid){
+      get(ref(db,'cy_users/'+postAuthorId+'/coins')).then(s=>{set(ref(db,'cy_users/'+postAuthorId+'/coins'),(s.val()||0)+1);});
+      pushNotif(postAuthorId,'💬',uname+' علق على منشورك: "'+txt.substring(0,30)+'"','',{type:'home'});
+    }
+  },
+  votePost(pk,ok,correctIdx,el){
+    const p=allPosts.find(x=>x._k===pk);if(!p)return;
+    if(p.options&&Object.values(p.options).some(o=>o.votes&&o.votes[uid])){toast('⚠️ مينفعش تغير تصويتك!');return;}
+    set(ref(db,'cy_posts/'+pk+'/options/'+ok+'/votes/'+uid),true);checkTask('vote');
+    const ci=correctIdx!==null&&correctIdx!==undefined?parseInt(correctIdx):null;
+    const myIdx=parseInt(ok.replace('o',''));
+    if(ci!==null&&myIdx===ci){addCoins(10,el);toast('🎉 إجابة صح! +10🪙');}
+    else if(ci!==null){toast('❌ إجابة غلط!');}
+    else{addCoins(3,el);toast('✅ تم تسجيل تصويتك +3🪙');}
+    if(p.authorId&&p.authorId!==uid)pushNotif(p.authorId,'📊',uname+' صوت في تصويتك','vote_'+pk+'_'+uid,{type:'home'});
+  },
+  voteAdminPoll(pk,ok,correctIdx,el){
+    const p=allPosts.find(x=>x._k===pk);if(!p)return;
+    if(p.options&&Object.values(p.options).some(o=>o.votes&&o.votes[uid])){toast('⚠️ مينفعش تغير تصويتك!');return;}
+    set(ref(db,'cy_posts/'+pk+'/options/'+ok+'/votes/'+uid),true);checkTask('vote');
+    const ci=correctIdx!==null?parseInt(correctIdx):null;
+    const myIdx=parseInt(ok.replace('o',''));
+    if(ci!==null&&myIdx===ci){addCoins(10,el);toast('🎉 إجابة صح! +10🪙');}
+    else if(ci!==null){toast('❌ إجابة غلط!');}
+    else{addCoins(3,el);}
+  },
+  replyGC(mk,name,txt){
+    replyTarget={msgId:mk,name,text:txt};
+    $('replyingToText').textContent='↩️ رد على '+name+': '+txt.substring(0,30)+'...';
+    $('replyingTo').style.display='flex';$('gcIn').focus();
+  },
+  pvt(oUid,oNm,oImg){openPvt(oUid,oNm,oImg);},
+  openGrp(grpId){
+    curGrpId=grpId;
+    if(grpUnsub){grpUnsub();grpUnsub=null;}
+    get(ref(db,'cy_groups/'+grpId)).then(s=>{
+      if(!s.exists())return;curGrpData=s.val();
+      $('grpNm').textContent=curGrpData.name;
+      $('grpCount').textContent=(curGrpData.members?Object.keys(curGrpData.members).length:0)+' أعضاء';
+      goPage('grp');
+      grpUnsub=onValue(ref(db,'cy_grp_msgs/'+grpId),snap=>{
+        let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});
+        msgs.sort((a,b)=>a.ts-b.ts);
+        const w=$('grpMsgs');if(!w)return;
+        w.innerHTML=msgs.map(m=>{
+          const me=m.sid===uid;
+          return`<div class="mbw ${me?'mine':'theirs'}">
+            ${!me?`<img src="${avt(m.simg,m.sname)}" style="width:26px;height:26px;border-radius:3px;object-fit:cover;margin-left:4px;align-self:flex-end;" alt="">`:'' }
+            <div class="mbb" style="${me?'':''}">
+              ${!me?`<div style="font-size:10px;font-weight:700;color:var(--primary);margin-bottom:3px;">${safeA(m.sname)}</div>`:''}
+              ${renderMentions(m.txt)}<div class="mbt">${fmt(m.ts)}</div>
+            </div>
+          </div>`;
+        }).join('');
+        setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);
+      });
+    });
+  },
+  follow(tUid){
+    const already=myFollowing[tUid];
+    if(already){
+      delete myFollowing[tUid];
+      set(ref(db,'cy_users/'+uid+'/following/'+tUid),null);
+      set(ref(db,'cy_users/'+tUid+'/followers/'+uid),null);
+      toast('تم إلغاء المتابعة');
+    }else{
+      myFollowing[tUid]=true;
+      set(ref(db,'cy_users/'+uid+'/following/'+tUid),true);
+      set(ref(db,'cy_users/'+tUid+'/followers/'+uid),true);
+      addCoins(1);
+      pushNotif(tUid,'👤',uname+' بدأ يتابعك! 🎉','follow_'+uid,{type:'home'});
+      toast('✅ تم المتابعة!');
+    }
+    delete usersCache[tUid];loadUserProfile(tUid);refreshStats();
+  },
+  viewProfile(tUid){prevPg=document.querySelector('.tni.active')?.dataset.pg||'home';loadUserProfile(tUid);},
+  openChest(id){
+    const chest=CHESTS.find(c=>c.id===id);if(!chest)return;
+    if(myCoins<chest.price){toast('⚠️ تحتاج '+chest.price+'🪙');return;}
+    if(myBag.includes(id)){toast('فتحته بالفعل!');return;}
+    myCoins-=chest.price;myBag=[...myBag,id];
+    localStorage.setItem('cy_coins',myCoins);localStorage.setItem('cy_bag',JSON.stringify(myBag));
+    set(ref(db,'cy_users/'+uid+'/coins'),myCoins);set(ref(db,'cy_users/'+uid+'/bag'),myBag);
+    updateCoinsUI();
+    // Open animation
+    const modal=$('mChest');$('chestModalTitle').textContent='🎁 '+chest.name;
+    $('chestOpenAnim').textContent='🎁';$('chestResult').style.display='none';$('chestOkBtn').style.display='none';
+    modal.classList.add('open');
+    setTimeout(()=>{
+      $('chestOpenAnim').style.fontSize='60px';
+      const item=chest.items[Math.floor(Math.random()*chest.items.length)];
+      $('chestItemIcon').textContent=item.icon;
+      $('chestItemName').textContent=item.name;
+      $('chestItemDesc').textContent=item.desc;
+      $('chestResult').style.display='block';$('chestOkBtn').style.display='block';
+      $('chestOpenAnim').textContent='✨';
+    },1200);
+    renderShop();renderBag();renderProfileBag();
+    toast('🎉 فتحت: '+chest.name+'!');
+  },
+  openTeam(tid){
+    currentTeamId=tid;
+    const addSec=$('addTeamMemberSection');
+    const isAd=isAdmin();if(addSec)addSec.style.display=isAd?'block':'none';
+    get(ref(db,'cy_teams/'+tid)).then(s=>{
+      if(!s.exists())return;const t=s.val();
+      $('teamMembersTitle').innerHTML=`<span style="color:${t.color};">⚔️ ${safeA(t.name)}</span>`;
+      const cont=$('teamMembersContent');cont.innerHTML='<div style="text-align:center;padding:10px;color:var(--text2);">جاري التحميل...</div>';
+      const members=t.members?Object.keys(t.members):[];
+      if(!members.length){cont.innerHTML='<div class="empty-state"><div class="ei">👥</div><p>لا توجد أعضاء</p></div>';}
+      else{
+        cont.innerHTML='';
+        members.forEach(async mId=>{
+          const u=await getUser(mId)||{name:'مجهول',img:''};
+          const row=document.createElement('div');
+          row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px solid #333;';
+          const img=document.createElement('img');img.src=avt(u.img,u.name);img.style.cssText='width:36px;height:36px;border-radius:3px;object-fit:cover;border:2px solid #333;cursor:pointer;';
+          img.onclick=()=>{$('mTeamMembers').classList.remove('open');WW.viewProfile(mId);};
+          const info=document.createElement('div');info.style.flex='1';
+          info.innerHTML=`<div style="font-weight:700;font-size:13px;">${safeA(u.name)}</div><div style="font-size:11px;color:var(--text2);">${safeA(u.mcname||'')}</div>`;
+          row.appendChild(img);row.appendChild(info);
+          if(isAdmin()){
+            const rm=document.createElement('button');rm.className='mc-btn small danger';rm.textContent='إزالة';rm.style.borderRadius='2px';
+            rm.onclick=()=>{remove(ref(db,'cy_teams/'+tid+'/members/'+mId));toast('تم الإزالة');WW.openTeam(tid);};
+            row.appendChild(rm);
+          }
+          cont.appendChild(row);
+        });
+      }
+      $('mTeamMembers').classList.add('open');
+    });
+  },
+  viewTeam(tid){
+    currentTeamId=tid;
+    const addSec=$('addTeamMemberSection');if(addSec)addSec.style.display='none';
+    this.openTeam(tid);
+  },
+  backFromPvt(){if(pvtUnsub){pvtUnsub();pvtUnsub=null;}activePvtUid='';goPage(prevPg);},
+  backFromGrp(){if(grpUnsub){grpUnsub();grpUnsub=null;}goPage('msgs');},
+  backFromUserProfile(){goPage(prevPg);},
+};
+
+// ══ TEAM MEMBER SEARCH ══
+window.searchTeamMember=async function(q){
+  const box=$('teamMemberSearchResults');if(!box)return;
+  if(!q){box.innerHTML='';return;}
+  const snap=await get(ref(db,'cy_users'));let results=[];
+  snap.forEach(s=>{const u=s.val();if(s.key!==uid&&(u.name||'').toLowerCase().includes(q.toLowerCase()))results.push({...u,_k:s.key});});
+  box.innerHTML='';
+  results.forEach(u=>{
+    const div=document.createElement('div');div.className='cli';div.style.marginBottom='4px';
+    const img=document.createElement('img');img.className='clia';img.src=avt(u.img,u.name);img.alt='';
+    const info=document.createElement('div');info.className='clin';
+    info.innerHTML=`<div class="clinm">${safeA(u.name)}</div><div class="clip">${safeA(u.mcname||'')}</div>`;
+    const btn=document.createElement('button');btn.className='mc-btn small';btn.textContent='إضافة';btn.style.borderRadius='2px';
+    btn.onclick=()=>{
+      if(!currentTeamId)return;
+      set(ref(db,'cy_teams/'+currentTeamId+'/members/'+u._k),true);
+      toast('✅ تم إضافة '+u.name);
+      pushNotif(u._k,'⚔️','تمت إضافتك لتيم جديد!','',{type:'home'});
+      btn.textContent='✅';btn.disabled=true;
+    };
+    div.appendChild(img);div.appendChild(info);div.appendChild(btn);
+    box.appendChild(div);
+  });
+};
+
+// ══ INIT ══
+function init(){
+  if(!uid)uid=localStorage.getItem('cy_uid')||'';
+  if(!uname)uname=localStorage.getItem('cy_name')||'';
+  umcname=localStorage.getItem('cy_mcname')||'';
+  uimg=localStorage.getItem('cy_img')||'';
+  myCoins=parseInt(localStorage.getItem('cy_coins')||'0');
+  myBag=JSON.parse(localStorage.getItem('cy_bag')||'[]');
+  myRank=localStorage.getItem('cy_rank')||'member';
+  activeTitle=localStorage.getItem('cy_activeTitle')||'';
+  loadFollowData();loadMsgsList();loadGroupsList();loadTasks();
+  syncFromFirebase();refreshStats();checkDailyLogin();
+  renderShop();renderTeams();renderPollsPage();
+  initColorPicker();
+}
 checkSetup();
 </script>
 </body>
