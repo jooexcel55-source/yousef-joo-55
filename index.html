@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -234,6 +235,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10" style="width:26px;height:26px;image-rendering:pixelated;border:2px solid var(--primary);" alt="">
     ⚔️ Golden Warriors
   </div>
+  <h6>المبرمج:يوسف الهواري</h6>
   <div class="hright">
     <span class="coins-hdr" id="coinsBadge">🪙 0</span>
     <button class="icbtn" id="notifBtn">🔔<span class="ndot" id="ndot"></span></button>
@@ -563,7 +565,7 @@ function updSel(wid,cv,sid){const s=$(sid);if(!s)return;s.innerHTML='<option val
 window.apOC=2;window.phOC=2;
 function initOpts(){buildOpts('apOptsWrap','apOC');updSel('apOptsWrap','apOC','apCorrect');buildOpts('phOptsWrap','phOC');updSel('phOptsWrap','phOC','phCorrect');}
 function getOpts(wid,cv){const opts={};let c=0;for(let i=0;i<window[cv];i++){const v=$(wid+'_o'+i)?.value?.trim();if(v){opts['o'+c]={text:v,votes:{}};c++;}}return{opts,count:c};}
-$('addOptBtn').addEventListener('click',()=>{if(window.apOC<10){window.apOC++;buildOpts('apOptsWrap','apOC');updSel('apOptsWrap','apOC','apCorrect');}else toast('الحد 10 خيارات!');});
+
 $('phAddOpt').addEventListener('click',()=>{if(window.phOC<10){window.phOC++;buildOpts('phOptsWrap','phOC');updSel('phOptsWrap','phOC','phCorrect');}else toast('الحد 10 خيارات!');});
 function renderLaw(){
   const l=LAWS[lawIndex];if(!l)return;$('lawNum').textContent=l.n;$('lawProgress').textContent=`قانون ${lawIndex+1} من ${LAWS.length}`;
@@ -578,12 +580,10 @@ function renderChests(){
   const box=$('chestsList');if(!box)return;
   box.innerHTML=CHESTS.map(c=>`<div class="chest-card" style="border-color:${c.bc};"><div class="chest-header" style="background:linear-gradient(180deg,${c.color}18,transparent);"><div class="chest-num-badge">${c.num}</div><div class="chest-icon">🎁</div><div class="chest-name" style="color:${c.color};">${c.name}</div></div><div class="chest-body"><div style="font-size:9px;color:var(--text2);font-weight:700;margin-bottom:3px;">المحتويات:</div>${c.items.map(it=>`<div class="chest-row"><span>⚔️</span><span>${it}</span></div>`).join('')}</div><div class="chest-price" style="color:${c.color};">${c.price.toLocaleString()} $</div></div>`).join('');
 }
-$('sNext1').addEventListener('click',async()=>{
-  const nm=$('sName').value.trim(),mcnm=$('sMCName').value.trim(),pass=$('sServerPass').value.trim();
-  if(!nm){toast('⚠️ اكتب اسمك!');return;}if(!mcnm){toast('⚠️ اكتب اسمك في اللعبة!');return;}if(pass!==SERVER_PASS){toast('❌ كلمة مرور السيرفر غلط!');return;}
-  $('sNext1').disabled=true;$('sNext1').textContent='جاري التحقق...';
-  try{const snap=await get(ref(db,'cy_users'));let nt=false,mt=false;snap.forEach(s=>{const u=s.val();if((u?.name||'').toLowerCase()===nm.toLowerCase())nt=true;if((u?.mcname||'').toLowerCase()===mcnm.toLowerCase())mt=true;});if(nt){toast('❌ الاسم مأخوذ!');$('sNext1').disabled=false;$('sNext1').textContent='التالي ←';return;}if(mt){toast('❌ اسم اللعبة مأخوذ!');$('sNext1').disabled=false;$('sNext1').textContent='التالي ←';return;}}catch(e){}
-  $('setupStep1').style.display='none';$('setupStep2').style.display='block';$('st1').classList.remove('active');$('st2').classList.add('active');$('sNext1').disabled=false;$('sNext1').textContent='التالي ←';
+$('sNext1').addEventListener('click',()=>{
+  const nm=$('sName').value.trim(),mcnm=$('sMCName').value.trim();
+  if(!nm){toast('⚠️ اكتب اسمك!');return;}if(!mcnm){toast('⚠️ اكتب اسمك في اللعبة!');return;}
+  $('setupStep1').style.display='none';$('setupStep2').style.display='block';$('st1').classList.remove('active');$('st2').classList.add('active');
 });
 $('sDone').addEventListener('click',async()=>{
   if(!sImgReady){toast('⚠️ الصورة لسه بتتحمل...');return;}
