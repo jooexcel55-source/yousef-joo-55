@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -17,6 +18,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body.no-scroll{overflow:hidden;height:100vh;position:fixed;width:100%;}
 img{image-rendering:auto;max-width:100%;}
 .mc-btn{background:#4a7a10;border:3px solid #000;box-shadow:inset -3px -3px 0 #1e3a00,inset 3px 3px 0 #7aaa25;color:#fff;font-family:'Cairo',sans-serif;font-weight:900;font-size:14px;padding:10px 16px;cursor:pointer;transition:all .1s;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;border-radius:2px;text-shadow:1px 1px 0 #000;}
 .mc-btn:active{box-shadow:inset 3px 3px 0 #1e3a00,inset -3px -3px 0 #7aaa25;transform:translateY(1px);}
@@ -77,7 +79,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
 .ptime{font-size:10px;color:var(--text2);}
 .ptxt{font-size:13px;line-height:1.7;margin-bottom:8px;white-space:pre-wrap;word-break:break-word;}
 .pdesc{font-size:11px;color:var(--text2);margin-bottom:8px;border-right:2px solid var(--primary);padding-right:8px;}
-.pimg{width:100%;border-radius:2px;margin-bottom:8px;max-height:260px;object-fit:cover;border:2px solid #222;}
+.pimg{width:100%;border-radius:2px;margin-bottom:8px;max-height:400px;object-fit:contain;border:2px solid #222;background:#000;}
 .pvid{width:100%;border-radius:2px;margin-bottom:8px;max-height:220px;border:2px solid #222;}
 .pacts{display:flex;align-items:center;gap:5px;flex-wrap:wrap;border-top:2px solid #1a1a1a;padding-top:7px;}
 .aibtn{background:#0d0d0d;border:2px solid #1e1e1e;color:var(--text2);cursor:pointer;font-size:11px;display:flex;align-items:center;gap:3px;padding:5px 8px;font-family:'Cairo',sans-serif;transition:all .15s;border-radius:2px;}
@@ -159,7 +161,8 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
 @keyframes ta{0%{opacity:0;transform:translateX(-50%) translateY(-8px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}75%{opacity:1}100%{opacity:0}}
 .coin-pop{position:fixed;pointer-events:none;font-size:13px;font-weight:900;color:var(--primary);z-index:5000;animation:coinfly 1.2s ease forwards;text-shadow:1px 1px 0 #000;}
 @keyframes coinfly{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-55px) scale(1.2)}}
-.setup-screen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;}
+.setup-screen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;touch-action:none;}
+.setup-bg{position:absolute;inset:0;background:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10') repeat;background-size:64px;image-rendering:pixelated;filter:brightness(.3);pointer-events:none;}
 .setup-bg{position:absolute;inset:0;background:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10') repeat;background-size:64px;image-rendering:pixelated;filter:brightness(.3);}
 .setup-box{background:#151515;border:3px solid var(--primary);box-shadow:0 0 40px rgba(240,192,64,.25);padding:22px 16px;width:100%;max-width:390px;text-align:center;color:var(--text);position:relative;z-index:1;}
 .slogo{font-size:21px;font-weight:900;color:var(--primary);margin-bottom:4px;text-shadow:2px 2px 0 #000,3px 3px 0 #7a5800;}
@@ -217,9 +220,21 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
       <input class="mc-input" id="sName" placeholder="اسمك الحقيقي...">
       <div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">اسمك في اللعبة (Minecraft):</div>
       <input class="mc-input" id="sMCName" placeholder="اسمك في ماين كرافت...">
-      <div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">كلمة مرور السيرفر:</div>
-      <input class="mc-input" id="sServerPass" type="password" placeholder="كلمة مرور السيرفر...">
-      <button class="mc-btn" style="width:100%;margin-top:4px;" id="sNext1">التالي ←</button>
+     <div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">كلمة مرور السيرفر:</div>
+<input class="mc-input" id="sServerPass" type="password" placeholder="كلمة مرور السيرفر...">
+<div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">كود دخولك الشخصي (اختاره واحفظه):</div>
+<input class="mc-input" id="sPersonalCode" type="password" placeholder="كود خاص بيك تحفظه...">
+      <button class="mc-btn" style="width:100%;margin-top:4px;" id="sNext1">تسجيل جديد ←</button>
+<div style="text-align:center;margin-top:8px;font-size:11px;color:var(--text2);">عندك حساب قديم؟</div>
+<button class="mc-btn blue" style="width:100%;margin-top:4px;" id="sLoginBtn">🔑 دخول بحساب موجود</button>
+<div id="loginSection" style="display:none;margin-top:10px;">
+  <div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">اسمك في اللعبة (Minecraft):</div>
+  <input class="mc-input" id="loginMCName" placeholder="اسمك في ماين كرافت...">
+  <div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">كودك الشخصي:</div>
+  <input class="mc-input" id="loginCode" type="password" placeholder="كودك الخاص...">
+  <div id="loginErr" style="font-size:11px;color:var(--red);margin-bottom:6px;display:none;"></div>
+  <button class="mc-btn gold" style="width:100%;" id="doLogin">دخول ⚔️</button>
+</div>
     </div>
     <div id="setupStep2" style="display:none">
       <div style="font-size:44px;margin-bottom:10px;">🎉</div>
@@ -243,6 +258,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
 
 <nav class="tnav">
   <button class="tni active" data-pg="home"><span class="tni-icon">🏠</span><span class="tni-label">المنشورات</span></button>
+  <button class="tni" data-pg="auction"><span class="tni-icon">🔨</span><span class="tni-label">المزاد</span></button>
   <button class="tni" data-pg="laws"><span class="tni-icon">📜</span><span class="tni-label">القوانين</span></button>
   <button class="tni" data-pg="explore"><span class="tni-icon">⚔️</span><span class="tni-label">استكشاف</span></button>
   <button class="tni" data-pg="chat"><span class="tni-icon">💬</span><span class="tni-label">شات</span></button>
@@ -404,7 +420,49 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
     <div id="tasksList"></div>
   </div>
 </div>
+<div id="pg_auction" class="page">
+  <div style="background:linear-gradient(135deg,#0d0a00,#1a1500);border:3px solid var(--primary);padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+    <div>
+      <div style="font-size:17px;font-weight:900;color:var(--primary);text-shadow:2px 2px 0 #000;">🔨 سوق المزاد</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:2px;">كل 5 ساعات — أعلى سعر يفوز</div>
+    </div>
+    <button class="mc-btn gold" id="btnNewAuction" style="display:none;">➕ مزاد جديد</button>
+  </div>
+  <div class="tab-btns" style="margin-bottom:10px;">
+    <button class="tab-btn active" onclick="switchAuctionTab('open')">🟢 مفتوح</button>
+    <button class="tab-btn" onclick="switchAuctionTab('closed')">🔴 مغلق</button>
+  </div>
+  <div id="auctionList"></div>
+</div>
 
+<!-- Modal نشر مزاد -->
+<div class="moverlay" id="mNewAuction">
+  <div class="modal">
+    <button class="mclose" onclick="document.getElementById('mNewAuction').classList.remove('open')">×</button>
+    <div class="mtitle">🔨 نشر مزاد جديد</div>
+    <input class="mc-input" id="auctTitle" placeholder="اسم الآيتم أو الحاجة اللي بتبيعها...">
+    <textarea class="mc-input" id="auctDesc" placeholder="وصف تفصيلي..." style="min-height:70px;"></textarea>
+    <input type="file" accept="image/*" class="mc-input" id="auctImg">
+    <div id="auctImgPreview" style="margin-bottom:8px;"></div>
+    <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:4px;">السعر الأساسي (🪙):</div>
+    <input class="mc-input" type="number" id="auctBasePrice" placeholder="مثال: 50000" min="1000">
+    <div style="font-size:10px;color:var(--primary);margin-bottom:8px;">⚡ أقل مزايدة مسموح بها: 10% من السعر الأساسي تلقائياً</div>
+    <button class="mc-btn" style="width:100%;" id="doNewAuction">🔨 نشر المزاد (+200 🪙)</button>
+  </div>
+</div>
+
+<!-- Modal المزايدة -->
+<div class="moverlay" id="mBid">
+  <div class="modal">
+    <button class="mclose" onclick="document.getElementById('mBid').classList.remove('open')">×</button>
+    <div class="mtitle">💰 أضف مزايدة</div>
+    <div id="bidCurrentInfo" style="background:#0d0d0d;border:2px solid var(--primary);padding:10px;margin-bottom:10px;border-radius:2px;"></div>
+    <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:4px;">مبلغ مزايدتك (🪙):</div>
+    <input class="mc-input" type="number" id="bidAmount" placeholder="اكتب مبلغك...">
+    <div id="bidError" style="font-size:11px;color:var(--red);margin-bottom:6px;display:none;"></div>
+    <button class="mc-btn" style="width:100%;" id="doBid">💰 زايد الآن</button>
+  </div>
+</div>
 <div id="pg_pvt" class="page chat-page">
   <div class="pvt-bar">
     <button onclick="WW.backFromPvt()" style="background:#5a0000;border:2px solid #000;color:#fff;font-size:16px;cursor:pointer;padding:4px 9px;border-radius:2px;">←</button>
@@ -466,7 +524,11 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
 let sImg='';let sImgReady=true;
 window.handleSetupAvatar=function(input){
   const f=input.files[0];if(!f)return;
-  sImgReady=false;const prev=document.getElementById('sAvtPreview');prev.style.opacity='.5';
+  sImgReady=false;
+  const prev=document.getElementById('sAvtPreview');prev.style.opacity='.5';
+  // عطّل أزرار التالي والدخول لحد ما الصورة تخلص
+  const n1=document.getElementById('sNext1'),n2=document.getElementById('sDone');
+  if(n1)n1.disabled=true;if(n2)n2.disabled=true;
   const reader=new FileReader();
   reader.onload=function(e){
     const img=new Image();
@@ -475,8 +537,12 @@ window.handleSetupAvatar=function(input){
       if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
       canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);
       sImg=canvas.toDataURL('image/jpeg',0.85);prev.src=sImg;prev.style.opacity='1';sImgReady=true;
+      if(n1)n1.disabled=false;if(n2)n2.disabled=false;
     };
-    img.onerror=function(){sImg=e.target.result;prev.src=sImg;prev.style.opacity='1';sImgReady=true;};
+    img.onerror=function(){
+      sImg=e.target.result;prev.src=sImg;prev.style.opacity='1';sImgReady=true;
+      if(n1)n1.disabled=false;if(n2)n2.disabled=false;
+    };
     img.src=e.target.result;
   };reader.readAsDataURL(f);
 };
@@ -586,18 +652,39 @@ $('sNext1').addEventListener('click',()=>{
 });
 $('sDone').addEventListener('click',async()=>{
   if(!sImgReady){toast('⚠️ الصورة لسه بتتحمل...');return;}
+  const personalCode=$('sPersonalCode').value.trim();
+  if(!personalCode||personalCode.length<4){toast('⚠️ اكتب كود شخصي (4 أحرف على الأقل)!');return;}
   uid='u_'+Date.now();uname=$('sName').value.trim()||'لاعب';umcname=$('sMCName').value.trim()||'Steve';uimg=sImg||'';myCoins=50000;myRank='member';
   localStorage.setItem('cy_uid',uid);localStorage.setItem('cy_name',uname);localStorage.setItem('cy_mcname',umcname);localStorage.setItem('cy_img',uimg);localStorage.setItem('cy_coins','50000');localStorage.setItem('cy_rank','member');
-  await set(ref(db,'cy_users/'+uid),{name:uname,mcname:umcname,img:uimg,coins:50000,rank:'member',activeTitle:'',ts:Date.now()});
+  await set(ref(db,'cy_users/'+uid),{name:uname,mcname:umcname,img:uimg,coins:50000,rank:'member',activeTitle:'',personalCode,ts:Date.now()});
   $('setupScreen').style.cssText='display:none!important';goPage('home');init();
 });
-function checkSetup(){uid=localStorage.getItem('cy_uid')||'';uname=localStorage.getItem('cy_name')||'';if(uid&&uname){$('setupScreen').style.cssText='display:none!important';init();}}
+const APP_VERSION='3';
+function checkSetup(){
+  const savedVer=localStorage.getItem('cy_version')||'1';
+  if(savedVer!==APP_VERSION){
+    localStorage.removeItem('cy_uid');localStorage.removeItem('cy_name');localStorage.removeItem('cy_mcname');
+    localStorage.removeItem('cy_img');localStorage.removeItem('cy_coins');localStorage.removeItem('cy_rank');
+    localStorage.removeItem('cy_activeTitle');localStorage.removeItem('cy_lastLogin');
+    Object.keys(localStorage).forEach(k=>{if(k.startsWith('cy_tasks_'))localStorage.removeItem(k);});
+    localStorage.setItem('cy_version',APP_VERSION);
+    return;
+  }
+  uid=localStorage.getItem('cy_uid')||'';uname=localStorage.getItem('cy_name')||'';
+  if(uid&&uname){$('setupScreen').style.cssText='display:none!important';init();}
+}
 function goPage(pg){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const el=$('pg_'+pg);if(el)el.classList.add('active');
   document.querySelectorAll('.tni').forEach(n=>n.classList.toggle('active',n.dataset.pg===pg));window.scrollTo(0,0);
   if(pg==='laws'){lawIndex=0;renderLaw();}if(pg==='explore'){renderChests();renderTeams();}
 }
-document.querySelectorAll('.tni').forEach(btn=>{btn.addEventListener('click',()=>{const pg=btn.dataset.pg;if(!['home','polls','laws','explore','chat','msgs','profile'].includes(pg))return;prevPg=pg;goPage(pg);if(pg==='msgs'){loadMsgsList();loadGroupsList();}if(pg==='polls')renderPollsPage();});});
+document.querySelectorAll('.tni').forEach(btn=>{btn.addEventListener('click',()=>{const pg=btn.dataset.pg;if(!['home','polls','laws','explore','chat','msgs','profile','auction'].includes(pg))return;prevPg=pg;goPage(pg);if(pg==='msgs'){loadMsgsList();loadGroupsList();}if(pg==='polls')renderPollsPage();
+                                                                                  if(pg==='auction'){auctionTab='open';renderAuctions();}
+  if(pg==='chat'){
+    setTimeout(()=>{const box=$('gcBox');if(box)box.scrollTop=box.scrollHeight;},100);
+    setTimeout(()=>{const box=$('gcBox');if(box)box.scrollTop=box.scrollHeight;},400);
+  }
+});});
 $('notifBtn').addEventListener('click',()=>toggleNotifDrop());
 function pushNotif(tUid,icon,text,key,linkObj){if(!tUid||tUid===uid)return;const data={ts:Date.now(),icon,text,unread:true,link:JSON.stringify(linkObj||{type:'home'})};if(key)set(ref(db,'cy_notifs/'+tUid+'/'+key),data);else push(ref(db,'cy_notifs/'+tUid),data);}
 function markRead(){get(ref(db,'cy_notifs/'+uid)).then(snap=>{snap.forEach(s=>{if(s.val()?.unread)set(ref(db,'cy_notifs/'+uid+'/'+s.key+'/unread'),false);});});$('ndot').style.display='none';}
@@ -777,6 +864,320 @@ function init(){
   myCoins=parseInt(localStorage.getItem('cy_coins')||'0');myRank=localStorage.getItem('cy_rank')||'member';activeTitle=localStorage.getItem('cy_activeTitle')||'';
   loadFollowData();loadMsgsList();loadGroupsList();loadTasks();syncFromFirebase();refreshStats();checkDailyLogin();initOpts();renderChests();renderTeams();renderPollsPage();
 }
+  // ==================== AUCTION SYSTEM ====================
+const auctRef = ref(db, 'cy_auctions');
+let allAuctions = [];
+let curBidAuctId = '';
+let auctionTab = 'open';
+
+function canPostAuction() {
+  return myRank === 'admin' || myRank === 'owner' || myRank === 'vip';
+}
+
+onValue(auctRef, snap => {
+  allAuctions = [];
+  snap.forEach(s => { let o = s.val(); o._k = s.key; allAuctions.push(o); });
+  allAuctions.sort((a, b) => b.ts - a.ts);
+  renderAuctions();
+  checkExpiredAuctions();
+});
+
+function checkExpiredAuctions() {
+  allAuctions.forEach(a => {
+    if (a.status === 'open' && Date.now() > a.endsAt) {
+      set(ref(db, 'cy_auctions/' + a._k + '/status'), 'closed');
+    }
+  });
+}
+
+function timeLeft(endsAt) {
+  const diff = endsAt - Date.now();
+  if (diff <= 0) return 'انتهى';
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  return (h > 0 ? h + ':' : '') + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+function renderAuctions() {
+  const btnNew = $('btnNewAuction');
+  if (btnNew) btnNew.style.display = canPostAuction() ? 'inline-flex' : 'none';
+  const box = $('auctionList');
+  if (!box) return;
+  const list = allAuctions.filter(a => auctionTab === 'open' ? a.status === 'open' : a.status !== 'open');
+  if (!list.length) {
+    box.innerHTML = `<div class="empty-state"><div class="ei">${auctionTab === 'open' ? '🔨' : '🔴'}</div><p>${auctionTab === 'open' ? 'لا توجد مزادات مفتوحة الآن' : 'لا توجد مزادات مغلقة'}</p></div>`;
+    return;
+  }
+  box.innerHTML = list.map(a => auctCard(a)).join('');
+  // تشغيل العدادات
+  list.filter(a => a.status === 'open').forEach(a => {
+    startCountdown(a._k, a.endsAt);
+  });
+}
+
+function auctCard(a) {
+  const isOpen = a.status === 'open';
+  const curPrice = a.currentPrice || a.basePrice;
+  const curBidder = a.currentBidder || null;
+  const curBidderName = a.currentBidderName || '—';
+  const minBid = Math.ceil(a.basePrice * 0.1) + curPrice;
+  const isOwner = a.authorId === uid;
+  const lc = a.likes ? Object.keys(a.likes).length : 0;
+  const cc = a.comments ? Object.keys(a.comments).length : 0;
+  const statusBadge = isOpen
+    ? `<span style="background:rgba(85,170,51,.15);color:var(--green);border:2px solid var(--green);font-size:9px;font-weight:900;padding:2px 8px;border-radius:2px;">🟢 مفتوح</span>`
+    : `<span style="background:rgba(204,51,51,.15);color:var(--red);border:2px solid var(--red);font-size:9px;font-weight:900;padding:2px 8px;border-radius:2px;">🔴 مغلق</span>`;
+
+  const winnerSection = !isOpen
+    ? `<div style="background:rgba(240,192,64,.08);border:2px solid var(--primary);padding:10px;margin:8px 0;border-radius:2px;">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:3px;">🏆 الفائز بالمزاد:</div>
+        <div style="font-size:14px;font-weight:900;color:var(--primary);">${curBidder ? safeA(curBidderName) : 'لم يوجد مزايدات'}</div>
+        <div style="font-size:12px;color:var(--text);margin-top:2px;">السعر النهائي: <b style="color:var(--primary);">${curPrice.toLocaleString()} 🪙</b></div>
+      </div>`
+    : '';
+
+  const sellerActions = isOwner && !isOpen
+    ? `<button class="mc-btn small gold" onclick="WW.confirmSale('${a._k}')">✅ تم البيع لـ ${curBidder ? safeA(curBidderName) : '—'}</button>`
+    : '';
+
+  const bidBtn = isOpen && !isOwner
+    ? `<button class="mc-btn small" onclick="WW.openBid('${a._k}')">💰 زايد</button>`
+    : '';
+
+  const cmts = a.comments ? Object.entries(a.comments).map(([k, c]) =>
+    `<div class="cmt"><img src="${avt(c.authorImg, c.authorName)}" style="width:26px;height:26px;border-radius:3px;object-fit:cover;flex-shrink:0;" alt="">
+    <div class="cmtbbl"><div class="cmtnm">${safeA(c.authorName)}</div><div class="cmttxt">${rMen(c.text)}</div></div></div>`
+  ).join('') : '';
+
+  return `<div class="card" style="border-color:${isOpen ? 'rgba(85,170,51,.4)' : 'rgba(204,51,51,.3)'};">
+    <div class="phead">
+      <img class="pavtp" src="${avt(a.authorImg, a.authorName)}" alt="">
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:700;">${safeA(a.authorName)}</div>
+        <div class="ptime">${ago(a.ts)}</div>
+      </div>
+      ${statusBadge}
+    </div>
+    <div style="font-size:15px;font-weight:900;color:var(--primary);margin-bottom:4px;">${safeA(a.title)}</div>
+    ${a.desc ? `<div class="pdesc">${safeA(a.desc)}</div>` : ''}
+    ${a.img ? `<img class="pimg" src="${a.img}" style="object-fit:contain;background:#000;" loading="lazy" alt="">` : ''}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0;">
+      <div style="background:#0d0d0d;border:2px solid #1a1a1a;padding:8px;text-align:center;border-radius:2px;">
+        <div style="font-size:9px;color:var(--text2);">السعر الأساسي</div>
+        <div style="font-size:13px;font-weight:900;color:var(--text);">${a.basePrice.toLocaleString()} 🪙</div>
+      </div>
+      <div style="background:#0d0d0d;border:2px solid var(--primary);padding:8px;text-align:center;border-radius:2px;">
+        <div style="font-size:9px;color:var(--text2);">أعلى مزايدة</div>
+        <div style="font-size:13px;font-weight:900;color:var(--primary);">${curPrice.toLocaleString()} 🪙</div>
+        ${curBidder ? `<div style="font-size:9px;color:var(--text2);margin-top:1px;">بـ ${safeA(curBidderName)}</div>` : ''}
+      </div>
+    </div>
+    ${isOpen ? `<div style="background:#0a0a0a;border:2px solid #1a1a1a;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;border-radius:2px;">
+      <span style="font-size:11px;color:var(--text2);">⏱️ ينتهي بعد:</span>
+      <span style="font-size:14px;font-weight:900;color:var(--primary);font-family:monospace;" id="cd_${a._k}">جاري...</span>
+    </div>` : ''}
+    ${winnerSection}
+    <div class="pacts">
+      <button class="aibtn ${a.likes && a.likes[uid] ? 'liked' : ''}" onclick="WW.likeAuct('${a._k}',this)">❤️ ${lc}</button>
+      <button class="aibtn" onclick="WW.toggleAuctCmts('${a._k}')">💬 ${cc}</button>
+      ${bidBtn}
+      ${sellerActions}
+      ${isAdmin() && isOpen ? `<button class="mc-btn small danger" onclick="WW.closeAuct('${a._k}')">🔒 إغلاق</button>` : ''}
+    </div>
+    <div class="cmtsec" id="acs_${a._k}">
+      ${cmts}
+      <div class="cmtrow">
+        <img src="${avt(uimg, uname)}" style="width:26px;height:26px;border-radius:3px;object-fit:cover;" alt="">
+        <input class="mc-input" placeholder="تعليقك على المزاد..." id="aci_${a._k}">
+        <button class="sbtn" style="padding:4px 7px;" onclick="WW.cmtAuct('${a._k}',this)">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" style="width:19px;height:19px;" alt="">
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+const countdownIntervals = {};
+function startCountdown(aId, endsAt) {
+  if (countdownIntervals[aId]) clearInterval(countdownIntervals[aId]);
+  const el = document.getElementById('cd_' + aId);
+  if (!el) return;
+  function update() {
+    const diff = endsAt - Date.now();
+    if (!document.getElementById('cd_' + aId)) { clearInterval(countdownIntervals[aId]); return; }
+    if (diff <= 0) {
+      document.getElementById('cd_' + aId) && (document.getElementById('cd_' + aId).textContent = 'انتهى');
+      clearInterval(countdownIntervals[aId]);
+      set(ref(db, 'cy_auctions/' + aId + '/status'), 'closed');
+      return;
+    }
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    const txt = (h > 0 ? h + ':' : '') + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    const cdEl = document.getElementById('cd_' + aId);
+    if (cdEl) cdEl.textContent = txt;
+  }
+  update();
+  countdownIntervals[aId] = setInterval(update, 1000);
+}
+
+window.switchAuctionTab = function(tab) {
+  auctionTab = tab;
+  document.querySelectorAll('#pg_auction .tab-btn').forEach((b, i) => b.classList.toggle('active', ['open', 'closed'][i] === tab));
+  renderAuctions();
+};
+
+$('btnNewAuction').addEventListener('click', () => $('mNewAuction').classList.add('open'));
+
+$('auctImg').addEventListener('change', function() {
+  const f = this.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { $('auctImgPreview').innerHTML = `<img src="${r.result}" style="width:100%;max-height:150px;object-fit:contain;border:2px solid #222;border-radius:2px;background:#000;">`; };
+  r.readAsDataURL(f);
+});
+
+$('doNewAuction').addEventListener('click', () => {
+  if (!canPostAuction()) { toast('❌ الإدمن والـ VIP والأونر بس!'); return; }
+  const title = $('auctTitle').value.trim();
+  const desc = $('auctDesc').value.trim();
+  const base = parseInt($('auctBasePrice').value);
+  if (!title) { toast('⚠️ اكتب اسم الآيتم!'); return; }
+  if (!base || base < 100) { toast('⚠️ السعر الأساسي لازم يكون 100 🪙 على الأقل!'); return; }
+  const f = $('auctImg').files[0];
+  const doPost = (imgData) => {
+    push(auctRef, {
+      title, desc: desc || '', img: imgData || '', basePrice: base, currentPrice: base,
+      currentBidder: null, currentBidderName: null,
+      authorId: uid, authorName: uname, authorImg: uimg,
+      status: 'open', ts: Date.now(), endsAt: Date.now() + 5 * 60 * 60 * 1000,
+      likes: {}, comments: {}
+    });
+    $('auctTitle').value = ''; $('auctDesc').value = ''; $('auctBasePrice').value = '';
+    $('auctImg').value = ''; $('auctImgPreview').innerHTML = '';
+    $('mNewAuction').classList.remove('open');
+    addCoins(200); toast('✅ تم نشر المزاد! +200 🪙');
+    goPage('auction');
+  };
+  if (f) { const r = new FileReader(); r.onload = () => doPost(r.result); r.readAsDataURL(f); }
+  else doPost('');
+});
+
+let curBidAuct = null;
+$('doBid').addEventListener('click', () => {
+  if (!curBidAuct) return;
+  const amt = parseInt($('bidAmount').value);
+  const errEl = $('bidError');
+  const curPrice = curBidAuct.currentPrice || curBidAuct.basePrice;
+  const minBid = curPrice + Math.ceil(curBidAuct.basePrice * 0.1);
+  errEl.style.display = 'none';
+  if (!amt || isNaN(amt)) { errEl.textContent = '⚠️ اكتب مبلغ!'; errEl.style.display = 'block'; return; }
+  if (amt < minBid) { errEl.textContent = `❌ المبلغ لازم يكون ${minBid.toLocaleString()} 🪙 على الأقل!`; errEl.style.display = 'block'; return; }
+  if (curBidAuct.currentBidder === uid) { errEl.textContent = '❌ أنت أعلى مزايد بالفعل!'; errEl.style.display = 'block'; return; }
+  set(ref(db, 'cy_auctions/' + curBidAuct._k + '/currentPrice'), amt);
+  set(ref(db, 'cy_auctions/' + curBidAuct._k + '/currentBidder'), uid);
+  set(ref(db, 'cy_auctions/' + curBidAuct._k + '/currentBidderName'), uname);
+  if (curBidAuct.authorId && curBidAuct.authorId !== uid)
+    pushNotif(curBidAuct.authorId, '💰', uname + ' زايد على مزادك بـ ' + amt.toLocaleString() + ' 🪙', '', { type: 'auction' });
+  $('mBid').classList.remove('open');
+  $('bidAmount').value = '';
+  toast('✅ تم تسجيل مزايدتك! 💰');
+});
+
+// WW extensions for auction
+Object.assign(WW, {
+  openBid(aId) {
+    const a = allAuctions.find(x => x._k === aId);
+    if (!a || a.status !== 'open') { toast('❌ المزاد مغلق!'); return; }
+    if (a.authorId === uid) { toast('❌ مش تقدر تزايد على مزادك!'); return; }
+    curBidAuct = a;
+    const curPrice = a.currentPrice || a.basePrice;
+    const minBid = curPrice + Math.ceil(a.basePrice * 0.1);
+    $('bidCurrentInfo').innerHTML = `
+      <div style="font-size:13px;font-weight:900;color:var(--primary);margin-bottom:5px;">${safeA(a.title)}</div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+        <span style="color:var(--text2);">السعر الحالي:</span>
+        <span style="font-weight:900;color:var(--primary);">${curPrice.toLocaleString()} 🪙</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+        <span style="color:var(--text2);">أقل مزايدة مقبولة:</span>
+        <span style="font-weight:900;color:var(--green);">${minBid.toLocaleString()} 🪙</span>
+      </div>
+      ${a.currentBidderName ? `<div style="font-size:10px;color:var(--text2);">أعلى مزايد الآن: <b style="color:var(--primary);">${safeA(a.currentBidderName)}</b></div>` : ''}`;
+    $('bidError').style.display = 'none';
+    $('bidAmount').value = minBid;
+    $('mBid').classList.add('open');
+  },
+  likeAuct(aId, el) {
+    const a = allAuctions.find(x => x._k === aId);
+    if (!a) return;
+    if (a.likes && a.likes[uid]) { toast('❌ اللايك مش بيتشالش!'); return; }
+    set(ref(db, 'cy_auctions/' + aId + '/likes/' + uid), true);
+    addCoins(50, el);
+  },
+  toggleAuctCmts(aId) {
+    const el = $('acs_' + aId);
+    if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
+  },
+  cmtAuct(aId, el) {
+    const inp = $('aci_' + aId), txt = inp ? inp.value.trim() : '';
+    if (!txt) return;
+    push(ref(db, 'cy_auctions/' + aId + '/comments'), {
+      ts: Date.now(), text: txt, authorId: uid, authorName: uname, authorImg: uimg
+    });
+    if (inp) inp.value = '';
+    addCoins(50, el);
+  },
+  closeAuct(aId) {
+    set(ref(db, 'cy_auctions/' + aId + '/status'), 'closed');
+    toast('🔒 تم إغلاق المزاد');
+  },
+  confirmSale(aId) {
+    const a = allAuctions.find(x => x._k === aId);
+    if (!a) return;
+    const winner = a.currentBidderName || 'لا أحد';
+    const price = (a.currentPrice || a.basePrice).toLocaleString();
+    toast(`✅ تم البيع لـ ${winner} بـ ${price} 🪙`);
+    set(ref(db, 'cy_auctions/' + aId + '/sold'), true);
+    if (a.currentBidder)
+      pushNotif(a.currentBidder, '🎉', 'فزت بمزاد "' + a.title + '" بـ ' + price + ' 🪙! تواصل مع الناشر', '', { type: 'auction' });
+  }
+});
+// ==================== END AUCTION ====================
+  // ===== LOGIN SYSTEM =====
+$('sLoginBtn').addEventListener('click',()=>{
+  const ls=$('loginSection');
+  ls.style.display=ls.style.display==='none'?'block':'none';
+});
+
+$('doLogin').addEventListener('click',async()=>{
+  const mcname=$('loginMCName').value.trim();
+  const code=$('loginCode').value.trim();
+  const errEl=$('loginErr');
+  errEl.style.display='none';
+  if(!mcname){errEl.textContent='⚠️ اكتب اسمك في اللعبة!';errEl.style.display='block';return;}
+  if(!code){errEl.textContent='⚠️ اكتب كودك الشخصي!';errEl.style.display='block';return;}
+  errEl.textContent='⏳ جاري البحث...';errEl.style.display='block';errEl.style.color='var(--primary)';
+  const snap=await get(ref(db,'cy_users'));
+  let found=null;
+  snap.forEach(s=>{
+    const u=s.val();
+    if((u.mcname||'').toLowerCase()===mcname.toLowerCase()&&u.personalCode===code)
+      found={...u,_k:s.key};
+  });
+  if(!found){errEl.textContent='❌ اسم اللعبة أو الكود غلط!';errEl.style.display='block';errEl.style.color='var(--red)';return;}
+  uid=found._k;uname=found.name||'';umcname=found.mcname||'';uimg=found.img||'';
+  myCoins=found.coins||0;myRank=found.rank||'member';activeTitle=found.activeTitle||'';
+  localStorage.setItem('cy_uid',uid);localStorage.setItem('cy_name',uname);
+  localStorage.setItem('cy_mcname',umcname);localStorage.setItem('cy_img',uimg);
+  localStorage.setItem('cy_coins',myCoins);localStorage.setItem('cy_rank',myRank);
+  localStorage.setItem('cy_version','2');
+  $('setupScreen').style.cssText='display:none!important';
+  goPage('home');init();
+  toast('✅ أهلاً '+uname+'! رجعت لحسابك 🎉');
+});
+// ===== END LOGIN =====
 checkSetup();
 </script>
 </body>
