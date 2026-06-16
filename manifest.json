@@ -1,7 +1,8 @@
 {
   "name": "Golden Warriors",
   "short_name": "GW ⚔️",
-  "start_url": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0d0d0d",
   "theme_color": "#f0c040",
