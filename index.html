@@ -396,7 +396,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
 </style>
 </head>
 <body>
-<div id="loadingScreen" style="position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+<div id="loadingScreen" style="position:fixed;inset:0;z-index:99999;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
   <div style="position:absolute;inset:0;background:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10') repeat;background-size:64px;image-rendering:pixelated;filter:brightness(.2);pointer-events:none;"></div>
   <div style="position:relative;z-index:1;text-align:center;">
     <div style="font-size:52px;margin-bottom:8px;animation:goldGlow 1.5s infinite alternate;filter:drop-shadow(0 0 10px #f0c040);">⚔️</div>
@@ -1086,7 +1086,7 @@ return`<div class="gmsg ${me?'mine':''}">
     <div class="gmsgc"><div class="gmsgnm">${safeA(m.sname)} <span style="font-size:9px;color:var(--text2);">${ago(m.ts)}</span></div><span class="gmsgb">${rH}${m.txt?rMen(m.txt):''}${mediaHTML}</span>
     <div class="msg-acts"><button class="msgbtn ${m.likes&&m.likes[uid]?'liked':''}" onclick="WW.likeGC('${m._k}',this)">❤️ ${lc}</button><button class="msgbtn" onclick="WW.replyGC('${m._k}','${safeA(m.sname)}','${safeA((m.txt||'').substring(0,50))}')">↩️ رد</button>${(m.sid===uid||isAdmin())?`<button class="msgbtn" onclick="WW.deleteGCMsg('${m._k}')" style="color:var(--red);border-color:var(--red);">🗑️</button>`:''}${m.sid===uid&&m.txt?`<button class="msgbtn" onclick="WW.editGCMsg('${m._k}','${safeA(m.txt||'')}')" style="color:#55aaff;border-color:#55aaff;">✏️</button>`:''}
 </div></div>
-  </div>`;}).join('');setTimeout(()=>{const b=$('gcBox');if(b)b.scrollTop=b.scrollHeight;},50);
+  </div>`;}).join('');setTimeout(()=>{if(w){w.scrollTop=w.scrollHeight;}$('pvtIn').focus();},50);
 });
 function gcSend(){const inp=$('gcIn'),txt=inp.value.trim();if(!txt)return;const msg={ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg};if(replyTarget)msg.replyTo=replyTarget;push(gcRef,msg);inp.value='';replyTarget=null;$('replyingTo').style.display='none';addCoins(100);checkTask('gc');}
 $('gcSend').addEventListener('click',gcSend);$('gcIn').addEventListener('keydown',e=>{if(e.key==='Enter')gcSend();});
