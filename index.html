@@ -2,6 +2,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -373,6 +374,12 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
 .read-avt{width:14px;height:14px;border-radius:50%;object-fit:cover;border:1px solid var(--primary);}
 .tick-single{color:#aaa;font-size:10px;margin-top:2px;text-align:left;}
 .tick-double{color:var(--primary);font-size:10px;margin-top:2px;text-align:left;}
+  .voice-btn{background:#5a0080;border:3px solid #000;box-shadow:inset -2px -2px 0 #2a0040,inset 2px 2px 0 #8a20c0;color:#fff;font-size:16px;cursor:pointer;padding:4px 8px;border-radius:2px;flex-shrink:0;user-select:none;}
+.voice-btn.recording{background:#cc0000;box-shadow:inset -2px -2px 0 #7a0000,inset 2px 2px 0 #ff3333;animation:recPulse .6s infinite alternate;}
+@keyframes recPulse{from{box-shadow:inset -2px -2px 0 #7a0000,inset 2px 2px 0 #ff3333;}to{box-shadow:inset -2px -2px 0 #7a0000,inset 2px 2px 0 #ff3333,0 0 12px #cc0000;}}
+.voice-msg{display:flex;align-items:center;gap:7px;background:rgba(90,0,128,.15);border:2px solid #5a0080;border-radius:8px;padding:7px 10px;margin-top:4px;min-width:160px;}
+.voice-play{background:#5a0080;border:none;color:#fff;font-size:14px;cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.voice-dur{font-size:10px;color:var(--text2);flex:1;}
 .file-btn{background:#1a3a6a;border:3px solid #000;box-shadow:inset -2px -2px 0 #0a1a3a,inset 2px 2px 0 #2a5aaa;color:#fff;font-size:16px;cursor:pointer;padding:4px 8px;border-radius:2px;flex-shrink:0;}
   .page.active.chat-page{display:flex!important;flex-direction:column;height:calc(100vh - var(--nav-h) - var(--tab-h));padding:0;overflow:hidden;}
 .gchat-scroll{flex:1;overflow-y:auto;scroll-behavior:smooth;}
@@ -389,7 +396,18 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
 </style>
 </head>
 <body>
-
+<div id="loadingScreen" style="position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+  <div style="position:absolute;inset:0;background:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10') repeat;background-size:64px;image-rendering:pixelated;filter:brightness(.2);pointer-events:none;"></div>
+  <div style="position:relative;z-index:1;text-align:center;">
+    <div style="font-size:52px;margin-bottom:8px;animation:goldGlow 1.5s infinite alternate;filter:drop-shadow(0 0 10px #f0c040);">⚔️</div>
+    <div style="font-size:22px;font-weight:900;color:#f0c040;text-shadow:2px 2px 0 #000,3px 3px 0 #7a5800;margin-bottom:4px;">Golden Warriors</div>
+    <div style="font-size:12px;color:#777;margin-bottom:24px;">🌿 كن الأسطورة .. وانتزع المجد</div>
+    <div style="width:220px;height:8px;background:#1a1a1a;border:2px solid #333;border-radius:4px;overflow:hidden;margin:0 auto 10px;">
+      <div id="loadBar" style="height:100%;width:0%;background:linear-gradient(90deg,#f0c040,#e8a800);border-radius:4px;transition:width .4s ease;"></div>
+    </div>
+    <div id="loadMsg" style="font-size:11px;color:#555;font-weight:700;">جاري التحميل...</div>
+  </div>
+</div>
 <div class="setup-screen" id="setupScreen">
   <div class="setup-bg"></div>
   <div class="setup-box">
@@ -438,6 +456,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
   </div>
   <div class="hright">
     <span class="coins-hdr" id="coinsBadge">🪙 0</span>
+<button class="icbtn" id="adminPanelBtn" style="display:none;background:linear-gradient(135deg,#5a0000,#aa0000);border-color:#cc0000;font-size:13px;" onclick="WW.openAdminPanel()">🛡️</button>
     <button class="icbtn" id="notifBtn">🔔<span class="ndot" id="ndot"></span></button>
   </div>
 </header>
@@ -560,6 +579,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
       <div class="gcbar-row">
         <img id="gcAvt" src="" style="width:28px;height:28px;border-radius:3px;object-fit:cover;flex-shrink:0;border:2px solid var(--primary);" alt="">
         <input class="mc-input" id="gcIn" placeholder="اكتب رسالتك...">
+        <button class="voice-btn" id="gcVoiceBtn" title="رسالة صوتية" onmousedown="WW.startVoice('gc')" ontouchstart="WW.startVoice('gc')" onmouseup="WW.stopVoice('gc')" ontouchend="WW.stopVoice('gc')">🎤</button>
         <label class="file-btn" title="إرسال صورة/فيديو">📎<input type="file" accept="image/*,video/*" id="gcFile" style="display:none" onchange="WW.sendGCMedia()"></label>
         <button class="sbtn" id="gcSend"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" alt=""></button>
       </div>
@@ -675,6 +695,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
   </div>
   <div class="pvtmsgs" id="pvtMsgs"></div>
   <div class="pvt-in-bar"><input class="mc-input" id="pvtIn" placeholder="اكتب رسالتك...">
+    <button class="voice-btn" id="pvtVoiceBtn" title="رسالة صوتية" onmousedown="WW.startVoice('pvt')" ontouchstart="WW.startVoice('pvt')" onmouseup="WW.stopVoice('pvt')" ontouchend="WW.stopVoice('pvt')">🎤</button>
 <label class="file-btn" title="إرسال صورة/فيديو">📎<input type="file" accept="image/*,video/*" id="pvtFile" style="display:none" onchange="WW.sendPvtMedia()"></label><button class="sbtn" id="pvtSend"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" alt=""></button></div>
 </div>
 
@@ -685,7 +706,8 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
     <div style="flex:1;"><div id="grpNm" style="font-weight:700;font-size:13px;"></div><div id="grpCount" style="font-size:10px;color:var(--text2);"></div></div>
   </div>
   <div class="pvtmsgs" id="grpMsgs"></div>
-  <div class="pvt-in-bar"><input class="mc-input" id="grpIn" placeholder="اكتب رسالتك..."><label class="file-btn" title="صورة/فيديو">📎<input type="file" accept="image/*,video/*" id="grpFile" style="display:none" onchange="WW.sendGrpMedia()"></label><button class="sbtn" id="grpSend"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" alt=""></button></div>
+  <div class="pvt-in-bar"><input class="mc-input" id="grpIn" placeholder="اكتب رسالتك...">
+    <button class="voice-btn" id="grpVoiceBtn" title="رسالة صوتية" onmousedown="WW.startVoice('grp')" ontouchstart="WW.startVoice('grp')" onmouseup="WW.stopVoice('grp')" ontouchend="WW.stopVoice('grp')">🎤</button><label class="file-btn" title="صورة/فيديو">📎<input type="file" accept="image/*,video/*" id="grpFile" style="display:none" onchange="WW.sendGrpMedia()"></label><button class="sbtn" id="grpSend"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" alt=""></button></div>
 </div>
 
 <div id="pg_userprofile" class="page" style="padding:0;overflow-y:auto;max-height:calc(100vh - var(--nav-h) - var(--tab-h));">
@@ -735,6 +757,48 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
   <button class="img-viewer-close" onclick="WW.closeViewer()">✕</button>
   <div id="imgViewerContent"></div>
   <div class="img-viewer-name" id="imgViewerName"></div>
+</div>
+  <div class="moverlay" id="mAdminPanel">
+  <div class="modal" style="border-color:#cc0000;max-height:92vh;">
+    <button class="mclose" onclick="document.getElementById('mAdminPanel').classList.remove('open')">×</button>
+    <div class="mtitle" style="color:#ff5555;">🛡️ لوحة تحكم الإدارة</div>
+    <div style="background:#0d0000;border:2px solid #cc0000;padding:10px;margin-bottom:10px;border-radius:4px;">
+      <div style="font-size:10px;color:#ff5555;font-weight:700;margin-bottom:6px;">📋 الأوامر المتاحة:</div>
+      <div style="font-size:10px;color:#aaa;line-height:2;">
+        🪙 ادي [اسم اللاعب] [مبلغ]<br>
+        ✂️ اخصم [اسم اللاعب] [مبلغ]<br>
+        👑 اخلي [اسم اللاعب] ادمن<br>
+        👑 اخلي [اسم اللاعب] اونر<br>
+        💎 اخلي [اسم اللاعب] vip<br>
+        🌿 اخلي [اسم اللاعب] عضو<br>
+        🗑️ امسح منشور [id المنشور]<br>
+        🔇 امسح رسالة [id الرسالة]<br>
+        📢 اعلن [النص]
+      </div>
+    </div>
+    <textarea class="mc-input" id="adminCmdIn" placeholder="اكتب الأمر هنا..." style="min-height:80px;border-color:#cc0000;"></textarea>
+    <div id="adminCmdResult" style="font-size:12px;padding:8px;background:#0d0d0d;border:2px solid #1a1a1a;margin-bottom:8px;min-height:36px;border-radius:4px;display:none;"></div>
+    <button class="mc-btn danger" style="width:100%;font-size:14px;" onclick="WW.runAdminCmd()">⚡ تنفيذ الأمر</button>
+  </div>
+</div>
+  <div class="moverlay" id="mEditPost">
+  <div class="modal">
+    <button class="mclose" onclick="document.getElementById('mEditPost').classList.remove('open')">×</button>
+    <div class="mtitle">✏️ تعديل المنشور</div>
+    <textarea class="mc-input" id="editPostTxt" style="min-height:100px;"></textarea>
+    <input type="hidden" id="editPostId">
+    <button class="mc-btn" style="width:100%;" onclick="WW.saveEditPost()">حفظ التعديل ✅</button>
+  </div>
+</div>
+<div class="moverlay" id="mEditMsg">
+  <div class="modal">
+    <button class="mclose" onclick="document.getElementById('mEditMsg').classList.remove('open')">×</button>
+    <div class="mtitle">✏️ تعديل الرسالة</div>
+    <input class="mc-input" id="editMsgTxt">
+    <input type="hidden" id="editMsgId">
+    <input type="hidden" id="editMsgType">
+    <button class="mc-btn" style="width:100%;" onclick="WW.saveEditMsg()">حفظ ✅</button>
+  </div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -915,29 +979,7 @@ const APP_VERSION='3';
   if (tab === 'pvt') { loadMsgsList(); loadGroupsList(); }
   if (tab === 'gc') { setTimeout(() => { const b = document.getElementById('gcBox'); if(b) b.scrollTop = b.scrollHeight; }, 100); }
 };
-function checkSetup(){
-  uid=localStorage.getItem('cy_uid')||'';
-  uname=localStorage.getItem('cy_name')||'';
- if(uid&&uname){
-  umcname=localStorage.getItem('cy_mcname')||'';
-  uimg=localStorage.getItem('cy_img')||'';
-  myCoins=parseInt(localStorage.getItem('cy_coins')||'0');
-  myRank=localStorage.getItem('cy_rank')||'member';
-  activeTitle=localStorage.getItem('cy_activeTitle')||'';
-  $('setupScreen').style.cssText='display:none!important';
-  init();
-  get(ref(db,'cy_users/'+uid)).then(snap=>{
-    if(!snap.exists()){localStorage.clear();location.reload();return;}
-    const u=snap.val();
-    myRank=u.rank||'member';myCoins=u.coins||0;uimg=u.img||uimg;
-    localStorage.setItem('cy_rank',myRank);localStorage.setItem('cy_coins',myCoins);
-    refreshStats();updateCoinsUI();
-  }).catch(()=>{});
-  return;
-}
-// مفيش بيانات محلية — ودي لشاشة التسجيل
-  $('setupScreen').style.display='flex';
-}
+function checkSetup(){}
 function goPage(pg){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const el=$('pg_'+pg);if(el)el.classList.add('active');
   document.querySelectorAll('.tni').forEach(n=>n.classList.toggle('active',n.dataset.pg===pg));window.scrollTo(0,0);
@@ -975,7 +1017,19 @@ onValue(ref(db,'cy_notifs/'+uid),snap=>{
 async function clearAllNotifs(){const snap=await get(ref(db,'cy_notifs/'+uid));snap.forEach(s=>remove(ref(db,'cy_notifs/'+uid+'/'+s.key)));$('ndot').style.display='none';$('notifDropList').innerHTML='<div style="text-align:center;padding:16px;color:var(--text2);font-size:12px;">لا توجد إشعارات</div>';toast('✅ تم المسح!');}
 window.clearAllNotifs=clearAllNotifs;
 const postsRef=ref(db,'cy_posts');
-onValue(postsRef,snap=>{allPosts=[];snap.forEach(s=>{let o=s.val();o._k=s.key;allPosts.push(o);});allPosts.sort((a,b)=>b.ts-a.ts);renderPosts();renderPollsPage();refreshStats();});
+let postsRenderTimer = null;
+onValue(postsRef, snap => {
+  allPosts = [];
+  snap.forEach(s => { let o = s.val(); o._k = s.key; allPosts.push(o); });
+  allPosts.sort((a, b) => b.ts - a.ts);
+  // تأجيل الرندر عشان مش كل تغيير يعمل رندر فوري
+  if (postsRenderTimer) clearTimeout(postsRenderTimer);
+  postsRenderTimer = setTimeout(() => {
+    renderPosts();
+    renderPollsPage();
+    refreshStats();
+  }, 150);
+});
 $('srch').addEventListener('input',renderPosts);
   let renderTimer;
 function renderPosts(){
@@ -1009,7 +1063,7 @@ function postCard(p,isPoll=false){
     ${(p.type==='poll'||p.type==='adminpoll')?`<div style="font-size:10px;background:rgba(240,192,64,.08);color:var(--primary);padding:2px 7px;border:1px solid rgba(240,192,64,.25);display:inline-block;margin-bottom:5px;">📊 ${p.type==='adminpoll'?'تصويت الإدارة':'تصويت'}</div>`:''}
     <div class="ptxt">${rMen(p.text)}</div>
     ${p.desc?`<div class="pdesc">${safeA(p.desc)}</div>`:''}${media}
-    <div class="pacts"><button class="aibtn ${liked?'liked':''}" onclick="WW.like('${p._k}','${p.authorId}',this)">❤️ ${lc}</button><button class="aibtn" onclick="WW.toggleCmts('${p._k}')">💬 ${cc}</button><span class="vcnt">👁 ${vc}</span></div>
+    <div class="pacts"><button class="aibtn ${liked?'liked':''}" onclick="WW.like('${p._k}','${p.authorId}',this)">❤️ ${lc}</button><button class="aibtn" onclick="WW.toggleCmts('${p._k}')">💬 ${cc}</button><span class="vcnt">👁 ${vc}</span>${p.authorId===uid?`<button class="aibtn" onclick="WW.editPost('${p._k}','${safeA(p.text||'')}')" style="color:#55aaff;border-color:#55aaff;">✏️</button><button class="aibtn" onclick="WW.deletePost('${p._k}')" style="color:var(--red);border-color:var(--red);">🗑️</button>`:(isAdmin()?`<button class="aibtn" onclick="WW.deletePost('${p._k}')" style="color:var(--red);border-color:var(--red);">🗑️</button>`:'')}</div>
     <div class="cmtsec" id="cs_${p._k}">${cmts}<div class="cmtrow"><img src="${avt(uimg,uname)}" style="width:26px;height:26px;border-radius:3px;object-fit:cover;" alt=""><input class="mc-input" placeholder="تعليقك..." id="ci_${p._k}"><button class="sbtn" style="padding:4px 7px;" onclick="WW.cmt('${p._k}','${p.authorId}',this)"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" style="width:19px;height:19px;" alt=""></button></div></div>
   </div>`;
 }
@@ -1026,12 +1080,13 @@ onValue(gcRef,snap=>{
   let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);
   const box=$('gcBox');if(!box)return;
   if(!msgs.length){box.innerHTML='<div class="empty-state"><div class="ei">💬</div><p>ابدأ المحادثة مع الجميع!</p></div>';return;}
-  box.innerHTML=msgs.map(m=>{const me=m.sid===uid;const lc=m.likes?Object.keys(m.likes).length:0;const rH=m.replyTo?`<div class="reply-prev">↩️ ${safeA(m.replyTo.name)}: ${safeA((m.replyTo.text||'').substring(0,40))}</div>`:'';const mediaHTML=m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" alt="" onclick="WW.openViewer('${m.mediaData}','صورة','img')" style="cursor:pointer;">`:m.mediaType==='video'?`<video class="media-msg" controls preload="metadata" playsinline onclick="WW.openViewer('${m.mediaData}','فيديو','video')"><source src="${m.mediaData}"></video>`:'';;
+  box.innerHTML=msgs.map(m=>{const me=m.sid===uid;const lc=m.likes?Object.keys(m.likes).length:0;const rH=m.replyTo?`<div class="reply-prev">↩️ ${safeA(m.replyTo.name)}: ${safeA((m.replyTo.text||'').substring(0,40))}</div>`:'';const mediaHTML=m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" alt="" onclick="WW.openViewer('${m.mediaData}','صورة','img')" style="cursor:pointer;">`:m.mediaType==='video'?`<video class="media-msg" controls preload="metadata" playsinline onclick="WW.openViewer('${m.mediaData}','فيديو','video')"><source src="${m.mediaData}"></video>`:m.mediaType==='voice'?voiceHTML(m.mediaData,m.voiceDur):'';
 return`<div class="gmsg ${me?'mine':''}">
     ${!me?`<img class="gmsgavt" src="${avt(m.simg,m.sname)}" alt="" onclick="WW.viewProfile('${m.sid}')">`:'' }
     <div class="gmsgc"><div class="gmsgnm">${safeA(m.sname)} <span style="font-size:9px;color:var(--text2);">${ago(m.ts)}</span></div><span class="gmsgb">${rH}${m.txt?rMen(m.txt):''}${mediaHTML}</span>
-    <div class="msg-acts"><button class="msgbtn ${m.likes&&m.likes[uid]?'liked':''}" onclick="WW.likeGC('${m._k}',this)">❤️ ${lc}</button><button class="msgbtn" onclick="WW.replyGC('${m._k}','${safeA(m.sname)}','${safeA((m.txt||'').substring(0,50))}')">↩️ رد</button></div></div>
-  </div>`;}).join('');setTimeout(()=>{if(w){w.scrollTop=w.scrollHeight;}$('pvtIn').focus();},50);
+    <div class="msg-acts"><button class="msgbtn ${m.likes&&m.likes[uid]?'liked':''}" onclick="WW.likeGC('${m._k}',this)">❤️ ${lc}</button><button class="msgbtn" onclick="WW.replyGC('${m._k}','${safeA(m.sname)}','${safeA((m.txt||'').substring(0,50))}')">↩️ رد</button>${(m.sid===uid||isAdmin())?`<button class="msgbtn" onclick="WW.deleteGCMsg('${m._k}')" style="color:var(--red);border-color:var(--red);">🗑️</button>`:''}${m.sid===uid&&m.txt?`<button class="msgbtn" onclick="WW.editGCMsg('${m._k}','${safeA(m.txt||'')}')" style="color:#55aaff;border-color:#55aaff;">✏️</button>`:''}
+</div></div>
+  </div>`;}).join('');setTimeout(()=>{const b=$('gcBox');if(b)b.scrollTop=b.scrollHeight;},50);
 });
 function gcSend(){const inp=$('gcIn'),txt=inp.value.trim();if(!txt)return;const msg={ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg};if(replyTarget)msg.replyTo=replyTarget;push(gcRef,msg);inp.value='';replyTarget=null;$('replyingTo').style.display='none';addCoins(100);checkTask('gc');}
 $('gcSend').addEventListener('click',gcSend);$('gcIn').addEventListener('keydown',e=>{if(e.key==='Enter')gcSend();});
@@ -1059,7 +1114,7 @@ function loadGroupsList(){
 }
 window.switchMsgTab=function(tab){$('msgsChats').style.display=tab==='chats'?'block':'none';$('msgsGroups').style.display=tab==='groups'?'block':'none';$('msgsSearch').style.display=tab==='search'?'block':'none';document.querySelectorAll('#pvtSection .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chats','groups','search'][i]===tab));if(tab==='groups')loadGroupsList();};
 $('userSearch').addEventListener('input',async function(){const q=this.value.trim().toLowerCase(),box=$('userSearchResults');if(!q){box.innerHTML='';return;}const snap=await get(ref(db,'cy_users'));let res=[];snap.forEach(s=>{const u=s.val();if(s.key!==uid&&(u.name||'').toLowerCase().includes(q))res.push({...u,_k:s.key});});if(!res.length){box.innerHTML='<div style="text-align:center;color:var(--text2);padding:14px;font-size:12px;">لا توجد نتائج</div>';return;}box.innerHTML='';res.forEach(u=>{const div=document.createElement('div');div.className='cli';const img=document.createElement('img');img.className='clia';img.src=avt(u.img,u.name);img.alt='';const info=document.createElement('div');info.className='clin';info.innerHTML=`<div class="clinm">${safeA(u.name)}</div><div class="clip">${safeA(u.mcname||'')}</div>`;div.appendChild(img);div.appendChild(info);div.addEventListener('click',()=>{prevPg='msgs';WW.pvt(u._k,u.name,u.img||'');});box.appendChild(div);});});
-function openPvt(oUid,oNm,oImg){if(!oUid||oUid===uid)return;if(pvtUnsub){pvtUnsub();pvtUnsub=null;}activePvtUid=oUid;curPvt={uid:oUid,name:oNm,img:oImg};$('pvtAvt').src=avt(oImg,oNm);$('pvtNm').textContent=oNm;goPage('pvt');const ck=[uid,oUid].sort().join('_');pvtUnsub=onValue(ref(db,'cy_pvt/'+ck),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('pvtMsgs');if(!w)return;w.innerHTML=msgs.length?msgs.map(m=>`<div class="mbw ${m.sid===uid?'mine':'theirs'}"><div class="mbb">${m.txt?rMen(m.txt):''}${m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" style="max-width:200px;border-radius:2px;display:block;margin-top:4px;" alt="">`:(m.mediaType==='video'?`<video class="media-msg" controls style="max-width:200px;display:block;margin-top:4px;"><source src="${m.mediaData}"></video>`:'')}
+function openPvt(oUid,oNm,oImg){if(!oUid||oUid===uid)return;if(pvtUnsub){pvtUnsub();pvtUnsub=null;}activePvtUid=oUid;curPvt={uid:oUid,name:oNm,img:oImg};$('pvtAvt').src=avt(oImg,oNm);$('pvtNm').textContent=oNm;goPage('pvt');const ck=[uid,oUid].sort().join('_');pvtUnsub=onValue(ref(db,'cy_pvt/'+ck),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('pvtMsgs');if(!w)return;w.innerHTML=msgs.length?msgs.map(m=>`<div class="mbw ${m.sid===uid?'mine':'theirs'}"><div class="mbb">${m.txt?rMen(m.txt):''}${(m.mediaType==='video'?`<video class="media-msg" controls style="max-width:200px;display:block;margin-top:4px;"><source src="${m.mediaData}"></video>`:'')}
 <div class="mbt">${fmt(m.ts)}</div></div></div>`).join(''):'<div style="text-align:center;padding:28px;color:var(--text2);">ابدأ المحادثة! 💬</div>';setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});}
 $('pvtSend').addEventListener('click',pvtSend);$('pvtIn').addEventListener('keydown',e=>{if(e.key==='Enter')pvtSend();});
 function pvtSend(){const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'cy_pvt/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_pvt_idx/'+uid+'/'+curPvt.uid),{uid:curPvt.uid,name:curPvt.name,img:curPvt.img,last:txt,ts:Date.now(),unread:false});set(ref(db,'cy_pvt_idx/'+curPvt.uid+'/'+uid),{uid,name:uname,img:uimg,last:txt,ts:Date.now(),unread:true});$('pvtIn').value='';addCoins(100);pushNotif(curPvt.uid,'✉️',uname+' بعتلك رسالة','',{type:'pvt',uid,name:uname,img:uimg||''});}
@@ -1081,6 +1136,8 @@ function refreshStats(){
   if($('stF'))$('stF').textContent=Object.keys(myFollowers).length;
   get(ref(db,'cy_teams')).then(snap=>{if($('heroTeam'))$('heroTeam').innerHTML='';snap.forEach(s=>{const t=s.val();if(t.members&&t.members[uid]&&$('heroTeam'))$('heroTeam').innerHTML=`<span class="tbadge" style="color:${t.color};border-color:${t.color};">⚔️ ${safeA(t.name)}</span>`;});});
   renderTasks();
+  const adminBtn = document.getElementById('adminPanelBtn');
+if (adminBtn) adminBtn.style.display = isAdmin() ? 'flex' : 'none';
 }
 $('saveNm').addEventListener('click',async()=>{const nm=$('nmIn').value.trim(),mc=$('mcnmIn').value.trim();if(!nm){toast('⚠️ اكتب اسمك!');return;}try{const snap=await get(ref(db,'cy_users'));let nt=false,mt=false;snap.forEach(s=>{if(s.key===uid)return;if((s.val()?.name||'').toLowerCase()===nm.toLowerCase())nt=true;if(mc&&(s.val()?.mcname||'').toLowerCase()===mc.toLowerCase())mt=true;});if(nt){toast('❌ الاسم مأخوذ!');return;}if(mt){toast('❌ اسم اللعبة مأخوذ!');return;}}catch(e){}uname=nm;umcname=mc||umcname;localStorage.setItem('cy_name',uname);localStorage.setItem('cy_mcname',umcname);set(ref(db,'cy_users/'+uid+'/name'),uname);set(ref(db,'cy_users/'+uid+'/mcname'),umcname);set(ref(db,'cy_users/'+uid+'/ts'),Date.now());refreshStats();toast('✅ تم الحفظ!');});
 $('avtFile').addEventListener('change',function(){const f=this.files[0];if(!f)return;toast('⏳ جاري تحميل الصورة...');const r=new FileReader();r.onload=function(e){const img=new Image();img.onload=function(){const canvas=document.createElement('canvas');const MAX=300;let w=img.width,h=img.height;if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);uimg=canvas.toDataURL('image/jpeg',0.85);localStorage.setItem('cy_img',uimg);set(ref(db,'cy_users/'+uid+'/img'),uimg);set(ref(db,'cy_users/'+uid+'/ts'),Date.now());refreshStats();toast('✅ تم تغيير الصورة!');};img.onerror=()=>{uimg=e.target.result;localStorage.setItem('cy_img',uimg);set(ref(db,'cy_users/'+uid+'/img'),uimg);refreshStats();toast('✅ تم!');};img.src=e.target.result;};r.readAsDataURL(f);});
@@ -1138,7 +1195,165 @@ $('mediaFile').addEventListener('change',function(){const f=this.files[0];if(!f)
 $('doMedia').addEventListener('click',()=>{const txt=$('mediaTxt').value.trim(),f=$('mediaFile').files[0];if(!txt&&!f){toast('⚠️ اختار ملف أو اكتب وصف!');return;}const go=(media,type)=>{const post={type:'post',ts:Date.now(),text:txt||'',authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,likes:{},views:{},comments:{}};if(type==='img')post.img=media;if(type==='vid')post.video=media;push(postsRef,post);$('mediaTxt').value='';$('mediaFile').value='';$('mediaPreview').innerHTML='';$('mMedia').classList.remove('open');addCoins(500);checkTask('post');toast('✨ تم النشر! +500🪙');};if(f){const r=new FileReader();r.onload=()=>go(r.result,f.type.startsWith('image/')?'img':'vid');r.readAsDataURL(f);}else go('','');});
 $('btnPollHome').addEventListener('click',()=>$('mPollHome').classList.add('open'));
 $('doPollHome').addEventListener('click',()=>{const q=$('phQ').value.trim(),desc=$('phDesc').value.trim();if(!q){toast('⚠️ اكتب السؤال!');return;}const{opts,count}=getOpts('phOptsWrap','phOC');if(count<2){toast('⚠️ محتاج خيارين!');return;}const ci=parseInt($('phCorrect').value);const post={type:'poll',ts:Date.now(),text:q,desc:desc||'',authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,options:opts,likes:{},views:{},comments:{}};if(ci>=0)post.correctIdx=ci;push(postsRef,post);$('phQ').value='';$('phDesc').value='';window.phOC=2;initOpts();$('mPollHome').classList.remove('open');addCoins(500);checkTask('post');toast('✅ تم! +500🪙');});
-function syncFromFirebase(){onValue(ref(db,'cy_users/'+uid+'/coins'),s=>{if(s.val()!==null){myCoins=s.val();updateCoinsUI();}});onValue(ref(db,'cy_users/'+uid+'/rank'),s=>{if(s.val()){myRank=s.val();localStorage.setItem('cy_rank',myRank);refreshStats();}});onValue(ref(db,'cy_users/'+uid+'/activeTitle'),s=>{if(s.val()!==null)activeTitle=s.val()||'';});}
+// ===== ADMIN PANEL =====
+WW.openAdminPanel = function() {
+  if (!isAdmin()) { toast('❌ مش مسموح!'); return; }
+  document.getElementById('adminCmdResult').style.display = 'none';
+  document.getElementById('adminCmdIn').value = '';
+  document.getElementById('mAdminPanel').classList.add('open');
+};
+
+WW.runAdminCmd = async function() {
+  if (!isAdmin()) return;
+  const cmd = document.getElementById('adminCmdIn').value.trim();
+  const res = document.getElementById('adminCmdResult');
+  res.style.display = 'block';
+  res.style.color = '#aaa';
+  res.textContent = '⏳ جاري التنفيذ...';
+  if (!cmd) { res.textContent = '⚠️ اكتب أمر!'; res.style.color = 'var(--primary)'; return; }
+
+  // دالة مساعدة للبحث عن لاعب بالاسم
+  async function findPlayer(name) {
+    const snap = await get(ref(db, 'cy_users'));
+    let found = null;
+    snap.forEach(s => {
+      const u = s.val();
+      if ((u.name || '').toLowerCase().includes(name.toLowerCase()) ||
+          (u.mcname || '').toLowerCase().includes(name.toLowerCase()))
+        found = { ...u, _k: s.key };
+    });
+    return found;
+  }
+
+  try {
+    // ادي [اسم] [مبلغ]
+    const giveMatch = cmd.match(/^ادي\s+(.+?)\s+(\d+)$/);
+    if (giveMatch) {
+      const p = await findPlayer(giveMatch[1]);
+      if (!p) { res.textContent = '❌ مش لاقي اللاعب!'; res.style.color = 'var(--red)'; return; }
+      const amt = parseInt(giveMatch[2]);
+      await set(ref(db, 'cy_users/' + p._k + '/coins'), (p.coins || 0) + amt);
+      pushNotif(p._k, '🪙', 'الإدارة أضافت لك ' + amt.toLocaleString() + ' 🪙', '', { type: 'home' });
+      res.textContent = '✅ تم إضافة ' + amt.toLocaleString() + ' 🪙 لـ ' + p.name;
+      res.style.color = 'var(--green)';
+      if (p._k === uid) { myCoins += amt; updateCoinsUI(); }
+      return;
+    }
+
+    // اخصم [اسم] [مبلغ]
+    const deductMatch = cmd.match(/^اخصم\s+(.+?)\s+(\d+)$/);
+    if (deductMatch) {
+      const p = await findPlayer(deductMatch[1]);
+      if (!p) { res.textContent = '❌ مش لاقي اللاعب!'; res.style.color = 'var(--red)'; return; }
+      const amt = parseInt(deductMatch[2]);
+      const newCoins = Math.max(0, (p.coins || 0) - amt);
+      await set(ref(db, 'cy_users/' + p._k + '/coins'), newCoins);
+      pushNotif(p._k, '⚠️', 'الإدارة خصمت منك ' + amt.toLocaleString() + ' 🪙', '', { type: 'home' });
+      res.textContent = '✅ تم خصم ' + amt.toLocaleString() + ' 🪙 من ' + p.name;
+      res.style.color = 'var(--green)';
+      if (p._k === uid) { myCoins = newCoins; updateCoinsUI(); }
+      return;
+    }
+
+    // اخلي [اسم] [رتبة]
+    const rankMatch = cmd.match(/^اخلي\s+(.+?)\s+(ادمن|اونر|vip|عضو)$/i);
+    if (rankMatch) {
+      if (myRank !== 'owner' && myRank !== 'admin') { res.textContent = '❌ الأونر والأدمن بس!'; res.style.color = 'var(--red)'; return; }
+      const p = await findPlayer(rankMatch[1]);
+      if (!p) { res.textContent = '❌ مش لاقي اللاعب!'; res.style.color = 'var(--red)'; return; }
+      const rankMap = { 'ادمن': 'admin', 'اونر': 'owner', 'vip': 'vip', 'عضو': 'member' };
+      const newRank = rankMap[rankMatch[2].toLowerCase()];
+      await set(ref(db, 'cy_users/' + p._k + '/rank'), newRank);
+      pushNotif(p._k, '👑', 'تم تغيير رتبتك إلى ' + rankMatch[2], '', { type: 'home' });
+      res.textContent = '✅ تم تغيير رتبة ' + p.name + ' إلى ' + rankMatch[2];
+      res.style.color = 'var(--green)';
+      delete usersCache[p._k];
+      return;
+    }
+
+    // امسح منشور [id]
+    const delPostMatch = cmd.match(/^امسح منشور\s+(.+)$/);
+    if (delPostMatch) {
+      await remove(ref(db, 'cy_posts/' + delPostMatch[1].trim()));
+      res.textContent = '✅ تم مسح المنشور!';
+      res.style.color = 'var(--green)';
+      return;
+    }
+
+    // امسح رسالة [id]
+    const delMsgMatch = cmd.match(/^امسح رسالة\s+(.+)$/);
+    if (delMsgMatch) {
+      await remove(ref(db, 'cy_gc/' + delMsgMatch[1].trim()));
+      res.textContent = '✅ تم مسح الرسالة!';
+      res.style.color = 'var(--green)';
+      return;
+    }
+
+    // اعلن [نص]
+    const announceMatch = cmd.match(/^اعلن\s+(.+)$/);
+    if (announceMatch) {
+      const msg = announceMatch[1];
+      push(gcRef, { ts: Date.now(), txt: '📢 إعلان من الإدارة:\n' + msg, sid: uid, sname: '📢 الإدارة', simg: '' });
+const usersSnap = await get(ref(db, 'cy_users'));
+      usersSnap.forEach(s => {
+        if (s.key !== uid) pushNotif(s.key, '📢', 'إعلان: ' + msg.substring(0, 40), 'ann_' + Date.now(), { type: 'chat' });
+      });
+      res.textContent = '✅ تم الإعلان!';
+      res.style.color = 'var(--green)';
+      return;
+    }
+
+    res.textContent = '❌ أمر غير معروف! راجع الأوامر المتاحة.';
+    res.style.color = 'var(--red)';
+
+  } catch (e) {
+    res.textContent = '❌ خطأ: ' + e.message;
+    res.style.color = 'var(--red)';
+  }
+};
+  // ===== EDIT & DELETE =====
+WW.deletePost = function(k) {
+  if (!confirm('حذف المنشور؟')) return;
+  remove(ref(db, 'cy_posts/' + k));
+  toast('✅ تم الحذف!');
+};
+WW.editPost = function(k, txt) {
+  document.getElementById('editPostId').value = k;
+  document.getElementById('editPostTxt').value = txt;
+  document.getElementById('mEditPost').classList.add('open');
+};
+WW.saveEditPost = function() {
+  const k = document.getElementById('editPostId').value;
+  const txt = document.getElementById('editPostTxt').value.trim();
+  if (!txt) { toast('⚠️ اكتب نص!'); return; }
+  set(ref(db, 'cy_posts/' + k + '/text'), txt);
+  set(ref(db, 'cy_posts/' + k + '/edited'), true);
+  document.getElementById('mEditPost').classList.remove('open');
+  toast('✅ تم التعديل!');
+};
+WW.deleteGCMsg = function(k) {
+  if (!confirm('حذف الرسالة؟')) return;
+  remove(ref(db, 'cy_gc/' + k));
+  toast('✅ تم الحذف!');
+};
+WW.editGCMsg = function(k, txt) {
+  document.getElementById('editMsgId').value = k;
+  document.getElementById('editMsgType').value = 'gc';
+  document.getElementById('editMsgTxt').value = txt;
+  document.getElementById('mEditMsg').classList.add('open');
+};
+WW.saveEditMsg = function() {
+  const k = document.getElementById('editMsgId').value;
+  const type = document.getElementById('editMsgType').value;
+  const txt = document.getElementById('editMsgTxt').value.trim();
+  if (!txt) { toast('⚠️ اكتب نص!'); return; }
+  if (type === 'gc') set(ref(db, 'cy_gc/' + k + '/txt'), txt);
+  document.getElementById('mEditMsg').classList.remove('open');
+  toast('✅ تم التعديل!');
+};
+// ===== END EDIT & DELETE =====
+// ===== END ADMIN PANEL =====
+function syncFromFirebase(){onValue(ref(db,'cy_users/'+uid+'/coins'),s=>{if(s.val()!==null){myCoins=s.val();updateCoinsUI();}});onValue(ref(db,'cy_users/'+uid+'/rank'),s=>{if(s.val()){myRank=s.val();localStorage.setItem('cy_rank',myRank);refreshStats();}});onValue(ref(db,'cy_users/'+uid+'/activeTitle'),s=>{if(s.val()!==null)activeTitle=s.val()||'';}); }
 window.WW={
   like(k,pAId,el){const p=allPosts.find(x=>x._k===k);if(!p)return;if(p.likes&&p.likes[uid]){toast('❌ اللايك مش بيتشالش!');return;}set(ref(db,'cy_posts/'+k+'/likes/'+uid),true);addCoins(100,el);checkTask('like');if(pAId&&pAId!==uid){get(ref(db,'cy_users/'+pAId+'/coins')).then(s=>set(ref(db,'cy_users/'+pAId+'/coins'),(s.val()||0)+200));pushNotif(pAId,'❤️',uname+' عمل لايك على منشورك','like_'+k+'_'+uid,{type:'home'});}},
   likeCmt(pk,ck){const p=allPosts.find(x=>x._k===pk);if(!p)return;const c=p.comments&&p.comments[ck];if(!c||c.likes&&c.likes[uid])return;set(ref(db,'cy_posts/'+pk+'/comments/'+ck+'/likes/'+uid),true);if(c.authorId&&c.authorId!==uid)pushNotif(c.authorId,'❤️',uname+' عمل لايك على تعليقك','',{type:'home'});},
@@ -1149,7 +1364,7 @@ window.WW={
   voteAP(pk,ok,ci,el){const p=allPosts.find(x=>x._k===pk);if(!p)return;if(p.options&&Object.values(p.options).some(o=>o.votes&&o.votes[uid])){toast('⚠️ مينفعش تغير تصويتك!');return;}set(ref(db,'cy_posts/'+pk+'/options/'+ok+'/votes/'+uid),true);checkTask('vote');const c=ci!==null?parseInt(ci):null,mx=parseInt(ok.replace('o',''));if(c!==null&&mx===c){addCoins(1000,el);toast('🎉 إجابة صح! +1,000🪙');}else if(c!==null)toast('❌ إجابة غلط!');else{addCoins(300,el);}},
   replyGC(mk,name,txt){replyTarget={msgId:mk,name,text:txt};$('replyingToText').textContent='↩️ رد على '+name+': '+txt.substring(0,30)+'...';$('replyingTo').style.display='flex';$('gcIn').focus();},
   pvt(oUid,oNm,oImg){openPvt(oUid,oNm,oImg);},
-  openGrp(grpId){curGrpId=grpId;if(grpUnsub){grpUnsub();grpUnsub=null;}get(ref(db,'cy_groups/'+grpId)).then(s=>{if(!s.exists())return;curGrpData=s.val();$('grpNm').textContent=curGrpData.name;$('grpCount').textContent=(curGrpData.members?Object.keys(curGrpData.members).length:0)+' أعضاء';goPage('grp');grpUnsub=onValue(ref(db,'cy_grp_msgs/'+grpId),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('grpMsgs');if(!w)return;w.innerHTML=msgs.map(m=>{const me=m.sid===uid;return`<div class="mbw ${me?'mine':'theirs'}">${!me?`<img src="${avt(m.simg,m.sname)}" style="width:24px;height:24px;border-radius:3px;object-fit:cover;margin-left:4px;align-self:flex-end;" alt="">`:''}<div class="mbb">${!me?`<div style="font-size:9px;font-weight:700;color:var(--primary);margin-bottom:2px;">${safeA(m.sname)}</div>`:''}${m.txt?rMen(m.txt):''}${m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" style="max-width:200px;border-radius:2px;display:block;margin-top:4px;" alt="">`:(m.mediaType==='video'?`<video class="media-msg" controls style="max-width:200px;display:block;margin-top:4px;"><source src="${m.mediaData}"></video>`:'')}
+  openGrp(grpId){curGrpId=grpId;if(grpUnsub){grpUnsub();grpUnsub=null;}get(ref(db,'cy_groups/'+grpId)).then(s=>{if(!s.exists())return;curGrpData=s.val();$('grpNm').textContent=curGrpData.name;$('grpCount').textContent=(curGrpData.members?Object.keys(curGrpData.members).length:0)+' أعضاء';goPage('grp');grpUnsub=onValue(ref(db,'cy_grp_msgs/'+grpId),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('grpMsgs');if(!w)return;w.innerHTML=msgs.map(m=>{const me=m.sid===uid;return`<div class="mbw ${me?'mine':'theirs'}">${!me?`<img src="${avt(m.simg,m.sname)}" style="width:24px;height:24px;border-radius:3px;object-fit:cover;margin-left:4px;align-self:flex-end;" alt="">`:''}<div class="mbb">${!me?`<div style="font-size:9px;font-weight:700;color:var(--primary);margin-bottom:2px;">${safeA(m.sname)}</div>`:''}${m.txt?rMen(m.txt):''}${m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" style="max-width:200px;border-radius:2px;display:block;margin-top:4px;" alt="">`:(m.mediaType==='video'?`<video class="media-msg" controls style="max-width:200px;display:block;margin-top:4px;"><source src="${m.mediaData}"></video>`:m.mediaType==='voice'?voiceHTML(m.mediaData,m.voiceDur):'')}
 <div class="mbt">${fmt(m.ts)}</div></div></div>`;}).join('');setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});});},
   follow(tUid){const al=myFollowing[tUid];if(al){delete myFollowing[tUid];set(ref(db,'cy_users/'+uid+'/following/'+tUid),null);set(ref(db,'cy_users/'+tUid+'/followers/'+uid),null);toast('تم إلغاء المتابعة');}else{myFollowing[tUid]=true;set(ref(db,'cy_users/'+uid+'/following/'+tUid),true);set(ref(db,'cy_users/'+tUid+'/followers/'+uid),true);addCoins(100);pushNotif(tUid,'👤',uname+' بدأ يتابعك!','follow_'+uid,{type:'home'});toast('✅ تم المتابعة!');}delete usersCache[tUid];loadUserProfile(tUid);refreshStats();},
   viewProfile(tUid){prevPg=document.querySelector('.tni.active')?.dataset.pg||'home';loadUserProfile(tUid);},
@@ -1223,6 +1438,82 @@ WW.closeViewer=function(e){
   document.body.classList.remove('no-scroll');
 };
 // ===== END IMAGE VIEWER =====
+  // ===== VOICE MESSAGES =====
+let mediaRecorder = null;
+let voiceChunks = [];
+let voiceStartTime = 0;
+
+WW.startVoice = async function(type) {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    voiceChunks = [];
+    voiceStartTime = Date.now();
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) voiceChunks.push(e.data); };
+    mediaRecorder.start();
+    const btn = document.getElementById(type + 'VoiceBtn');
+    if (btn) btn.classList.add('recording');
+    toast('🎤 جاري التسجيل... ارفع إصبعك للإرسال');
+  } catch(e) {
+    toast('❌ مش قادر يوصل للميكروفون!');
+  }
+};
+
+WW.stopVoice = function(type) {
+  if (!mediaRecorder || mediaRecorder.state !== 'recording') return;
+  const btn = document.getElementById(type + 'VoiceBtn');
+  if (btn) btn.classList.remove('recording');
+  mediaRecorder.stop();
+  mediaRecorder.onstop = () => {
+    const duration = Math.round((Date.now() - voiceStartTime) / 1000);
+    if (duration < 1) { toast('⚠️ التسجيل قصير جداً!'); return; }
+    const blob = new Blob(voiceChunks, { type: 'audio/webm' });
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const audioData = e.target.result;
+      const msg = { ts: Date.now(), txt: '', sid: uid, sname: uname, simg: uimg, mediaType: 'voice', mediaData: audioData, voiceDur: duration };
+      if (type === 'gc') {
+        if (replyTarget) msg.replyTo = replyTarget;
+        push(gcRef, msg);
+        replyTarget = null;
+        document.getElementById('replyingTo').style.display = 'none';
+        addCoins(50);
+      } else if (type === 'pvt' && curPvt.uid) {
+        const ck = [uid, curPvt.uid].sort().join('_');
+        push(ref(db, 'cy_pvt/' + ck), msg);
+        set(ref(db, 'cy_pvt_idx/' + uid + '/' + curPvt.uid), { uid: curPvt.uid, name: curPvt.name, img: curPvt.img, last: '🎤 رسالة صوتية', ts: Date.now(), unread: false });
+        set(ref(db, 'cy_pvt_idx/' + curPvt.uid + '/' + uid), { uid, name: uname, img: uimg, last: '🎤 رسالة صوتية', ts: Date.now(), unread: true });
+        pushNotif(curPvt.uid, '🎤', uname + ' بعتلك رسالة صوتية', '', { type: 'pvt', uid, name: uname, img: uimg || '' });
+        addCoins(50);
+      } else if (type === 'grp' && curGrpId) {
+        push(ref(db, 'cy_grp_msgs/' + curGrpId), msg);
+        addCoins(30);
+      }
+      toast('✅ تم إرسال الرسالة الصوتية! 🎤');
+    };
+    reader.readAsDataURL(blob);
+    mediaRecorder.stream.getTracks().forEach(t => t.stop());
+  };
+};
+
+function voiceHTML(src, dur) {
+  return `<div class="voice-msg">
+    <button class="voice-play" onclick="playVoice(this,'${src}')">▶️</button>
+    <div style="flex:1;">
+      <div style="font-size:10px;color:var(--primary);font-weight:700;">🎤 رسالة صوتية</div>
+      <div class="voice-dur">${dur || 0} ثانية</div>
+    </div>
+  </div>`;
+}
+
+window.playVoice = function(btn, src) {
+  const audio = new Audio(src);
+  btn.textContent = '⏸️';
+  audio.play();
+  audio.onended = () => btn.textContent = '▶️';
+  audio.onerror = () => { btn.textContent = '▶️'; toast('❌ خطأ في تشغيل الصوت'); };
+};
+// ===== END VOICE MESSAGES =====
   WW.logout=function(){
   if(!confirm('هتخرج من حسابك؟'))return;
   if(uid){
@@ -1780,7 +2071,74 @@ window.registerKill = async function() {
   document.getElementById('killVictimIn').value = '';
 }
 // ==================== END WAR ====================
-checkSetup();
+// ===== LOADING SCREEN =====
+function setLoad(pct, msg) {
+  const bar = document.getElementById('loadBar');
+  const txt = document.getElementById('loadMsg');
+  if (bar) bar.style.width = pct + '%';
+  if (txt) txt.textContent = msg;
+}
+function hideLoading() {
+  const ls = document.getElementById('loadingScreen');
+  if (!ls) return;
+  ls.style.transition = 'opacity .5s';
+  ls.style.opacity = '0';
+  setTimeout(() => { ls.style.display = 'none'; }, 500);
+}
+
+async function startApp() {
+  setLoad(10, '⚔️ جاري الاتصال بالسيرفر...');
+  await new Promise(r => setTimeout(r, 300));
+
+  const localUid = localStorage.getItem('cy_uid') || '';
+  const localName = localStorage.getItem('cy_name') || '';
+
+  if (localUid && localName) {
+    setLoad(30, '👤 جاري تحميل بياناتك...');
+    uid = localUid; uname = localName;
+    umcname = localStorage.getItem('cy_mcname') || '';
+    uimg = localStorage.getItem('cy_img') || '';
+    myCoins = parseInt(localStorage.getItem('cy_coins') || '0');
+    myRank = localStorage.getItem('cy_rank') || 'member';
+    activeTitle = localStorage.getItem('cy_activeTitle') || '';
+
+    try {
+      setLoad(50, '🔥 جاري تحميل المنشورات...');
+      const userSnap = await get(ref(db, 'cy_users/' + uid));
+      if (!userSnap.exists()) { localStorage.clear(); location.reload(); return; }
+      const u = userSnap.val();
+      myRank = u.rank || 'member'; myCoins = u.coins || 0; uimg = u.img || uimg;
+      localStorage.setItem('cy_rank', myRank); localStorage.setItem('cy_coins', myCoins);
+
+      setLoad(70, '💬 جاري تحميل الشات...');
+      await new Promise(r => setTimeout(r, 200));
+
+      setLoad(85, '🏆 جاري تحميل باقي البيانات...');
+      await new Promise(r => setTimeout(r, 200));
+
+      setLoad(100, '✅ جاهز!');
+      await new Promise(r => setTimeout(r, 400));
+
+      document.getElementById('setupScreen').style.cssText = 'display:none!important';
+      hideLoading();
+      init();
+    } catch(e) {
+      setLoad(100, '✅ جاهز!');
+      await new Promise(r => setTimeout(r, 300));
+      document.getElementById('setupScreen').style.cssText = 'display:none!important';
+      hideLoading();
+      init();
+    }
+  } else {
+    setLoad(100, '✅ جاهز!');
+    await new Promise(r => setTimeout(r, 500));
+    hideLoading();
+    document.getElementById('setupScreen').style.display = 'flex';
+  }
+}
+
+startApp();
+// ===== END LOADING SCREEN =====
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js');
   }
