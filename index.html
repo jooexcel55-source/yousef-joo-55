@@ -511,6 +511,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
       <button class="tab-btn active" onclick="switchExpTab('chests')">🎁 الصناديق</button>
       <button class="tab-btn" onclick="switchExpTab('teams')">⚔️ التيمات</button>
       <button class="tab-btn" onclick="switchExpTab('lb')">🏆 المتصدرين</button>
+<button class="tab-btn" onclick="switchExpTab('war')">⚔️ الحرب</button>
     </div>
     <div id="expTab_chests">
       <div style="background:linear-gradient(135deg,#1a1000,#2a1e00);border:3px solid var(--primary);padding:12px;margin-bottom:12px;text-align:center;">
@@ -534,12 +535,14 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
       <div id="teamsList"></div>
     </div>
     <div id="expTab_lb" style="display:none;">
+      <div class="stitle">🟢 المتصلون الآن</div>
+<div id="onlineList" style="margin-bottom:12px;"></div>
       <div class="stitle">🏆 المتصدرين</div>
-      <div id="lbList"></div>
+<div id="lbList"></div>
     </div>
+    <div id="expTab_war" style="display:none;"></div>
   </div>
 </div>
-
 <div id="pg_chat" class="page chat-page" style="flex-direction:column;">
   <div style="display:flex;border-bottom:3px solid var(--primary);background:#080808;flex-shrink:0;">
     <button class="tab-btn active" id="tabGC" onclick="switchChatTab('gc')" style="flex:1;border:none;border-radius:0;padding:10px;">💬 الشات العام</button>
@@ -613,7 +616,8 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
     </div>
   </div>
   <div class="card" style="border-color:var(--red);margin-bottom:8px;">
-  <button class="mc-btn danger" style="width:100%;" onclick="WW.logout()">🚪 تسجيل الخروج</button>
+  <button class="mc-btn danger" style="width:100%;" onclick="window.WW.logout()"
+>🚪 تسجيل الخروج</button>
 </div>
   <div id="pTab_tasks" style="display:none;">
     <div class="card" style="border-color:var(--primary);margin-bottom:8px;"><div style="color:var(--primary);font-size:13px;font-weight:900;">🎯 المهام اليومية</div><div style="color:var(--text2);font-size:11px;margin-top:3px;">أتمّ المهام واكسب ذهب! 🔄</div></div>
@@ -681,7 +685,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
     <div style="flex:1;"><div id="grpNm" style="font-weight:700;font-size:13px;"></div><div id="grpCount" style="font-size:10px;color:var(--text2);"></div></div>
   </div>
   <div class="pvtmsgs" id="grpMsgs"></div>
-  <div class="pvt-in-bar"><input class="mc-input" id="grpIn" placeholder="اكتب رسالتك..."><button class="sbtn" id="grpSend"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" alt=""></button></div>
+  <div class="pvt-in-bar"><input class="mc-input" id="grpIn" placeholder="اكتب رسالتك..."><label class="file-btn" title="صورة/فيديو">📎<input type="file" accept="image/*,video/*" id="grpFile" style="display:none" onchange="WW.sendGrpMedia()"></label><button class="sbtn" id="grpSend"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" alt=""></button></div>
 </div>
 
 <div id="pg_userprofile" class="page" style="padding:0;overflow-y:auto;max-height:calc(100vh - var(--nav-h) - var(--tab-h));">
@@ -809,6 +813,19 @@ let taskProgress={},replyTarget=null,selectedTeamColor=null,currentTeamId=null,l
 let apOC=2,phOC=2;
 const $=id=>document.getElementById(id);
 const fC=n=>n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?(n/1000).toFixed(0)+'K':n+'';
+  let prevNotifCount=0;
+function playNotifSound(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator();const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.frequency.setValueAtTime(880,ctx.currentTime);
+    o.frequency.setValueAtTime(660,ctx.currentTime+0.1);
+    g.gain.setValueAtTime(0.3,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.35);
+    o.start();o.stop(ctx.currentTime+0.35);
+  }catch(e){}
+}
 function toast(m){const t=$('toast');t.textContent=m;t.className='toast show';setTimeout(()=>t.className='toast',2900);}
 function avt(img,nm){return(img&&img.length>10)?img:`https://ui-avatars.com/api/?name=${encodeURIComponent(nm||'؟')}&background=2a1e00&color=f0c040&size=80`;}
 function ago(ts){const d=Date.now()-ts;if(d<60000)return'الآن';if(d<3600000)return Math.floor(d/60000)+' د';if(d<86400000)return Math.floor(d/3600000)+' س';return Math.floor(d/86400000)+' ي';}
@@ -817,13 +834,17 @@ function safeA(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').repla
 function rMen(txt){return safeA(txt).replace(/@([\u0600-\u06FFa-zA-Z0-9_]+)/g,'<span style="color:var(--primary);font-weight:900">@$1</span>');}
 function coinPop(n,el){const p=document.createElement('div');p.className='coin-pop';p.textContent='+'+fC(n)+'🪙';const r=el?el.getBoundingClientRect():{top:window.innerHeight/2,left:window.innerWidth/2};p.style.cssText=`top:${r.top+window.scrollY-20}px;left:${r.left+window.scrollX}px;`;document.body.appendChild(p);setTimeout(()=>p.remove(),1300);}
 function isAdmin(){return myRank==='admin'||myRank==='owner';}
+  function onlineDot(aId){
+  // هنرجع span فاضي دلوقتي ونملاه من الـ presence
+  return `<span id="dot_${aId}" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#333;margin-left:3px;vertical-align:middle;"></span>`;
+}
 function rankHTML(rank){if(rank==='admin')return`<span class="rbadge ra">⚔️ Admin</span>`;if(rank==='owner')return`<span class="rbadge ro">👑 Owner</span>`;if(rank==='vip')return`<span class="rbadge rv">💎 VIP</span>`;return`<span class="rbadge rm">🌿 عضو</span>`;}
 function rankC(rank){if(rank==='admin')return'var(--admin)';if(rank==='owner')return'var(--owner)';if(rank==='vip')return'var(--vip)';return'var(--member)';}
 function renderUN(aId,nm,mc,ud){
   const rank=aId===uid?myRank:(ud?.rank||'member');const rc=rankC(rank);
   const rl=rank==='admin'?'[Admin]':rank==='owner'?'[Owner]':rank==='vip'?'[VIP]':'[عضو]';
   const aT=aId===uid?activeTitle:(ud?.activeTitle||'');const mcn=mc||(ud?.mcname||'');
-  let h=`<span style="color:${rc};font-weight:900;font-size:10px;">${rl}</span> <b>${safeA(nm||'مجهول')}</b>`;
+  let h=`${onlineDot(aId)}<span style="color:${rc};font-weight:900;font-size:10px;">${rl}</span> <b>${safeA(nm||'مجهول')}</b>`;
   if(mcn)h+=` <span style="color:var(--text2);font-size:10px;">(${safeA(mcn)})</span>`;
   if(aT)h+=` <span style="background:rgba(240,192,64,.12);color:var(--primary);font-size:9px;padding:1px 5px;border:1px solid var(--primary);">${safeA(aT)}</span>`;
   return h;
@@ -897,44 +918,24 @@ const APP_VERSION='3';
 function checkSetup(){
   uid=localStorage.getItem('cy_uid')||'';
   uname=localStorage.getItem('cy_name')||'';
-  if(uid&&uname){
-    // عنده بيانات محلية — تحقق من Firebase إنه موجود فعلاً
-    get(ref(db,'cy_users/'+uid)).then(snap=>{
-      if(snap.exists()){
-        // حساب موجود — حمّل بياناته من Firebase
-        const u=snap.val();
-        uname=u.name||uname;
-        umcname=u.mcname||'';
-        uimg=u.img||'';
-        myCoins=u.coins||0;
-        myRank=u.rank||'member';
-        activeTitle=u.activeTitle||'';
-        localStorage.setItem('cy_name',uname);
-        localStorage.setItem('cy_mcname',umcname);
-        localStorage.setItem('cy_img',uimg);
-        localStorage.setItem('cy_coins',myCoins);
-        localStorage.setItem('cy_rank',myRank);
-        localStorage.setItem('cy_version',APP_VERSION);
-        $('setupScreen').style.cssText='display:none!important';
-        init();
-      }else{
-        // uid موجود محلياً بس مش في Firebase — امسحه وودي للتسجيل
-        localStorage.clear();
-        $('setupScreen').style.display='flex';
-      }
-    }).catch(()=>{
-      // مفيش نت — اشتغل بالبيانات المحلية
-      umcname=localStorage.getItem('cy_mcname')||'';
-      uimg=localStorage.getItem('cy_img')||'';
-      myCoins=parseInt(localStorage.getItem('cy_coins')||'0');
-      myRank=localStorage.getItem('cy_rank')||'member';
-      activeTitle=localStorage.getItem('cy_activeTitle')||'';
-      $('setupScreen').style.cssText='display:none!important';
-      init();
-    });
-    return;
-  }
-  // مفيش بيانات محلية — ودي لشاشة التسجيل
+ if(uid&&uname){
+  umcname=localStorage.getItem('cy_mcname')||'';
+  uimg=localStorage.getItem('cy_img')||'';
+  myCoins=parseInt(localStorage.getItem('cy_coins')||'0');
+  myRank=localStorage.getItem('cy_rank')||'member';
+  activeTitle=localStorage.getItem('cy_activeTitle')||'';
+  $('setupScreen').style.cssText='display:none!important';
+  init();
+  get(ref(db,'cy_users/'+uid)).then(snap=>{
+    if(!snap.exists()){localStorage.clear();location.reload();return;}
+    const u=snap.val();
+    myRank=u.rank||'member';myCoins=u.coins||0;uimg=u.img||uimg;
+    localStorage.setItem('cy_rank',myRank);localStorage.setItem('cy_coins',myCoins);
+    refreshStats();updateCoinsUI();
+  }).catch(()=>{});
+  return;
+}
+// مفيش بيانات محلية — ودي لشاشة التسجيل
   $('setupScreen').style.display='flex';
 }
 function goPage(pg){
@@ -963,7 +964,10 @@ function pushNotif(tUid,icon,text,key,linkObj){if(!tUid||tUid===uid)return;const
 function markRead(){get(ref(db,'cy_notifs/'+uid)).then(snap=>{snap.forEach(s=>{if(s.val()?.unread)set(ref(db,'cy_notifs/'+uid+'/'+s.key+'/unread'),false);});});$('ndot').style.display='none';}
 onValue(ref(db,'cy_notifs/'+uid),snap=>{
   let nts=[];snap.forEach(s=>{let o=s.val();o._k=s.key;nts.push(o);});nts.sort((a,b)=>b.ts-a.ts);
-  const unread=nts.filter(n=>n.unread).length;$('ndot').style.display=unread>0?'block':'none';
+  const unread=nts.filter(n=>n.unread).length;
+  if(unread>prevNotifCount)playNotifSound();
+  prevNotifCount=unread;
+  $('ndot').style.display=unread>0?'block':'none';
   const box=$('notifDropList');if(!box)return;
   if(!nts.length){box.innerHTML='<div style="text-align:center;padding:16px;color:var(--text2);font-size:12px;">لا توجد إشعارات</div>';return;}
   box.innerHTML='';nts.slice(0,30).forEach(n=>{const d=document.createElement('div');d.className='notif-item'+(n.unread?' unread':'');d.innerHTML=`<div style="font-size:17px;flex-shrink:0;">${n.icon||'🔔'}</div><div style="flex:1;"><div style="font-size:12px;line-height:1.5;font-weight:${n.unread?700:400};">${safeA(n.text)}</div><div style="font-size:10px;color:var(--text2);margin-top:2px;">${ago(n.ts)}</div></div>`;d.addEventListener('click',()=>{$('notifDrop').classList.remove('open');remove(ref(db,'cy_notifs/'+uid+'/'+n._k));try{const l=JSON.parse(n.link||'{}');if(l.type==='pvt'&&l.uid)WW.pvt(l.uid,l.name||'',l.img||'');else goPage('home');}catch(e){goPage('home');}});box.appendChild(d);});
@@ -973,6 +977,7 @@ window.clearAllNotifs=clearAllNotifs;
 const postsRef=ref(db,'cy_posts');
 onValue(postsRef,snap=>{allPosts=[];snap.forEach(s=>{let o=s.val();o._k=s.key;allPosts.push(o);});allPosts.sort((a,b)=>b.ts-a.ts);renderPosts();renderPollsPage();refreshStats();});
 $('srch').addEventListener('input',renderPosts);
+  let renderTimer;
 function renderPosts(){
   const q=($('srch').value||'').toLowerCase(),box=$('postsBox');
   const list=allPosts.filter(p=>p.type!=='adminpoll'&&(p.text||'').toLowerCase().includes(q));
@@ -1054,7 +1059,8 @@ function loadGroupsList(){
 }
 window.switchMsgTab=function(tab){$('msgsChats').style.display=tab==='chats'?'block':'none';$('msgsGroups').style.display=tab==='groups'?'block':'none';$('msgsSearch').style.display=tab==='search'?'block':'none';document.querySelectorAll('#pvtSection .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chats','groups','search'][i]===tab));if(tab==='groups')loadGroupsList();};
 $('userSearch').addEventListener('input',async function(){const q=this.value.trim().toLowerCase(),box=$('userSearchResults');if(!q){box.innerHTML='';return;}const snap=await get(ref(db,'cy_users'));let res=[];snap.forEach(s=>{const u=s.val();if(s.key!==uid&&(u.name||'').toLowerCase().includes(q))res.push({...u,_k:s.key});});if(!res.length){box.innerHTML='<div style="text-align:center;color:var(--text2);padding:14px;font-size:12px;">لا توجد نتائج</div>';return;}box.innerHTML='';res.forEach(u=>{const div=document.createElement('div');div.className='cli';const img=document.createElement('img');img.className='clia';img.src=avt(u.img,u.name);img.alt='';const info=document.createElement('div');info.className='clin';info.innerHTML=`<div class="clinm">${safeA(u.name)}</div><div class="clip">${safeA(u.mcname||'')}</div>`;div.appendChild(img);div.appendChild(info);div.addEventListener('click',()=>{prevPg='msgs';WW.pvt(u._k,u.name,u.img||'');});box.appendChild(div);});});
-function openPvt(oUid,oNm,oImg){if(!oUid||oUid===uid)return;if(pvtUnsub){pvtUnsub();pvtUnsub=null;}activePvtUid=oUid;curPvt={uid:oUid,name:oNm,img:oImg};$('pvtAvt').src=avt(oImg,oNm);$('pvtNm').textContent=oNm;goPage('pvt');const ck=[uid,oUid].sort().join('_');pvtUnsub=onValue(ref(db,'cy_pvt/'+ck),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('pvtMsgs');if(!w)return;w.innerHTML=msgs.length?msgs.map(m=>`<div class="mbw ${m.sid===uid?'mine':'theirs'}"><div class="mbb">${rMen(m.txt)}<div class="mbt">${fmt(m.ts)}</div></div></div>`).join(''):'<div style="text-align:center;padding:28px;color:var(--text2);">ابدأ المحادثة! 💬</div>';setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});}
+function openPvt(oUid,oNm,oImg){if(!oUid||oUid===uid)return;if(pvtUnsub){pvtUnsub();pvtUnsub=null;}activePvtUid=oUid;curPvt={uid:oUid,name:oNm,img:oImg};$('pvtAvt').src=avt(oImg,oNm);$('pvtNm').textContent=oNm;goPage('pvt');const ck=[uid,oUid].sort().join('_');pvtUnsub=onValue(ref(db,'cy_pvt/'+ck),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('pvtMsgs');if(!w)return;w.innerHTML=msgs.length?msgs.map(m=>`<div class="mbw ${m.sid===uid?'mine':'theirs'}"><div class="mbb">${m.txt?rMen(m.txt):''}${m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" style="max-width:200px;border-radius:2px;display:block;margin-top:4px;" alt="">`:(m.mediaType==='video'?`<video class="media-msg" controls style="max-width:200px;display:block;margin-top:4px;"><source src="${m.mediaData}"></video>`:'')}
+<div class="mbt">${fmt(m.ts)}</div></div></div>`).join(''):'<div style="text-align:center;padding:28px;color:var(--text2);">ابدأ المحادثة! 💬</div>';setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});}
 $('pvtSend').addEventListener('click',pvtSend);$('pvtIn').addEventListener('keydown',e=>{if(e.key==='Enter')pvtSend();});
 function pvtSend(){const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'cy_pvt/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_pvt_idx/'+uid+'/'+curPvt.uid),{uid:curPvt.uid,name:curPvt.name,img:curPvt.img,last:txt,ts:Date.now(),unread:false});set(ref(db,'cy_pvt_idx/'+curPvt.uid+'/'+uid),{uid,name:uname,img:uimg,last:txt,ts:Date.now(),unread:true});$('pvtIn').value='';addCoins(100);pushNotif(curPvt.uid,'✉️',uname+' بعتلك رسالة','',{type:'pvt',uid,name:uname,img:uimg||''});}
 $('grpSend').addEventListener('click',grpSend);$('grpIn').addEventListener('keydown',e=>{if(e.key==='Enter')grpSend();});
@@ -1087,6 +1093,24 @@ function initColorGrid(){const g=$('colorGrid');if(!g)return;g.innerHTML=TC.map(
 window.selColor=function(i){selectedTeamColor=TC[i];document.querySelectorAll('.color-dot').forEach((d,j)=>d.classList.toggle('selected',j===i));const lbl=$('selColorLabel');if(lbl){lbl.textContent='اللون: '+TC[i].n;lbl.style.color=TC[i].h;}};
 $('doCreateTeam').addEventListener('click',async()=>{if(!isAdmin()){toast('❌ الأدمن/الأونر بس!');return;}const nm=$('teamNameIn').value.trim();if(!nm){toast('⚠️ اكتب اسم التيم!');return;}if(!selectedTeamColor){toast('⚠️ اختار لون!');return;}const snap=await get(ref(db,'cy_teams'));let nt=false,ct=false;snap.forEach(s=>{const t=s.val();if((t.name||'').toLowerCase()===nm.toLowerCase())nt=true;if(t.color===selectedTeamColor.h)ct=true;});if(nt){toast('❌ اسم التيم مأخوذ!');return;}if(ct){toast('❌ اللون مأخوذ!');return;}const tid='t_'+Date.now();set(ref(db,'cy_teams/'+tid),{name:nm,color:selectedTeamColor.h,colorName:selectedTeamColor.n,members:{},owner:uid,ts:Date.now()});$('teamNameIn').value='';selectedTeamColor=null;document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));const lbl=$('selColorLabel');if(lbl){lbl.textContent='لم يتم اختيار لون';lbl.style.color='';}toast('✅ تم إنشاء تيم: '+nm);renderTeams();});
 function renderTeams(){const adm=$('adminTeamCreate');if(adm)adm.style.display=isAdmin()?'block':'none';initColorGrid();const box=$('teamsList');if(!box)return;onValue(ref(db,'cy_teams'),snap=>{let teams=[];snap.forEach(s=>{let o=s.val();o._k=s.key;teams.push(o);});if(!teams.length){box.innerHTML='<div class="empty-state"><div class="ei">⚔️</div><p>لا توجد تيمات بعد</p></div>';return;}box.innerHTML=teams.map(t=>{const mc=t.members?Object.keys(t.members).length:0;return`<div class="team-item" style="border-color:${t.color};"><div style="width:32px;height:32px;background:${t.color};display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;border:2px solid #000;">⚔️</div><div style="flex:1;"><div style="font-weight:900;font-size:13px;color:${t.color};">${safeA(t.name)}</div><div style="font-size:10px;color:var(--text2);">${mc} أعضاء</div></div>${isAdmin()?`<button class="mc-btn small blue" onclick="WW.openTeam('${t._k}')">إدارة</button>`:`<button class="mc-btn small" style="background:#111;box-shadow:inset -2px -2px 0 #000,inset 2px 2px 0 #222;" onclick="WW.viewTeam('${t._k}')">عرض</button>`}</div>`;}).join('');});}
+  function loadOnlineUsers(){
+  onValue(ref(db,'cy_presence'),snap=>{
+    const box=$('onlineList');if(!box)return;
+    const now=Date.now();let online=[];
+    snap.forEach(s=>{
+      const u=s.val();
+      // معتبره أونلاين لو آخر تحديث أقل من دقيقتين
+      if(u.online&&(now-u.ts)<120000)online.push(u);
+    });
+    if(!online.length){box.innerHTML='<div style="font-size:11px;color:var(--text2);padding:8px;">لا أحد متصل الآن</div>';return;}
+    box.innerHTML=online.map(u=>`
+      <div class="lb-item" style="border-color:rgba(85,170,51,.3);">
+        <div style="width:8px;height:8px;background:#55aa33;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px #55aa33;"></div>
+        <img src="${avt(u.img,u.name)}" style="width:32px;height:32px;border-radius:3px;object-fit:cover;border:2px solid #1a1a1a;" alt="">
+        <div style="flex:1;"><div style="font-weight:700;font-size:12px;">${safeA(u.name||'مجهول')} ${u.uid===uid?'<span style="color:var(--primary);font-size:10px;">(أنت)</span>':''}</div></div>
+      </div>`).join('');
+  });
+}
 async function loadLeaderboard(){const box=$('lbList');if(!box)return;box.innerHTML='<div style="text-align:center;padding:18px;color:var(--text2);">جاري التحميل...</div>';const snap=await get(ref(db,'cy_users'));let users=[];snap.forEach(s=>{const u=s.val();users.push({...u,_k:s.key});});users.sort((a,b)=>(b.coins||0)-(a.coins||0));const r=['🥇','🥈','🥉'];box.innerHTML=users.slice(0,10).map((u,i)=>`<div class="lb-item"><div style="font-size:14px;font-weight:900;min-width:26px;text-align:center;">${r[i]||('#'+(i+1))}</div><img src="${avt(u.img,u.name)}" style="width:32px;height:32px;border-radius:3px;object-fit:cover;border:2px solid #1a1a1a;" alt=""><div style="flex:1;"><div style="font-weight:700;font-size:12px;">${safeA(u.name||'مجهول')} ${u.mcname?`<span style="color:var(--text2);font-size:10px;">(${safeA(u.mcname)})</span>`:''} ${u._k===uid?'<span style="color:var(--primary);font-size:10px;">(أنت)</span>':''}</div><div style="font-size:11px;color:var(--primary);">${fC(u.coins||0)} 🪙</div></div><span style="font-size:10px;color:${rankC(u.rank||'member')};">${u.rank==='admin'?'Admin':u.rank==='owner'?'Owner':u.rank==='vip'?'VIP':'عضو'}</span></div>`).join('');}
 async function loadUserProfile(tUid){
   goPage('userprofile');const ud=await getUser(tUid)||{name:'مجهول',img:'',coins:0,rank:'member'};
@@ -1103,7 +1127,10 @@ function loadFollowData(){onValue(ref(db,'cy_users/'+uid+'/followers'),s=>{myFol
 function checkDailyLogin(){const today=new Date().toDateString(),last=localStorage.getItem('cy_lastLogin')||'';if(last===today)return;localStorage.setItem('cy_lastLogin',today);addCoins(1000);toast('🎉 تسجيل يومي! +1,000🪙');}
 function toggleNotifDrop(){const d=$('notifDrop');if(d.classList.contains('open'))d.classList.remove('open');else{d.classList.add('open');markRead();}}
 document.addEventListener('click',e=>{const d=$('notifDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target)&&e.target.id!=='notifBtn')d.classList.remove('open');});
-window.switchExpTab=function(tab){['chests','teams','lb'].forEach(t=>{const el=$('expTab_'+t);if(el)el.style.display=t===tab?'block':'none';});document.querySelectorAll('#pg_explore .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chests','teams','lb'][i]===tab));if(tab==='lb')loadLeaderboard();if(tab==='teams')renderTeams();if(tab==='chests')renderChests();};
+window.switchExpTab=function(tab){['chests','teams','lb','war'].forEach(t=>{
+const el=$('expTab_'+t);if(el)el.style.display=t===tab?'block':'none';});document.querySelectorAll('#pg_explore .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chests','teams','lb','war'][i]===tab));
+if(tab==='lb'){loadLeaderboard();loadOnlineUsers();}
+if(tab==='war'){renderWarTab();}if(tab==='teams')renderTeams();if(tab==='chests')renderChests();};
 $('btnPost').addEventListener('click',()=>$('mPost').classList.add('open'));$('mPostClose').addEventListener('click',()=>$('mPost').classList.remove('open'));
 $('doPost').addEventListener('click',()=>{const txt=$('postTxt').value.trim();if(!txt){toast('⚠️ اكتب شيئاً!');return;}push(postsRef,{type:'post',ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,likes:{},views:{},comments:{}});$('postTxt').value='';$('mPost').classList.remove('open');addCoins(500);checkTask('post');toast('✨ تم النشر! +500🪙');Object.keys(myFollowing).forEach(fId=>pushNotif(fId,'📝',uname+' نشر منشور جديد','',{type:'home'}));});
 $('btnMedia').addEventListener('click',()=>$('mMedia').classList.add('open'));$('mMediaClose').addEventListener('click',()=>$('mMedia').classList.remove('open'));
@@ -1122,7 +1149,8 @@ window.WW={
   voteAP(pk,ok,ci,el){const p=allPosts.find(x=>x._k===pk);if(!p)return;if(p.options&&Object.values(p.options).some(o=>o.votes&&o.votes[uid])){toast('⚠️ مينفعش تغير تصويتك!');return;}set(ref(db,'cy_posts/'+pk+'/options/'+ok+'/votes/'+uid),true);checkTask('vote');const c=ci!==null?parseInt(ci):null,mx=parseInt(ok.replace('o',''));if(c!==null&&mx===c){addCoins(1000,el);toast('🎉 إجابة صح! +1,000🪙');}else if(c!==null)toast('❌ إجابة غلط!');else{addCoins(300,el);}},
   replyGC(mk,name,txt){replyTarget={msgId:mk,name,text:txt};$('replyingToText').textContent='↩️ رد على '+name+': '+txt.substring(0,30)+'...';$('replyingTo').style.display='flex';$('gcIn').focus();},
   pvt(oUid,oNm,oImg){openPvt(oUid,oNm,oImg);},
-  openGrp(grpId){curGrpId=grpId;if(grpUnsub){grpUnsub();grpUnsub=null;}get(ref(db,'cy_groups/'+grpId)).then(s=>{if(!s.exists())return;curGrpData=s.val();$('grpNm').textContent=curGrpData.name;$('grpCount').textContent=(curGrpData.members?Object.keys(curGrpData.members).length:0)+' أعضاء';goPage('grp');grpUnsub=onValue(ref(db,'cy_grp_msgs/'+grpId),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('grpMsgs');if(!w)return;w.innerHTML=msgs.map(m=>{const me=m.sid===uid;return`<div class="mbw ${me?'mine':'theirs'}">${!me?`<img src="${avt(m.simg,m.sname)}" style="width:24px;height:24px;border-radius:3px;object-fit:cover;margin-left:4px;align-self:flex-end;" alt="">`:''}<div class="mbb">${!me?`<div style="font-size:9px;font-weight:700;color:var(--primary);margin-bottom:2px;">${safeA(m.sname)}</div>`:''}${rMen(m.txt)}<div class="mbt">${fmt(m.ts)}</div></div></div>`;}).join('');setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});});},
+  openGrp(grpId){curGrpId=grpId;if(grpUnsub){grpUnsub();grpUnsub=null;}get(ref(db,'cy_groups/'+grpId)).then(s=>{if(!s.exists())return;curGrpData=s.val();$('grpNm').textContent=curGrpData.name;$('grpCount').textContent=(curGrpData.members?Object.keys(curGrpData.members).length:0)+' أعضاء';goPage('grp');grpUnsub=onValue(ref(db,'cy_grp_msgs/'+grpId),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('grpMsgs');if(!w)return;w.innerHTML=msgs.map(m=>{const me=m.sid===uid;return`<div class="mbw ${me?'mine':'theirs'}">${!me?`<img src="${avt(m.simg,m.sname)}" style="width:24px;height:24px;border-radius:3px;object-fit:cover;margin-left:4px;align-self:flex-end;" alt="">`:''}<div class="mbb">${!me?`<div style="font-size:9px;font-weight:700;color:var(--primary);margin-bottom:2px;">${safeA(m.sname)}</div>`:''}${m.txt?rMen(m.txt):''}${m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" style="max-width:200px;border-radius:2px;display:block;margin-top:4px;" alt="">`:(m.mediaType==='video'?`<video class="media-msg" controls style="max-width:200px;display:block;margin-top:4px;"><source src="${m.mediaData}"></video>`:'')}
+<div class="mbt">${fmt(m.ts)}</div></div></div>`;}).join('');setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});});},
   follow(tUid){const al=myFollowing[tUid];if(al){delete myFollowing[tUid];set(ref(db,'cy_users/'+uid+'/following/'+tUid),null);set(ref(db,'cy_users/'+tUid+'/followers/'+uid),null);toast('تم إلغاء المتابعة');}else{myFollowing[tUid]=true;set(ref(db,'cy_users/'+uid+'/following/'+tUid),true);set(ref(db,'cy_users/'+tUid+'/followers/'+uid),true);addCoins(100);pushNotif(tUid,'👤',uname+' بدأ يتابعك!','follow_'+uid,{type:'home'});toast('✅ تم المتابعة!');}delete usersCache[tUid];loadUserProfile(tUid);refreshStats();},
   viewProfile(tUid){prevPg=document.querySelector('.tni.active')?.dataset.pg||'home';loadUserProfile(tUid);},
   openTeam(tid){currentTeamId=tid;const addSec=$('addTeamMemberSection');if(addSec)addSec.style.display=isAdmin()?'block':'none';get(ref(db,'cy_teams/'+tid)).then(s=>{if(!s.exists())return;const t=s.val();$('teamMembersTitle').innerHTML=`<span style="color:${t.color};">⚔️ ${safeA(t.name)}</span>`;const cont=$('teamMembersContent');cont.innerHTML='<div style="text-align:center;padding:10px;color:var(--text2);">جاري التحميل...</div>';const members=t.members?Object.keys(t.members):[];if(!members.length){cont.innerHTML='<div class="empty-state"><div class="ei">👥</div><p>لا توجد أعضاء بعد</p></div>';}else{cont.innerHTML='';members.forEach(async mId=>{const u=await getUser(mId)||{name:'مجهول',img:''};const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:2px solid #111;';const img=document.createElement('img');img.src=avt(u.img,u.name);img.style.cssText='width:32px;height:32px;border-radius:3px;object-fit:cover;border:2px solid #1a1a1a;cursor:pointer;';img.onclick=()=>{$('mTeamMembers').classList.remove('open');WW.viewProfile(mId);};const info=document.createElement('div');info.style.flex='1';info.innerHTML=`<div style="font-weight:700;font-size:12px;">${safeA(u.name||'مجهول')}</div><div style="font-size:10px;color:var(--text2);">${safeA(u.mcname||'')}</div>`;row.appendChild(img);row.appendChild(info);if(isAdmin()){const rm=document.createElement('button');rm.className='mc-btn small danger';rm.textContent='إزالة';rm.onclick=()=>{remove(ref(db,'cy_teams/'+tid+'/members/'+mId));toast('تم الإزالة');WW.openTeam(tid);};row.appendChild(rm);}cont.appendChild(row);});}$('mTeamMembers').classList.add('open');});},
@@ -1146,7 +1174,18 @@ WW.sendGCMedia=function(){
     addCoins(100);toast('✅ تم الإرسال!');
   };r.readAsDataURL(f);
 };
-
+WW.sendGrpMedia=function(){
+  const f=document.getElementById('grpFile').files[0];if(!f||!curGrpId)return;
+  toast('⏳ جاري الإرسال...');
+  const r=new FileReader();
+  r.onload=function(e){
+    const isVid=f.type.startsWith('video/');
+    push(ref(db,'cy_grp_msgs/'+curGrpId),{ts:Date.now(),txt:'',sid:uid,sname:uname,simg:uimg,mediaType:isVid?'video':'img',mediaData:e.target.result});
+    set(ref(db,'cy_grp_idx/'+uid+'/'+curGrpId),{name:curGrpData.name,count:Object.keys(curGrpData.members||{}).length,ts:Date.now()});
+    document.getElementById('grpFile').value='';
+    addCoins(50);toast('✅ تم الإرسال!');
+  };r.readAsDataURL(f);
+};
 WW.sendPvtMedia=function(){
   const f=document.getElementById('pvtFile').files[0];if(!f||!curPvt.uid)return;
   toast('⏳ جاري الإرسال...');
@@ -1186,6 +1225,10 @@ WW.closeViewer=function(e){
 // ===== END IMAGE VIEWER =====
   WW.logout=function(){
   if(!confirm('هتخرج من حسابك؟'))return;
+  if(uid){
+    const presRef=ref(db,'cy_presence/'+uid);
+    set(presRef,{uid,name:uname,img:uimg,online:false,ts:Date.now()});
+  }
   localStorage.removeItem('cy_uid');
   localStorage.removeItem('cy_name');
   localStorage.removeItem('cy_mcname');
@@ -1199,12 +1242,35 @@ WW.closeViewer=function(e){
   location.reload();
 };
 window.searchTeamMember=async function(q){const box=$('teamMemberSearchResults');if(!box||!q)return;const snap=await get(ref(db,'cy_users'));let res=[];snap.forEach(s=>{const u=s.val();if(s.key!==uid&&(u.name||'').toLowerCase().includes(q.toLowerCase()))res.push({...u,_k:s.key});});box.innerHTML='';res.forEach(u=>{const div=document.createElement('div');div.className='cli';div.style.marginBottom='4px';const img=document.createElement('img');img.className='clia';img.src=avt(u.img,u.name);img.alt='';const info=document.createElement('div');info.className='clin';info.innerHTML=`<div class="clinm">${safeA(u.name)}</div><div class="clip">${safeA(u.mcname||'')}</div>`;const btn=document.createElement('button');btn.className='mc-btn small';btn.textContent='إضافة';btn.onclick=()=>{if(!currentTeamId)return;set(ref(db,'cy_teams/'+currentTeamId+'/members/'+u._k),true);toast('✅ تم إضافة '+u.name);pushNotif(u._k,'⚔️','تمت إضافتك لتيم!','',{type:'home'});btn.textContent='✅';btn.disabled=true;};div.appendChild(img);div.appendChild(info);div.appendChild(btn);box.appendChild(div);});};
+  function initPresence(){
+  if(!uid)return;
+  const presRef=ref(db,'cy_presence/'+uid);
+  set(presRef,{uid,name:uname,img:uimg,online:true,ts:Date.now()});
+  // لما يقفل التاب أو يخرج
+  window.addEventListener('beforeunload',()=>set(presRef,{uid,name:uname,img:uimg,online:false,ts:Date.now()}));
+  // تحديث كل دقيقة عشان يعرف إنه لسه موجود
+  setInterval(()=>set(presRef,{uid,name:uname,img:uimg,online:true,ts:Date.now()}),60000);
+}
 function init(){
   if(!uid)uid=localStorage.getItem('cy_uid')||'';if(!uname)uname=localStorage.getItem('cy_name')||'';
   umcname=localStorage.getItem('cy_mcname')||'';uimg=localStorage.getItem('cy_img')||'';
   myCoins=parseInt(localStorage.getItem('cy_coins')||'0');myRank=localStorage.getItem('cy_rank')||'member';activeTitle=localStorage.getItem('cy_activeTitle')||'';
-  loadFollowData();loadMsgsList();loadGroupsList();loadTasks();syncFromFirebase();refreshStats();checkDailyLogin();initOpts();renderChests();renderTeams();renderPollsPage();
+ initPresence(); loadFollowData();loadMsgsList();loadGroupsList();loadTasks();syncFromFirebase();refreshStats();checkDailyLogin();initOpts();renderChests();renderTeams();renderPollsPage();
 }
+  // تحديث النقط الخضرا
+onValue(ref(db,'cy_presence'),snap=>{
+  const now=Date.now();
+  const online={};
+  snap.forEach(s=>{
+    const u=s.val();
+    if(u.online&&(now-u.ts)<120000) online[s.key]=true;
+  });
+  document.querySelectorAll('[id^="dot_"]').forEach(el=>{
+    const aId=el.id.replace('dot_','');
+    el.style.background=online[aId]?'#55aa33':'#333';
+    el.style.boxShadow=online[aId]?'0 0 5px #55aa33':'none';
+  });
+});
   // ==================== AUCTION SYSTEM ====================
 const auctRef = ref(db, 'cy_auctions');
 let allAuctions = [];
@@ -1519,6 +1585,201 @@ $('doLogin').addEventListener('click',async()=>{
   toast('✅ أهلاً '+uname+'! رجعت لحسابك 🎉');
 });
 // ===== END LOGIN =====
+  // ==================== WAR SYSTEM ====================
+const warRef = ref(db, 'cy_war');
+let currentWar = null;
+
+onValue(warRef, snap => {
+  currentWar = snap.val();
+  renderWarTab();
+  updateWarBadge();
+});
+
+function updateWarBadge() {
+  const tab = document.querySelector('[data-pg="explore"]');
+  if (!tab) return;
+  let badge = document.getElementById('warBadge');
+  if (currentWar && currentWar.status === 'active') {
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.id = 'warBadge';
+      badge.style.cssText = 'position:absolute;top:4px;right:2px;width:8px;height:8px;border-radius:50%;background:#cc3333;box-shadow:0 0 6px #cc3333;';
+      tab.style.position = 'relative';
+      tab.appendChild(badge);
+    }
+  } else if (badge) badge.remove();
+}
+
+window.startWar = async function() {
+
+  if (!isAdmin()) { toast('❌ الأدمن/الأونر بس!'); return; }
+  if (currentWar && currentWar.status === 'active') { toast('❌ في حرب شغالة!'); return; }
+  const snap = await get(ref(db, 'cy_teams'));
+  let validTeams = [];
+  snap.forEach(s => {
+    const t = s.val();
+    const memberCount = t.members ? Object.keys(t.members).length : 0;
+    if (memberCount > 0) validTeams.push({ ...t, _k: s.key });
+  });
+  if (validTeams.length < 2) { toast('❌ محتاج تيمين على الأقل فيهم أعضاء!'); return; }
+  const shuffled = validTeams.sort(() => Math.random() - 0.5);
+  const team1 = shuffled[0];
+  const team2 = shuffled[1];
+  const warData = {
+    status: 'active',
+    startedAt: Date.now(),
+    endsAt: Date.now() + 30 * 60 * 1000,
+
+    team1: { id: team1._k, name: team1.name, color: team1.color, members: team1.members || {}, score: 0 },
+    team2: { id: team2._k, name: team2.name, color: team2.color, members: team2.members || {}, score: 0 },
+    kills: {},
+    log: {}
+  };
+  await set(warRef, warData);
+  const allMembers = [...Object.keys(team1.members || {}), ...Object.keys(team2.members || {})];
+  allMembers.forEach(mId => pushNotif(mId, '⚔️', `🔥 حرب بدأت! ${team1.name} ضد ${team2.name}`, 'war_start', { type: 'explore' }));
+  toast('⚔️ الحرب بدأت!');
+  renderWarTab();
+}
+
+window.endWar = async function() {
+
+  if (!isAdmin()) return;
+  if (!currentWar || currentWar.status !== 'active') { toast('❌ م في حرب!'); return; }
+  const s1 = currentWar.team1.score || 0;
+  const s2 = currentWar.team2.score || 0;
+  const winner = s1 > s2 ? currentWar.team1 : s2 > s1 ? currentWar.team2 : null;
+  await set(ref(db, 'cy_war/status'), 'ended');
+  await set(ref(db, 'cy_war/endedAt'), Date.now());
+  await set(ref(db, 'cy_war/winner'), winner ? winner.id : 'draw');
+  if (winner) {
+    Object.keys(winner.members || {}).forEach(mId => {
+      pushNotif(mId, '🏆', `تيمك ${winner.name} فاز في الحرب! +5000 🪙`, 'war_end', { type: 'explore' });
+      get(ref(db, 'cy_users/' + mId + '/coins')).then(cs => set(ref(db, 'cy_users/' + mId + '/coins'), (cs.val() || 0) + 5000));
+    });
+    toast('🏆 فاز ' + winner.name + '! +5000🪙 لكل عضو');
+  } else {
+    toast('🤝 تعادل!');
+  }
+  renderWarTab();
+}
+
+async function addKill(killerUid, killerName, victimName) {
+  if (!currentWar || currentWar.status !== 'active') { toast('❌ م في حرب!'); return; }
+  const isT1 = currentWar.team1.members && currentWar.team1.members[killerUid];
+  const isT2 = currentWar.team2.members && currentWar.team2.members[killerUid];
+  if (!isT1 && !isT2) { toast('❌ اللاعب مش في أي تيم في الحرب!'); return; }
+  const teamKey = isT1 ? 'team1' : 'team2';
+  const newScore = (currentWar[teamKey].score || 0) + 1;
+  await set(ref(db, 'cy_war/' + teamKey + '/score'), newScore);
+  const logKey = 'k_' + Date.now();
+  await set(ref(db, 'cy_war/log/' + logKey), {
+    ts: Date.now(), killerUid, killerName, victimName, team: teamKey
+  });
+  get(ref(db, 'cy_users/' + killerUid + '/coins')).then(cs =>
+    set(ref(db, 'cy_users/' + killerUid + '/coins'), (cs.val() || 0) + 500)
+  );
+  toast('⚔️ +1 كيل لـ ' + (isT1 ? currentWar.team1.name : currentWar.team2.name) + ' | +500🪙 لـ ' + killerName);
+  renderWarTab();
+}
+
+function renderWarTab() {
+  const box = document.getElementById('expTab_war');
+  if (!box) return;
+  if (!currentWar || currentWar.status === 'idle' || currentWar.status === 'ended' && !isAdmin()) {
+
+    box.innerHTML = `
+      <div style="text-align:center;padding:30px 20px;">
+        <div style="font-size:50px;margin-bottom:10px;">⚔️</div>
+        <div style="font-size:16px;font-weight:900;color:var(--primary);margin-bottom:6px;">لا توجد حرب الآن</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:16px;">الإدمن يقدر يبدأ حرب بين التيمات</div>
+        ${isAdmin() ? `<button class="mc-btn" onclick="startWar()">⚔️ ابدأ حرب عشوائية</button>` : ''}
+      </div>`;
+    return;
+  }
+  const w = currentWar;
+  const s1 = w.team1?.score || 0;
+  const s2 = w.team2?.score || 0;
+  const total = s1 + s2 || 1;
+  const pct1 = Math.round(s1 / total * 100);
+  const pct2 = 100 - pct1;
+  const diff = w.endsAt - Date.now();
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const timeStr = diff > 0 ? `${h}س ${m}د` : 'انتهى الوقت';
+  const logs = w.log ? Object.values(w.log).sort((a, b) => b.ts - a.ts).slice(0, 10) : [];
+  const myTeam = w.team1?.members?.[uid] ? 'team1' : w.team2?.members?.[uid] ? 'team2' : null;
+
+  box.innerHTML = `
+    <div style="background:linear-gradient(135deg,#1a0000,#0d0000);border:3px solid #cc3333;padding:14px;margin-bottom:12px;text-align:center;">
+      <div style="font-size:11px;color:#cc3333;font-weight:900;letter-spacing:2px;margin-bottom:8px;">⚔️ الحرب جارية ⚔️</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
+        <div style="text-align:center;">
+          <div style="font-size:22px;font-weight:900;color:${w.team1.color};">${w.team1.name}</div>
+          <div style="font-size:36px;font-weight:900;color:${w.team1.color};">${s1}</div>
+          <div style="font-size:10px;color:var(--text2);">كيل</div>
+        </div>
+        <div style="font-size:24px;color:#cc3333;font-weight:900;">VS</div>
+        <div style="text-align:center;">
+          <div style="font-size:22px;font-weight:900;color:${w.team2.color};">${w.team2.name}</div>
+          <div style="font-size:36px;font-weight:900;color:${w.team2.color};">${s2}</div>
+          <div style="font-size:10px;color:var(--text2);">كيل</div>
+        </div>
+      </div>
+      <div style="background:#111;border-radius:4px;height:12px;overflow:hidden;margin-bottom:8px;display:flex;">
+        <div style="width:${pct1}%;background:${w.team1.color};transition:width .5s;"></div>
+        <div style="width:${pct2}%;background:${w.team2.color};transition:width .5s;"></div>
+      </div>
+      <div style="font-size:12px;color:var(--text2);">⏱️ ${w.status === 'ended' ? '🏁 انتهت الحرب' : 'ينتهي بعد: ' + timeStr}</div>
+      ${myTeam ? `<div style="margin-top:8px;font-size:11px;background:rgba(240,192,64,.1);border:1px solid var(--primary);padding:4px 10px;display:inline-block;">أنت في تيم: <b style="color:var(--primary);">${w[myTeam].name}</b></div>` : ''}
+    </div>
+    ${isAdmin() && w.status === 'active' ? `
+    <div class="card" style="border-color:#cc3333;margin-bottom:10px;">
+      <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:8px;">🗡️ تسجيل كيل — الأدمن فقط</div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">القاتل:</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;" id="killerGrid"></div>
+<div style="font-size:11px;color:var(--text2);margin-bottom:4px;">المقتول:</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;" id="victimGrid"></div>
+<div id="selectedKill" style="display:none;background:#0d0d0d;border:2px solid var(--primary);padding:8px;margin-bottom:8px;border-radius:2px;font-size:12px;"></div>
+      <div style="font-size:10px;color:var(--text2);margin-bottom:6px;">سيتم إضافة نقطة لتيم القاتل تلقائياً</div>
+      <button class="mc-btn" style="width:100%;" onclick="registerKill()">⚔️ تسجيل الكيل</button>
+    </div>
+    <button class="mc-btn danger" style="width:100%;margin-bottom:10px;" onclick="endWar()">🏁 إنهاء الحرب</button>` : ''}
+    ${w.status === 'ended' ? `
+    <div style="background:rgba(240,192,64,.08);border:2px solid var(--primary);padding:12px;text-align:center;margin-bottom:10px;">
+      <div style="font-size:14px;font-weight:900;color:var(--primary);">🏆 ${w.winner === 'draw' ? 'تعادل!' : 'الفائز: ' + (w.winner === w.team1?.id ? w.team1?.name : w.team2?.name)}</div>
+      ${isAdmin() ? `<button class="mc-btn" style="margin-top:8px;" onclick="startWar()">⚔️ حرب جديدة</button>` : ''}
+    </div>` : ''}
+    <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:8px;">📋 سجل الكيلز</div>
+    ${logs.length ? logs.map(l => `
+      <div style="display:flex;align-items:center;gap:8px;padding:7px;background:#0d0d0d;border:2px solid #1a1a1a;margin-bottom:4px;border-radius:2px;">
+        <span style="color:${l.team === 'team1' ? w.team1?.color : w.team2?.color};font-size:14px;">⚔️</span>
+        <div style="flex:1;font-size:12px;"><b>${safeA(l.killerName)}</b> قتل <b>${safeA(l.victimName)}</b></div>
+        <span style="font-size:10px;color:var(--text2);">${ago(l.ts)}</span>
+      </div>`).join('') : '<div style="text-align:center;color:var(--text2);font-لا توجد كيلز بعد</div>'}
+  `;
+  if(isAdmin()&&w.status==='active'){const allM={...Object.fromEntries(Object.keys(w.team1?.members||{}).map(k=>([k,{name:'',team:'team1',color:w.team1.color,tname:w.team1.name}]))),...Object.fromEntries(Object.keys(w.team2?.members||{}).map(k=>([k,{name:'',team:'team2',color:w.team2.color,tname:w.team2.name}])))};Promise.all(Object.keys(allM).map(id=>get(ref(db,'cy_users/'+id)).then(s=>{if(s.exists())allM[id].name=s.val().mcname||s.val().name||'مجهول';}))).then(()=>{let selKiller='',selVictim='';const kg=document.getElementById('killerGrid'),vg=document.getElementById('victimGrid');if(!kg||!vg)return;function renderGrids(){kg.innerHTML=Object.entries(allM).map(([id,u])=>`<div onclick="window.selectKiller('${id}')" style="padding:7px;border:2px solid ${selKiller===id?u.color:'#222'};background:${selKiller===id?u.color+'22':'#0d0d0d'};border-radius:4px;cursor:pointer;text-align:center;"><div style="font-size:9px;color:${u.color};font-weight:700;">${u.tname}</div><div style="font-size:11px;font-weight:700;">${u.name}</div></div>`).join('');vg.innerHTML=Object.entries(allM).map(([id,u])=>`<div onclick="window.selectVictim('${id}')" style="padding:7px;border:2px solid ${selVictim===id?'#cc3333':'#222'};background:${selVictim===id?'#cc333322':'#0d0d0d'};border-radius:4px;cursor:pointer;text-align:center;"><div style="font-size:9px;color:${u.color};font-weight:700;">${u.tname}</div><div style="font-size:11px;font-weight:700;">${u.name}</div></div>`).join('');const sd=document.getElementById('selectedKill');if(sd){if(selKiller&&selVictim){sd.style.display='block';sd.innerHTML=`⚔️ <b style="color:${allM[selKiller]?.color}">${allM[selKiller]?.name}</b> قتل <b style="color:#cc3333">${allM[selVictim]?.name}</b>`;}else sd.style.display='none';}}window.selectKiller=function(id){selKiller=id;renderGrids();};window.selectVictim=function(id){selVictim=id;renderGrids();};window.registerKill=async function(){if(!selKiller){toast('⚠️ اختار القاتل!');return;}if(!selVictim){toast('⚠️ اختار المقتول!');return;}if(selKiller===selVictim){toast('❌ مش ينفع نفس اللاعب!');return;}await addKill(selKiller,allM[selKiller].name,allM[selVictim].name);selKiller='';selVictim='';renderGrids();};renderGrids();});}
+}
+
+window.registerKill = async function() {
+
+  const killerMC = document.getElementById('killKillerIn')?.value.trim();
+  const victimName = document.getElementById('killVictimIn')?.value.trim();
+  if (!killerMC || !victimName) { toast('⚠️ اكتب اسم القاتل والمقتول!'); return; }
+  const snap = await get(ref(db, 'cy_users'));
+  let killerUid = null, killerName = '';
+  snap.forEach(s => {
+    const u = s.val();
+    if ((u.mcname || '').toLowerCase() === killerMC.toLowerCase()) {
+      killerUid = s.key; killerName = u.name || killerMC;
+    }
+  });
+  if (!killerUid) { toast('❌ مش لاقي اللاعب ده!'); return; }
+  await addKill(killerUid, killerName, victimName);
+  document.getElementById('killKillerIn').value = '';
+  document.getElementById('killVictimIn').value = '';
+}
+// ==================== END WAR ====================
 checkSetup();
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js');
@@ -1526,3 +1787,19 @@ checkSetup();
 </script>
 </body>
 </html>
+<!-- do not change the markup -->
+<a href="#">
+  
+</a>
+
+<!-- 
+1. make look like a button
+2. change text color red on hover
+
+Cannot change html, only css.
+Look closely at
+-->  
+
+<div></div>
+<div></div>
+<div></div>
