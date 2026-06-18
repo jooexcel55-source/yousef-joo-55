@@ -396,7 +396,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
 </style>
 </head>
 <body>
-<div id="loadingScreen" style="position:fixed;inset:0;z-index:99999;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+<div id="loadingScreen" style="position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
   <div style="position:absolute;inset:0;background:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10') repeat;background-size:64px;image-rendering:pixelated;filter:brightness(.2);pointer-events:none;"></div>
   <div style="position:relative;z-index:1;text-align:center;">
     <div style="font-size:52px;margin-bottom:8px;animation:goldGlow 1.5s infinite alternate;filter:drop-shadow(0 0 10px #f0c040);">⚔️</div>
@@ -831,8 +831,8 @@ window.handleSetupAvatar=function(input){
 </script>
 
 <script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import{getDatabase,ref,push,set,onValue,get,remove}from"https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import{initializeApp}from"https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+import{getDatabase,ref,push,set,onValue,get,remove}from"https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 const app=initializeApp({apiKey:"AIzaSyDgi3--q8nDGfps5MV4AmC8B4PYPMfAPZo",authDomain:"yousef-a3438.firebaseapp.com",projectId:"yousef-a3438",storageBucket:"yousef-a3438.firebasestorage.app",messagingSenderId:"645915709487",appId:"1:645915709487:web:588dae85e94d33daa636da"});
 const db=getDatabase(app);
 const SERVER_PASS="golden2024";
@@ -869,6 +869,7 @@ const LAWS=[
   {n:18,t:"الانتحال",b:"يُمنع انتحال شخصية إداري أو لاعب آخر."},
 ];
 const TASKS=[{id:'post1',label:'انشر منشور',goal:1,reward:500,action:'post'},{id:'like5',label:'اعمل لايك على 5 منشورات',goal:5,reward:1000,action:'like'},{id:'cmt3',label:'اكتب 3 تعليقات',goal:3,reward:1500,action:'comment'},{id:'vote1',label:'شارك في تصويت',goal:1,reward:800,action:'vote'},{id:'gc1',label:'بعت رسالة في الشات',goal:1,reward:500,action:'gc'}];
+  window.WW={};
 let uid='',uname='',umcname='',uimg='',myCoins=0,myRank='member',activeTitle='';
 let allPosts=[],usersCache={},myFollowers={},myFollowing={};
 let prevPg='home',curPvt={uid:'',name:'',img:''};
