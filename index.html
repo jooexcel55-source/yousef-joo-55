@@ -1333,9 +1333,11 @@ WW.saveEditPost = function() {
   toast('✅ تم التعديل!');
 };
 WW.deleteGCMsg = function(k) {
+ WW.deleteGrpMsg = function(grpId, k) {
   if (!confirm('حذف الرسالة؟')) return;
-  remove(ref(db, 'cy_gc/' + k));
+  remove(ref(db, 'cy_grp_msgs/' + grpId + '/' + k));
   toast('✅ تم الحذف!');
+};
 };
 WW.editGCMsg = function(k, txt) {
   document.getElementById('editMsgId').value = k;
@@ -1366,7 +1368,7 @@ window.WW={
   replyGC(mk,name,txt){replyTarget={msgId:mk,name,text:txt};$('replyingToText').textContent='↩️ رد على '+name+': '+txt.substring(0,30)+'...';$('replyingTo').style.display='flex';$('gcIn').focus();},
   pvt(oUid,oNm,oImg){openPvt(oUid,oNm,oImg);},
   openGrp(grpId){curGrpId=grpId;if(grpUnsub){grpUnsub();grpUnsub=null;}get(ref(db,'cy_groups/'+grpId)).then(s=>{if(!s.exists())return;curGrpData=s.val();$('grpNm').textContent=curGrpData.name;$('grpCount').textContent=(curGrpData.members?Object.keys(curGrpData.members).length:0)+' أعضاء';goPage('grp');grpUnsub=onValue(ref(db,'cy_grp_msgs/'+grpId),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('grpMsgs');if(!w)return;w.innerHTML=msgs.map(m=>{const me=m.sid===uid;return`<div class="mbw ${me?'mine':'theirs'}">${!me?`<img src="${avt(m.simg,m.sname)}" style="width:24px;height:24px;border-radius:3px;object-fit:cover;margin-left:4px;align-self:flex-end;" alt="">`:''}<div class="mbb">${!me?`<div style="font-size:9px;font-weight:700;color:var(--primary);margin-bottom:2px;">${safeA(m.sname)}</div>`:''}${m.txt?rMen(m.txt):''}${m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" style="max-width:200px;border-radius:2px;display:block;margin-top:4px;" alt="">`:(m.mediaType==='video'?`<video class="media-msg" controls style="max-width:200px;display:block;margin-top:4px;"><source src="${m.mediaData}"></video>`:m.mediaType==='voice'?voiceHTML(m.mediaData,m.voiceDur):'')}
-<div class="mbt">${fmt(m.ts)}</div></div></div>`;}).join('');setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});});},
+<div class="mbt">${fmt(m.ts)}</div>${(m.sid===uid||isAdmin())?`<button class="msgbtn" onclick="WW.deleteGrpMsg('${curGrpId}','${m._k}')" style="color:var(--red);border-color:var(--red);margin-top:3px;">🗑️</button>`:''}</div></div>`;}).join('');setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});});},
   follow(tUid){const al=myFollowing[tUid];if(al){delete myFollowing[tUid];set(ref(db,'cy_users/'+uid+'/following/'+tUid),null);set(ref(db,'cy_users/'+tUid+'/followers/'+uid),null);toast('تم إلغاء المتابعة');}else{myFollowing[tUid]=true;set(ref(db,'cy_users/'+uid+'/following/'+tUid),true);set(ref(db,'cy_users/'+tUid+'/followers/'+uid),true);addCoins(100);pushNotif(tUid,'👤',uname+' بدأ يتابعك!','follow_'+uid,{type:'home'});toast('✅ تم المتابعة!');}delete usersCache[tUid];loadUserProfile(tUid);refreshStats();},
   viewProfile(tUid){prevPg=document.querySelector('.tni.active')?.dataset.pg||'home';loadUserProfile(tUid);},
   openTeam(tid){currentTeamId=tid;const addSec=$('addTeamMemberSection');if(addSec)addSec.style.display=isAdmin()?'block':'none';get(ref(db,'cy_teams/'+tid)).then(s=>{if(!s.exists())return;const t=s.val();$('teamMembersTitle').innerHTML=`<span style="color:${t.color};">⚔️ ${safeA(t.name)}</span>`;const cont=$('teamMembersContent');cont.innerHTML='<div style="text-align:center;padding:10px;color:var(--text2);">جاري التحميل...</div>';const members=t.members?Object.keys(t.members):[];if(!members.length){cont.innerHTML='<div class="empty-state"><div class="ei">👥</div><p>لا توجد أعضاء بعد</p></div>';}else{cont.innerHTML='';members.forEach(async mId=>{const u=await getUser(mId)||{name:'مجهول',img:''};const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:2px solid #111;';const img=document.createElement('img');img.src=avt(u.img,u.name);img.style.cssText='width:32px;height:32px;border-radius:3px;object-fit:cover;border:2px solid #1a1a1a;cursor:pointer;';img.onclick=()=>{$('mTeamMembers').classList.remove('open');WW.viewProfile(mId);};const info=document.createElement('div');info.style.flex='1';info.innerHTML=`<div style="font-weight:700;font-size:12px;">${safeA(u.name||'مجهول')}</div><div style="font-size:10px;color:var(--text2);">${safeA(u.mcname||'')}</div>`;row.appendChild(img);row.appendChild(info);if(isAdmin()){const rm=document.createElement('button');rm.className='mc-btn small danger';rm.textContent='إزالة';rm.onclick=()=>{remove(ref(db,'cy_teams/'+tid+'/members/'+mId));toast('تم الإزالة');WW.openTeam(tid);};row.appendChild(rm);}cont.appendChild(row);});}$('mTeamMembers').classList.add('open');});},
@@ -1445,6 +1447,7 @@ let voiceChunks = [];
 let voiceStartTime = 0;
 
 WW.startVoice = async function(type) {
+  if (mediaRecorder && mediaRecorder.state === 'recording') return;
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     voiceChunks = [];
