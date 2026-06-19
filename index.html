@@ -281,7 +281,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
 .chest-row{display:flex;align-items:flex-start;gap:4px;font-size:10px;padding:2px 0;color:var(--text2);line-height:1.4;}
 .chest-price{padding:7px;text-align:center;font-size:15px;font-weight:900;border-top:2px solid rgba(255,255,255,.06);text-shadow:1px 1px 0 #000;}
 .gchat-scroll{flex:1;overflow-y:auto;padding:10px;background:var(--bg);}
-.gmsg{display:flex;gap:7px;margin-bottom:10px;align-items:flex-start;}
+.gmsg{display:flex;gap:7px;margin-bottom:10px;align-items:center;}
 .gmsgavt{width:30px;height:30px;border-radius:3px;object-fit:cover;flex-shrink:0;cursor:pointer;background:#222;border:2px solid var(--border);}
 .gmsgc{max-width:76%;}
 .gmsgnm{font-size:10px;font-weight:700;margin-bottom:2px;color:var(--primary);}
@@ -458,6 +458,7 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
     <span class="coins-hdr" id="coinsBadge">🪙 0</span>
 
     <button class="icbtn" id="notifBtn">🔔<span class="ndot" id="ndot"></span></button>
+    <button class="icbtn" onclick="startTour()" title="جولة تعريفية">❓</button>
   </div>
 </header>
 
@@ -704,7 +705,11 @@ header{background:var(--hdr);position:fixed;top:0;left:0;right:0;z-index:1000;he
     <button onclick="WW.backFromGrp()" style="background:#5a0000;border:2px solid #000;color:#fff;font-size:16px;cursor:pointer;padding:4px 9px;border-radius:2px;">←</button>
     <div style="width:32px;height:32px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;border-radius:2px;">👥</div>
     <div style="flex:1;"><div id="grpNm" style="font-weight:700;font-size:13px;"></div><div id="grpCount" style="font-size:10px;color:var(--text2);"></div></div>
+<button onclick="WW.toggleGrpInfo()" style="background:#1a1a1a;border:2px solid #2a2a2a;color:var(--primary);font-size:12px;cursor:pointer;padding:4px 10px;border-radius:3px;white-space:nowrap;">ℹ️ تفاصيل</button>
   </div>
+  <div id="grpInfoPanel" style="display:none;background:#0d0d0d;border-bottom:2px solid var(--primary);padding:10px;max-height:60vh;overflow-y:auto;flex-shrink:0;">
+  <div id="grpInfoContent"></div>
+</div>
   <div class="pvtmsgs" id="grpMsgs"></div>
   <div class="pvt-in-bar"><input class="mc-input" id="grpIn" placeholder="اكتب رسالتك...">
     <button class="voice-btn" id="grpVoiceBtn" title="رسالة صوتية" onmousedown="WW.startVoice('grp')" ontouchstart="WW.startVoice('grp')" onmouseup="WW.stopVoice('grp')" ontouchend="WW.stopVoice('grp')">🎤</button><label class="file-btn" title="صورة/فيديو">📎<input type="file" accept="image/*,video/*" id="grpFile" style="display:none" onchange="WW.sendGrpMedia()"></label><button class="sbtn" id="grpSend"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" alt=""></button></div>
@@ -948,6 +953,7 @@ function renderChests(){
 $('sNext1').addEventListener('click',()=>{
   const nm=$('sName').value.trim(),mcnm=$('sMCName').value.trim();
   if(!nm){toast('⚠️ اكتب اسمك!');return;}if(!mcnm){toast('⚠️ اكتب اسمك في اللعبة!');return;}
+  if(!sImg){toast('⚠️ لازم تختار صورة أولاً!');return;}
   $('setupStep1').style.display='none';$('setupStep2').style.display='block';$('st1').classList.remove('active');$('st2').classList.add('active');
 });
 $('sDone').addEventListener('click',async()=>{
@@ -1064,7 +1070,8 @@ function postCard(p,isPoll=false){
     ${(p.type==='poll'||p.type==='adminpoll')?`<div style="font-size:10px;background:rgba(240,192,64,.08);color:var(--primary);padding:2px 7px;border:1px solid rgba(240,192,64,.25);display:inline-block;margin-bottom:5px;">📊 ${p.type==='adminpoll'?'تصويت الإدارة':'تصويت'}</div>`:''}
     <div class="ptxt">${rMen(p.text)}</div>
     ${p.desc?`<div class="pdesc">${safeA(p.desc)}</div>`:''}${media}
-    <div class="pacts"><button class="aibtn ${liked?'liked':''}" onclick="WW.like('${p._k}','${p.authorId}',this)">❤️ ${lc}</button><button class="aibtn" onclick="WW.toggleCmts('${p._k}')">💬 ${cc}</button><span class="vcnt">👁 ${vc}</span>${p.authorId===uid?`<button class="aibtn" onclick="WW.editPost('${p._k}','${safeA(p.text||'')}')" style="color:#55aaff;border-color:#55aaff;">✏️</button><button class="aibtn" onclick="WW.deletePost('${p._k}')" style="color:var(--red);border-color:var(--red);">🗑️</button>`:(isAdmin()?`<button class="aibtn" onclick="WW.deletePost('${p._k}')" style="color:var(--red);border-color:var(--red);">🗑️</button>`:'')}</div>
+    <div class="pacts"><button class="aibtn ${liked?'liked':''}" onclick="WW.like('${p._k}','${p.authorId}',this)">❤️ ${lc}</button><button class="aibtn" onclick="WW.toggleCmts('${p._k}')">💬 ${cc}</button><span class="vcnt">👁 ${vc}</span>${(p.authorId===uid||isAdmin())?`<button onclick="WW.deletePost('${p._k}')" style="background:none;border:none;color:#555;font-size:16px;cursor:pointer;padding:2px 6px;margin-right:auto;">🗑️</button>`:''}</div>
+
     <div class="cmtsec" id="cs_${p._k}">${cmts}<div class="cmtrow"><img src="${avt(uimg,uname)}" style="width:26px;height:26px;border-radius:3px;object-fit:cover;" alt=""><input class="mc-input" placeholder="تعليقك..." id="ci_${p._k}"><button class="sbtn" style="padding:4px 7px;" onclick="WW.cmt('${p._k}','${p.authorId}',this)"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7VzdKYVcrGn94FUc01SrqCVzBEIANpd3OBFKD4dNmsw&s=10" style="width:19px;height:19px;" alt=""></button></div></div>
   </div>`;
 }
@@ -1084,9 +1091,8 @@ onValue(gcRef,snap=>{
   box.innerHTML=msgs.map(m=>{const me=m.sid===uid;const lc=m.likes?Object.keys(m.likes).length:0;const rH=m.replyTo?`<div class="reply-prev">↩️ ${safeA(m.replyTo.name)}: ${safeA((m.replyTo.text||'').substring(0,40))}</div>`:'';const mediaHTML=m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" alt="" onclick="WW.openViewer('${m.mediaData}','صورة','img')" style="cursor:pointer;">`:m.mediaType==='video'?`<video class="media-msg" controls preload="metadata" playsinline onclick="WW.openViewer('${m.mediaData}','فيديو','video')"><source src="${m.mediaData}"></video>`:m.mediaType==='voice'?voiceHTML(m.mediaData,m.voiceDur):'';
 return`<div class="gmsg ${me?'mine':''}">
     ${!me?`<img class="gmsgavt" src="${avt(m.simg,m.sname)}" alt="" onclick="WW.viewProfile('${m.sid}')">`:'' }
-    <div class="gmsgc"><div class="gmsgnm">${safeA(m.sname)} <span style="font-size:9px;color:var(--text2);">${ago(m.ts)}</span></div><span class="gmsgb">${rH}${m.txt?rMen(m.txt):''}${mediaHTML}</span>
-    <div class="msg-acts"><button class="msgbtn ${m.likes&&m.likes[uid]?'liked':''}" onclick="WW.likeGC('${m._k}',this)">❤️ ${lc}</button><button class="msgbtn" onclick="WW.replyGC('${m._k}','${safeA(m.sname)}','${safeA((m.txt||'').substring(0,50))}')">↩️ رد</button>${(m.sid===uid||isAdmin())?`<button class="msgbtn" onclick="WW.deleteGCMsg('${m._k}')" style="color:var(--red);border-color:var(--red);">🗑️</button>`:''}${m.sid===uid&&m.txt?`<button class="msgbtn" onclick="WW.editGCMsg('${m._k}','${safeA(m.txt||'')}')" style="color:#55aaff;border-color:#55aaff;">✏️</button>`:''}
-</div></div>
+    <div class="gmsgc"><div class="gmsgnm">${safeA(m.sname)} <span style="font-size:9px;color:var(--text2);">${ago(m.ts)}</span></div><div style="display:flex;align-items:center;gap:4px;">${me?`<button onclick="WW.deleteGCMsg('${m._k}')" style="background:none;border:none;color:#555;font-size:13px;cursor:pointer;flex-shrink:0;padding:2px 4px;order:${me?'2':'0'};">🗑️</button>`:''}<span class="gmsgb">${rH}${m.txt?rMen(m.txt):''}${mediaHTML}</span>${!me&&isAdmin()?`<button onclick="WW.deleteGCMsg('${m._k}')" style="background:none;border:none;color:#555;font-size:13px;cursor:pointer;flex-shrink:0;padding:2px 4px;">🗑️</button>`:''}</div>
+   </div></div>
   </div>`;}).join('');setTimeout(()=>{if(w){w.scrollTop=w.scrollHeight;}$('pvtIn').focus();},50);
 });
 function gcSend(){const inp=$('gcIn'),txt=inp.value.trim();if(!txt)return;const msg={ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg};if(replyTarget)msg.replyTo=replyTarget;push(gcRef,msg);inp.value='';replyTarget=null;$('replyingTo').style.display='none';addCoins(100);checkTask('gc');}
@@ -1115,8 +1121,9 @@ function loadGroupsList(){
 }
 window.switchMsgTab=function(tab){$('msgsChats').style.display=tab==='chats'?'block':'none';$('msgsGroups').style.display=tab==='groups'?'block':'none';$('msgsSearch').style.display=tab==='search'?'block':'none';document.querySelectorAll('#pvtSection .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chats','groups','search'][i]===tab));if(tab==='groups')loadGroupsList();};
 $('userSearch').addEventListener('input',async function(){const q=this.value.trim().toLowerCase(),box=$('userSearchResults');if(!q){box.innerHTML='';return;}const snap=await get(ref(db,'cy_users'));let res=[];snap.forEach(s=>{const u=s.val();if(s.key!==uid&&(u.name||'').toLowerCase().includes(q))res.push({...u,_k:s.key});});if(!res.length){box.innerHTML='<div style="text-align:center;color:var(--text2);padding:14px;font-size:12px;">لا توجد نتائج</div>';return;}box.innerHTML='';res.forEach(u=>{const div=document.createElement('div');div.className='cli';const img=document.createElement('img');img.className='clia';img.src=avt(u.img,u.name);img.alt='';const info=document.createElement('div');info.className='clin';info.innerHTML=`<div class="clinm">${safeA(u.name)}</div><div class="clip">${safeA(u.mcname||'')}</div>`;div.appendChild(img);div.appendChild(info);div.addEventListener('click',()=>{prevPg='msgs';WW.pvt(u._k,u.name,u.img||'');});box.appendChild(div);});});
-function openPvt(oUid,oNm,oImg){if(!oUid||oUid===uid)return;if(pvtUnsub){pvtUnsub();pvtUnsub=null;}activePvtUid=oUid;curPvt={uid:oUid,name:oNm,img:oImg};$('pvtAvt').src=avt(oImg,oNm);$('pvtNm').textContent=oNm;goPage('pvt');const ck=[uid,oUid].sort().join('_');pvtUnsub=onValue(ref(db,'cy_pvt/'+ck),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('pvtMsgs');if(!w)return;w.innerHTML=msgs.length?msgs.map(m=>`<div class="mbw ${m.sid===uid?'mine':'theirs'}"><div class="mbb">${m.txt?rMen(m.txt):''}${(m.mediaType==='video'?`<video class="media-msg" controls style="max-width:200px;display:block;margin-top:4px;"><source src="${m.mediaData}"></video>`:'')}
-<div class="mbt">${fmt(m.ts)}</div></div></div>`).join(''):'<div style="text-align:center;padding:28px;color:var(--text2);">ابدأ المحادثة! 💬</div>';setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});}
+function openPvt(oUid,oNm,oImg){if(!oUid||oUid===uid)return;if(pvtUnsub){pvtUnsub();pvtUnsub=null;}activePvtUid=oUid;curPvt={uid:oUid,name:oNm,img:oImg};$('pvtAvt').src=avt(oImg,oNm);$('pvtNm').textContent=oNm;goPage('pvt');const ck=[uid,oUid].sort().join('_');pvtUnsub=onValue(ref(db,'cy_pvt/'+ck),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('pvtMsgs');if(!w)return;w.innerHTML=msgs.length?msgs.map(m=>{const me=m.sid===uid;return`<div class="mbw ${me?'mine':'theirs'}" style="align-items:center;gap:5px;">${me?`<button onclick="WW.deletePvtMsg('${m._k}')" style="background:none;border:none;color:#555;font-size:13px;cursor:pointer;flex-shrink:0;padding:2px 4px;" title="حذف">🗑️</button>`:''}
+<div class="mbb">${m.txt?rMen(m.txt):''}${(m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" style="max-width:200px;border-radius:2px;display:block;margin-top:4px;" alt="">`:m.mediaType==='video'?`<video class="media-msg" controls style="max-width:200px;display:block;margin-top:4px;"><source src="${m.mediaData}"></video>`:m.mediaType==='voice'?voiceHTML(m.mediaData,m.voiceDur):'')}
+<div class="mbt">${fmt(m.ts)}</div></div>${!me?`<button onclick="WW.deletePvtMsg('${m._k}')" style="background:none;border:none;color:#555;font-size:13px;cursor:pointer;flex-shrink:0;padding:2px 4px;" title="حذف">🗑️</button>`:''}</div>`;}).join(''):'<div style="text-align:center;padding:28px;color:var(--text2);">ابدأ المحادثة! 💬</div>';setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});}
 $('pvtSend').addEventListener('click',pvtSend);$('pvtIn').addEventListener('keydown',e=>{if(e.key==='Enter')pvtSend();});
 function pvtSend(){const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'cy_pvt/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_pvt_idx/'+uid+'/'+curPvt.uid),{uid:curPvt.uid,name:curPvt.name,img:curPvt.img,last:txt,ts:Date.now(),unread:false});set(ref(db,'cy_pvt_idx/'+curPvt.uid+'/'+uid),{uid,name:uname,img:uimg,last:txt,ts:Date.now(),unread:true});$('pvtIn').value='';addCoins(100);pushNotif(curPvt.uid,'✉️',uname+' بعتلك رسالة','',{type:'pvt',uid,name:uname,img:uimg||''});}
 $('grpSend').addEventListener('click',grpSend);$('grpIn').addEventListener('keydown',e=>{if(e.key==='Enter')grpSend();});
@@ -1333,11 +1340,14 @@ WW.saveEditPost = function() {
   toast('✅ تم التعديل!');
 };
 WW.deleteGCMsg = function(k) {
- WW.deleteGrpMsg = function(grpId, k) {
+  if (!confirm('حذف الرسالة؟')) return;
+  remove(ref(db, 'cy_gc/' + k));
+  toast('✅ تم الحذف!');
+};
+WW.deleteGrpMsg = function(grpId, k) {
   if (!confirm('حذف الرسالة؟')) return;
   remove(ref(db, 'cy_grp_msgs/' + grpId + '/' + k));
   toast('✅ تم الحذف!');
-};
 };
 WW.editGCMsg = function(k, txt) {
   document.getElementById('editMsgId').value = k;
@@ -1356,9 +1366,83 @@ WW.saveEditMsg = function() {
 };
 // ===== END EDIT & DELETE =====
 // ===== END ADMIN PANEL =====
+  Object.assign(window.WW, {
+  deletePost: function(k){if(!confirm('حذف المنشور؟'))return;remove(ref(db,'cy_posts/'+k));toast('✅ تم الحذف!');},
+  editPost: function(k,txt){document.getElementById('editPostId').value=k;document.getElementById('editPostTxt').value=txt;document.getElementById('mEditPost').classList.add('open');},
+  saveEditPost: function(){const k=document.getElementById('editPostId').value;const txt=document.getElementById('editPostTxt').value.trim();if(!txt){toast('⚠️ اكتب نص!');return;}set(ref(db,'cy_posts/'+k+'/text'),txt);set(ref(db,'cy_posts/'+k+'/edited'),true);document.getElementById('mEditPost').classList.remove('open');toast('✅ تم التعديل!');},
+  deleteGCMsg: function(k){if(!confirm('حذف الرسالة؟'))return;remove(ref(db,'cy_gc/'+k));toast('✅ تم الحذف!');},
+  deleteGrpMsg: function(grpId,k){if(!confirm('حذف الرسالة؟'))return;remove(ref(db,'cy_grp_msgs/'+grpId+'/'+k));toast('✅ تم الحذف!');},
+  editGCMsg: function(k,txt){document.getElementById('editMsgId').value=k;document.getElementById('editMsgType').value='gc';document.getElementById('editMsgTxt').value=txt;document.getElementById('mEditMsg').classList.add('open');},
+  saveEditMsg: function(){const k=document.getElementById('editMsgId').value;const type=document.getElementById('editMsgType').value;const txt=document.getElementById('editMsgTxt').value.trim();if(!txt){toast('⚠️ اكتب نص!');return;}if(type==='gc')set(ref(db,'cy_gc/'+k+'/txt'),txt);document.getElementById('mEditMsg').classList.remove('open');toast('✅ تم التعديل!');}
+});
 function syncFromFirebase(){onValue(ref(db,'cy_users/'+uid+'/coins'),s=>{if(s.val()!==null){myCoins=s.val();updateCoinsUI();}});onValue(ref(db,'cy_users/'+uid+'/rank'),s=>{if(s.val()){myRank=s.val();localStorage.setItem('cy_rank',myRank);refreshStats();}});onValue(ref(db,'cy_users/'+uid+'/activeTitle'),s=>{if(s.val()!==null)activeTitle=s.val()||'';}); }
+  // ===== TOUR SYSTEM =====
+const TOUR_STEPS = [
+  {title:'⚔️ أهلاً في Golden Warriors!',text:'خليني أشرحلك الموقع في ثواني — اضغط التالي',target:null},
+  {title:'🏠 المنشورات',text:'من هنا تشوف منشورات الأعضاء وتنشر منشوراتك وتصويتاتك وصورك',target:'pg_home'},
+  {title:'🔨 المزاد',text:'بيع واشتري الأيتمز مع باقي اللاعبين — أعلى سعر يفوز!',target:'pg_auction'},
+  {title:'⚔️ الاستكشاف',text:'فيه الصناديق والتيمات والمتصدرين وساحة الحرب بين التيمات',target:'expTab_chests'},
+  {title:'💬 الشات',text:'شات عام مع الكل أو رسايل خاصة مع أي لاعب',target:'pg_chat'},
+  {title:'👤 البروفايل',text:'غيّر صورتك واسمك وشوف مهامك اليومية واكسب ذهب',target:'pg_profile'},
+  {title:'🪙 الذهب',text:'اكسب ذهب من المنشورات والتعليقات والمهام اليومية واشتري صناديق',target:'coinsBadge'},
+  {title:'✅ جاهز!',text:'انت دلوقتي عارف كل حاجة — ابدأ وانتزع المجد!',target:null},
+];
+window.tourStep = 0;
+window.startTour = function() {
+  window.tourStep = 0;
+  window.showTourStep();
+};
+window.showTourStep = function() {
+  document.getElementById('tourOverlay')?.remove();
+  if (window.tourStep >= TOUR_STEPS.length) { localStorage.setItem('cy_tour_done','1'); return; }
+  const s = TOUR_STEPS[window.tourStep];
+  if (s.target === 'pg_home') goPage('home');
+  else if (s.target === 'pg_auction') goPage('auction');
+  else if (s.target === 'pg_chat') { goPage('chat'); switchChatTab('gc'); }
+  else if (s.target === 'pg_profile') goPage('profile');
+  else if (s.target === 'expTab_chests') { goPage('explore'); switchExpTab('chests'); }
+  else if (s.target === 'coinsBadge') goPage('home');
+  setTimeout(() => {
+    const overlay = document.createElement('div');
+    overlay.id = 'tourOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;pointer-events:none;';
+    const box = document.createElement('div');
+    box.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);width:90%;max-width:360px;background:#151515;border:3px solid var(--primary);padding:16px;z-index:99999;pointer-events:all;box-shadow:0 0 40px rgba(240,192,64,.3);';
+    let highlight = '';
+    if (s.target) {
+      const el = document.getElementById(s.target);
+      if (el) {
+        const r = el.getBoundingClientRect();
+        highlight = `<div style="position:fixed;top:${r.top-4}px;left:${r.left-4}px;width:${r.width+8}px;height:${r.height+8}px;border:3px solid var(--primary);border-radius:4px;box-shadow:0 0 20px rgba(240,192,64,.5);pointer-events:none;z-index:99997;animation:tourPulse 1s infinite alternate;"></div>`;
+      }
+    }
+    box.innerHTML = `
+      <div style="font-size:14px;font-weight:900;color:var(--primary);margin-bottom:6px;">${s.title}</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.7;margin-bottom:12px;">${s.text}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:10px;color:var(--text2);">${window.tourStep+1} / ${TOUR_STEPS.length}</div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="document.getElementById('tourOverlay')?.remove();localStorage.setItem('cy_tour_done','1');window.tourStep=0;" style="background:#222;border:2px solid #333;color:var(--text2);font-size:11px;cursor:pointer;padding:5px 10px;font-family:Cairo,sans-serif;">تخطي</button>
+          <button onclick="window.tourStep++;window.showTourStep();" style="background:#4a7a10;border:3px solid #000;box-shadow:inset -2px -2px 0 #1e3a00,inset 2px 2px 0 #7aaa25;color:#fff;font-size:12px;font-weight:900;cursor:pointer;padding:5px 14px;font-family:Cairo,sans-serif;">${window.tourStep===TOUR_STEPS.length-1?'ابدأ! ⚔️':'التالي →'}</button>
+        </div>
+      </div>`;
+    overlay.innerHTML = highlight;
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+    if (!document.getElementById('tourStyle')) {
+      const st = document.createElement('style');
+      st.id = 'tourStyle';
+      st.textContent = '@keyframes tourPulse{from{box-shadow:0 0 10px rgba(240,192,64,.3);}to{box-shadow:0 0 25px rgba(240,192,64,.8);}}';
+      document.head.appendChild(st);
+    }
+  }, 300);
+};
+window.startTour = startTour;
+// ===== END TOUR =====
 window.WW={
-  like(k,pAId,el){const p=allPosts.find(x=>x._k===k);if(!p)return;if(p.likes&&p.likes[uid]){toast('❌ اللايك مش بيتشالش!');return;}set(ref(db,'cy_posts/'+k+'/likes/'+uid),true);addCoins(100,el);checkTask('like');if(pAId&&pAId!==uid){get(ref(db,'cy_users/'+pAId+'/coins')).then(s=>set(ref(db,'cy_users/'+pAId+'/coins'),(s.val()||0)+200));pushNotif(pAId,'❤️',uname+' عمل لايك على منشورك','like_'+k+'_'+uid,{type:'home'});}},
+  deletePost:function(k){if(!confirm('حذف؟'))return;remove(ref(db,'cy_posts/'+k));toast('✅ تم الحذف!');},
+  deleteGCMsg:function(k){if(!confirm('حذف؟'))return;remove(ref(db,'cy_gc/'+k));toast('✅ تم الحذف!');},
+  deleteGrpMsg:function(grpId,k){if(!confirm('حذف؟'))return;remove(ref(db,'cy_grp_msgs/'+grpId+'/'+k));toast('✅ تم الحذف!');},  like(k,pAId,el){const p=allPosts.find(x=>x._k===k);if(!p)return;if(p.likes&&p.likes[uid]){toast('❌ اللايك مش بيتشالش!');return;}set(ref(db,'cy_posts/'+k+'/likes/'+uid),true);addCoins(100,el);checkTask('like');if(pAId&&pAId!==uid){get(ref(db,'cy_users/'+pAId+'/coins')).then(s=>set(ref(db,'cy_users/'+pAId+'/coins'),(s.val()||0)+200));pushNotif(pAId,'❤️',uname+' عمل لايك على منشورك','like_'+k+'_'+uid,{type:'home'});}},
   likeCmt(pk,ck){const p=allPosts.find(x=>x._k===pk);if(!p)return;const c=p.comments&&p.comments[ck];if(!c||c.likes&&c.likes[uid])return;set(ref(db,'cy_posts/'+pk+'/comments/'+ck+'/likes/'+uid),true);if(c.authorId&&c.authorId!==uid)pushNotif(c.authorId,'❤️',uname+' عمل لايك على تعليقك','',{type:'home'});},
   likeGC(mk,el){if(el.classList.contains('liked')){toast('❌ اللايك مش بيتشالش!');return;}set(ref(db,'cy_gc/'+mk+'/likes/'+uid),true);addCoins(50,el);},
   toggleCmts(k){const el=$('cs_'+k);if(el)el.style.display=el.style.display==='block'?'none':'block';},
@@ -1368,13 +1452,20 @@ window.WW={
   replyGC(mk,name,txt){replyTarget={msgId:mk,name,text:txt};$('replyingToText').textContent='↩️ رد على '+name+': '+txt.substring(0,30)+'...';$('replyingTo').style.display='flex';$('gcIn').focus();},
   pvt(oUid,oNm,oImg){openPvt(oUid,oNm,oImg);},
   openGrp(grpId){curGrpId=grpId;if(grpUnsub){grpUnsub();grpUnsub=null;}get(ref(db,'cy_groups/'+grpId)).then(s=>{if(!s.exists())return;curGrpData=s.val();$('grpNm').textContent=curGrpData.name;$('grpCount').textContent=(curGrpData.members?Object.keys(curGrpData.members).length:0)+' أعضاء';goPage('grp');grpUnsub=onValue(ref(db,'cy_grp_msgs/'+grpId),snap=>{let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);const w=$('grpMsgs');if(!w)return;w.innerHTML=msgs.map(m=>{const me=m.sid===uid;return`<div class="mbw ${me?'mine':'theirs'}">${!me?`<img src="${avt(m.simg,m.sname)}" style="width:24px;height:24px;border-radius:3px;object-fit:cover;margin-left:4px;align-self:flex-end;" alt="">`:''}<div class="mbb">${!me?`<div style="font-size:9px;font-weight:700;color:var(--primary);margin-bottom:2px;">${safeA(m.sname)}</div>`:''}${m.txt?rMen(m.txt):''}${m.mediaType==='img'?`<img class="media-msg" src="${m.mediaData}" style="max-width:200px;border-radius:2px;display:block;margin-top:4px;" alt="">`:(m.mediaType==='video'?`<video class="media-msg" controls style="max-width:200px;display:block;margin-top:4px;"><source src="${m.mediaData}"></video>`:m.mediaType==='voice'?voiceHTML(m.mediaData,m.voiceDur):'')}
-<div class="mbt">${fmt(m.ts)}</div>${(m.sid===uid||isAdmin())?`<button class="msgbtn" onclick="WW.deleteGrpMsg('${curGrpId}','${m._k}')" style="color:var(--red);border-color:var(--red);margin-top:3px;">🗑️</button>`:''}</div></div>`;}).join('');setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});});},
+<div class="mbt">${fmt(m.ts)}</div></div>${(m.sid===uid||isAdmin())?`<button onclick="WW.deleteGrpMsg('${curGrpId}','${m._k}')" style="background:none;border:none;color:#555;font-size:13px;cursor:pointer;flex-shrink:0;padding:2px 4px;">🗑️</button>`:''}</div>`;}).join('');setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});});},
   follow(tUid){const al=myFollowing[tUid];if(al){delete myFollowing[tUid];set(ref(db,'cy_users/'+uid+'/following/'+tUid),null);set(ref(db,'cy_users/'+tUid+'/followers/'+uid),null);toast('تم إلغاء المتابعة');}else{myFollowing[tUid]=true;set(ref(db,'cy_users/'+uid+'/following/'+tUid),true);set(ref(db,'cy_users/'+tUid+'/followers/'+uid),true);addCoins(100);pushNotif(tUid,'👤',uname+' بدأ يتابعك!','follow_'+uid,{type:'home'});toast('✅ تم المتابعة!');}delete usersCache[tUid];loadUserProfile(tUid);refreshStats();},
   viewProfile(tUid){prevPg=document.querySelector('.tni.active')?.dataset.pg||'home';loadUserProfile(tUid);},
   openTeam(tid){currentTeamId=tid;const addSec=$('addTeamMemberSection');if(addSec)addSec.style.display=isAdmin()?'block':'none';get(ref(db,'cy_teams/'+tid)).then(s=>{if(!s.exists())return;const t=s.val();$('teamMembersTitle').innerHTML=`<span style="color:${t.color};">⚔️ ${safeA(t.name)}</span>`;const cont=$('teamMembersContent');cont.innerHTML='<div style="text-align:center;padding:10px;color:var(--text2);">جاري التحميل...</div>';const members=t.members?Object.keys(t.members):[];if(!members.length){cont.innerHTML='<div class="empty-state"><div class="ei">👥</div><p>لا توجد أعضاء بعد</p></div>';}else{cont.innerHTML='';members.forEach(async mId=>{const u=await getUser(mId)||{name:'مجهول',img:''};const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:2px solid #111;';const img=document.createElement('img');img.src=avt(u.img,u.name);img.style.cssText='width:32px;height:32px;border-radius:3px;object-fit:cover;border:2px solid #1a1a1a;cursor:pointer;';img.onclick=()=>{$('mTeamMembers').classList.remove('open');WW.viewProfile(mId);};const info=document.createElement('div');info.style.flex='1';info.innerHTML=`<div style="font-weight:700;font-size:12px;">${safeA(u.name||'مجهول')}</div><div style="font-size:10px;color:var(--text2);">${safeA(u.mcname||'')}</div>`;row.appendChild(img);row.appendChild(info);if(isAdmin()){const rm=document.createElement('button');rm.className='mc-btn small danger';rm.textContent='إزالة';rm.onclick=()=>{remove(ref(db,'cy_teams/'+tid+'/members/'+mId));toast('تم الإزالة');WW.openTeam(tid);};row.appendChild(rm);}cont.appendChild(row);});}$('mTeamMembers').classList.add('open');});},
   viewTeam(tid){currentTeamId=tid;const a=$('addTeamMemberSection');if(a)a.style.display='none';this.openTeam(tid);},
   backFromPvt(){if(pvtUnsub){pvtUnsub();pvtUnsub=null;}activePvtUid='';goPage(prevPg);},
-  backFromGrp(){if(grpUnsub){grpUnsub();grpUnsub=null;}goPage('msgs');},
+  deletePvtMsg:function(k){if(!confirm('حذف الرسالة؟'))return;const ck=[uid,curPvt.uid].sort().join('_');remove(ref(db,'cy_pvt/'+ck+'/'+k));toast('✅ تم الحذف!');},
+  backFromGrp(){if(grpUnsub){grpUnsub();grpUnsub=null;}curGrpId='';const p=document.getElementById('grpInfoPanel');if(p)p.style.display='none';goPage('chat');switchChatTab('pvt');},
+toggleGrpInfo:function(){const p=document.getElementById('grpInfoPanel');if(!p)return;if(p.style.display==='none'){p.style.display='block';WW.renderGrpInfo();}else p.style.display='none';},
+renderGrpInfo:async function(){const box=document.getElementById('grpInfoContent');if(!box||!curGrpId)return;box.innerHTML='<div style="text-align:center;color:var(--text2);padding:10px;">جاري التحميل...</div>';const snap=await get(ref(db,'cy_groups/'+curGrpId));if(!snap.exists()){box.innerHTML='<div style="color:var(--red);">خطأ في تحميل البيانات</div>';return;}const g=snap.val();const isOwner=g.owner===uid;const members=g.members?Object.keys(g.members):[];let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div style="font-size:13px;font-weight:900;color:var(--primary);">👥 ${safeA(g.name)}</div><div style="font-size:10px;color:var(--text2);">${members.length} أعضاء</div></div>`;html+=`<div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:700;">👑 المسؤول:</div>`;const ownerData=await getUser(g.owner)||{name:'مجهول',img:''};html+=`<div style="display:flex;align-items:center;gap:8px;padding:7px;background:#111;border:2px solid var(--primary);border-radius:4px;margin-bottom:10px;"><img src="${avt(ownerData.img,ownerData.name)}" style="width:32px;height:32px;border-radius:3px;object-fit:cover;"><div style="flex:1;font-size:12px;font-weight:700;">${safeA(ownerData.name||'مجهول')}</div><span style="font-size:10px;color:var(--primary);">👑 مسؤول</span></div>`;html+=`<div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:700;">الأعضاء:</div>`;for(const mId of members){const u=await getUser(mId)||{name:'مجهول',img:''};const isO=mId===g.owner;html+=`<div style="display:flex;align-items:center;gap:8px;padding:6px;border-bottom:1px solid #1a1a1a;"><img src="${avt(u.img,u.name)}" style="width:28px;height:28px;border-radius:3px;object-fit:cover;"><div style="flex:1;font-size:12px;">${safeA(u.name||'مجهول')} ${isO?'<span style="color:var(--primary);font-size:9px;">👑</span>':''}</div>${isOwner&&!isO?`<button onclick="WW.kickFromGrp('${mId}','${safeA(u.name||'')}')" style="background:#5a0000;border:2px solid #000;color:#fff;font-size:10px;cursor:pointer;padding:2px 7px;border-radius:2px;">طرد</button>`:''}</div>`;}if(isOwner){html+=`<div style="margin-top:10px;border-top:2px solid #1a1a1a;padding-top:10px;"><div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:5px;">➕ إضافة عضو:</div><input class="mc-input" id="grpAddSearch" placeholder="ابحث عن لاعب..." oninput="WW.searchGrpAdd(this.value)" style="margin-bottom:5px;"><div id="grpAddResults"></div></div>`;html+=`<button onclick="WW.deleteGrp()" class="mc-btn danger" style="width:100%;margin-top:8px;">🗑️ حذف المجموعة</button>`;}box.innerHTML=html;},
+kickFromGrp:async function(mId,mName){if(!confirm('طرد '+mName+'؟'))return;await remove(ref(db,'cy_groups/'+curGrpId+'/members/'+mId));await remove(ref(db,'cy_grp_idx/'+mId+'/'+curGrpId));toast('✅ تم طرد '+mName);WW.renderGrpInfo();},
+deleteGrp:async function(){if(!confirm('حذف المجموعة نهائياً؟'))return;const snap=await get(ref(db,'cy_groups/'+curGrpId));if(snap.exists()){const g=snap.val();const members=g.members?Object.keys(g.members):[];members.forEach(m=>remove(ref(db,'cy_grp_idx/'+m+'/'+curGrpId)));}await remove(ref(db,'cy_groups/'+curGrpId));await remove(ref(db,'cy_grp_msgs/'+curGrpId));toast('✅ تم حذف المجموعة');WW.backFromGrp();},
+searchGrpAdd:async function(q){const box=document.getElementById('grpAddResults');if(!box)return;if(!q){box.innerHTML='';return;}const snap=await get(ref(db,'cy_users'));const grpSnap=await get(ref(db,'cy_groups/'+curGrpId));const members=grpSnap.val()?.members||{};let res=[];snap.forEach(s=>{const u=s.val();if(s.key!==uid&&!members[s.key]&&(u.name||'').toLowerCase().includes(q.toLowerCase()))res.push({...u,_k:s.key});});if(!res.length){box.innerHTML='<div style="font-size:11px;color:var(--text2);padding:5px;">لا توجد نتائج</div>';return;}box.innerHTML=res.slice(0,5).map(u=>`<div style="display:flex;align-items:center;gap:7px;padding:5px;border-bottom:1px solid #111;"><img src="${avt(u.img,u.name)}" style="width:26px;height:26px;border-radius:3px;object-fit:cover;"><div style="flex:1;font-size:11px;">${safeA(u.name)}</div><button onclick="WW.addToGrp('${u._k}','${safeA(u.name)}')" style="background:#4a7a10;border:2px solid #000;color:#fff;font-size:10px;cursor:pointer;padding:2px 7px;border-radius:2px;">إضافة</button></div>`).join('');},
+addToGrp:async function(mId,mName){await set(ref(db,'cy_groups/'+curGrpId+'/members/'+mId),true);const grpSnap=await get(ref(db,'cy_groups/'+curGrpId));const g=grpSnap.val()||{};await set(ref(db,'cy_grp_idx/'+mId+'/'+curGrpId),{name:g.name||'',count:Object.keys(g.members||{}).length,ts:Date.now()});pushNotif(mId,'👥',uname+' أضافك لمجموعة: "'+g.name+'"','',{type:'msgs'});toast('✅ تم إضافة '+mName);WW.renderGrpInfo();document.getElementById('grpAddSearch').value='';document.getElementById('grpAddResults').innerHTML='';},
   backFromUserProfile(){goPage(prevPg);},
 };
   // ===== MEDIA & READ RECEIPTS =====
@@ -1510,12 +1601,35 @@ function voiceHTML(src, dur) {
   </div>`;
 }
 
+let _activeAudio = null;
+let _activeBtn = null;
+
 window.playVoice = function(btn, src) {
+  if (_activeAudio && !_activeAudio.paused) {
+    _activeAudio.pause();
+    _activeAudio.currentTime = 0;
+    if (_activeBtn) _activeBtn.textContent = '▶️';
+    if (_activeBtn === btn) {
+      _activeAudio = null;
+      _activeBtn = null;
+      return;
+    }
+  }
   const audio = new Audio(src);
+  _activeAudio = audio;
+  _activeBtn = btn;
   btn.textContent = '⏸️';
   audio.play();
-  audio.onended = () => btn.textContent = '▶️';
-  audio.onerror = () => { btn.textContent = '▶️'; toast('❌ خطأ في تشغيل الصوت'); };
+  audio.onended = () => {
+    btn.textContent = '▶️';
+    _activeAudio = null;
+    _activeBtn = null;
+  };
+  audio.onerror = () => {
+    btn.textContent = '▶️';
+    _activeAudio = null;
+    _activeBtn = null;
+  };
 };
 // ===== END VOICE MESSAGES =====
   WW.logout=function(){
@@ -1548,6 +1662,7 @@ window.searchTeamMember=async function(q){const box=$('teamMemberSearchResults')
 }
 function init(){
   if(!uid)uid=localStorage.getItem('cy_uid')||'';if(!uname)uname=localStorage.getItem('cy_name')||'';
+  if(!localStorage.getItem('cy_tour_done')) setTimeout(startTour, 1500);
   umcname=localStorage.getItem('cy_mcname')||'';uimg=localStorage.getItem('cy_img')||'';
   myCoins=parseInt(localStorage.getItem('cy_coins')||'0');myRank=localStorage.getItem('cy_rank')||'member';activeTitle=localStorage.getItem('cy_activeTitle')||'';
  initPresence(); loadFollowData();loadMsgsList();loadGroupsList();loadTasks();syncFromFirebase();refreshStats();checkDailyLogin();initOpts();renderChests();renderTeams();renderPollsPage();
