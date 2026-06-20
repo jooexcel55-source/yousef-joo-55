@@ -21,3 +21,9 @@ messaging.onBackgroundMessage(function(payload) {
   };
   self.registration.showNotification(title, options);
 });
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('https://jooexcel55-source.github.io/yousef-joo-55/')
+  );
+});
