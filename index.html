@@ -1665,7 +1665,7 @@ function init(){
   if(!localStorage.getItem('cy_tour_done')) setTimeout(startTour, 1500);
   umcname=localStorage.getItem('cy_mcname')||'';uimg=localStorage.getItem('cy_img')||'';
   myCoins=parseInt(localStorage.getItem('cy_coins')||'0');myRank=localStorage.getItem('cy_rank')||'member';activeTitle=localStorage.getItem('cy_activeTitle')||'';
- initPresence(); loadFollowData();loadMsgsList();loadGroupsList();loadTasks();syncFromFirebase();refreshStats();checkDailyLogin();initOpts();renderChests();renderTeams();renderPollsPage();
+ initPresence(); loadFollowData();loadMsgsList(); setTimeout(requestNotifPermission,2000);loadGroupsList();loadTasks();syncFromFirebase();refreshStats();checkDailyLogin();initOpts();renderChests();renderTeams();renderPollsPage();
 }
   // تحديث النقط الخضرا
 onValue(ref(db,'cy_presence'),snap=>{
