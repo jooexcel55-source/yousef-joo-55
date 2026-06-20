@@ -2279,7 +2279,7 @@ async function requestNotifPermission(){
 }
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/sw.js').then(async reg=>{
+  navigator.serviceWorker.register('./sw.js').then(async reg=>{
     try{
       const {getMessaging,getToken,onMessage}=await import('https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging.js');
       const messaging=getMessaging(app);
