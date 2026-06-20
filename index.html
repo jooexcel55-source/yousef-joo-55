@@ -1009,7 +1009,21 @@ if(pg==='pvt'){
 }
 });});
 $('notifBtn').addEventListener('click',()=>toggleNotifDrop());
-function pushNotif(tUid,icon,text,key,linkObj){if(!tUid||tUid===uid)return;const data={ts:Date.now(),icon,text,unread:true,link:JSON.stringify(linkObj||{type:'home'})};if(key)set(ref(db,'cy_notifs/'+tUid+'/'+key),data);else push(ref(db,'cy_notifs/'+tUid),data);}
+function pushNotif(tUid,icon,text,key,linkObj){
+  if(!tUid||tUid===uid)return;
+  const data={ts:Date.now(),icon,text,unread:true,link:JSON.stringify(linkObj||{type:'home'})};
+  if(key)set(ref(db,'cy_notifs/'+tUid+'/'+key),data);
+  else push(ref(db,'cy_notifs/'+tUid),data);
+  get(ref(db,'cy_users/'+tUid+'/fcmToken')).then(s=>{
+    const token=s.val();
+    if(!token)return;
+    fetch('https://gw-notif-server-production.up.railway.app/send',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token,title:icon+' '+uname,body:text})
+    }).catch(e=>console.log('FCM send error:',e));
+  });
+}
 function markRead(){get(ref(db,'cy_notifs/'+uid)).then(snap=>{snap.forEach(s=>{if(s.val()?.unread)set(ref(db,'cy_notifs/'+uid+'/'+s.key+'/unread'),false);});});$('ndot').style.display='none';}
 onValue(ref(db,'cy_notifs/'+uid),snap=>{
   let nts=[];snap.forEach(s=>{let o=s.val();o._k=s.key;nts.push(o);});nts.sort((a,b)=>b.ts-a.ts);
