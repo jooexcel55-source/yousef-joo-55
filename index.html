@@ -2258,9 +2258,44 @@ async function startApp() {
 
 startApp();
 // ===== END LOADING SCREEN =====
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js');
+  const VAPID_KEY='BHaZjTgg0msb-9c9AkM_LpRjS7HGmOiGoWTrCkeCp-OpQeJuopra0biYeHDrRUQrUB5bEVjZTQTMnNrqvrEDIe0';
+const NOTIF_SERVER='https://gw-notif-server-production.up.railway.app';
+
+async function requestNotifPermission(){
+  if(!('Notification' in window))return;
+  const perm=await Notification.requestPermission();
+  if(perm==='granted'&&uid){
+    try{
+      const {getMessaging,getToken}=await import('https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging.js');
+      const messaging=getMessaging(app);
+      const reg=await navigator.serviceWorker.ready;
+      const token=await getToken(messaging,{vapidKey:VAPID_KEY,serviceWorkerRegistration:reg});
+      if(token){
+        set(ref(db,'cy_users/'+uid+'/fcmToken'),token);
+        console.log('FCM Token saved!');
+      }
+    }catch(e){console.log('FCM error:',e);}
   }
+}
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js').then(async reg=>{
+    try{
+      const {getMessaging,getToken,onMessage}=await import('https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging.js');
+      const messaging=getMessaging(app);
+      const token=await getToken(messaging,{vapidKey:VAPID_KEY,serviceWorkerRegistration:reg});
+      if(token&&uid)set(ref(db,'cy_users/'+uid+'/fcmToken'),token);
+      onMessage(messaging,payload=>{
+        const title=payload.notification?.title||'⚔️ Golden Warriors';
+        const body=payload.notification?.body||'';
+        new Notification(title,{body,icon:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10'});
+        playNotifSound();
+      });
+    }catch(e){console.log('FCM error:',e);}
+  });
+}
+
+setTimeout(requestNotifPermission,3000);
 </script>
 </body>
 </html>
