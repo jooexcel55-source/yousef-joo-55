@@ -1014,20 +1014,21 @@ function pushNotif(tUid,icon,text,key,linkObj){
   const currentName=localStorage.getItem('cy_name')||uname;
   text=text.replace(uname,currentName);
   const data={ts:Date.now(),icon,text,unread:true,link:JSON.stringify(linkObj||{type:'home'})};
- push(ref(db,'cy_notifs/'+tUid),data);
+ const notifKey = key || (icon+'_'+tUid+'_'+Date.now());
+set(ref(db,'cy_notifs/'+tUid+'/'+notifKey),data);
 // FCM disabled
 }
 function markRead(){get(ref(db,'cy_notifs/'+uid)).then(snap=>{snap.forEach(s=>{if(s.val()?.unread)set(ref(db,'cy_notifs/'+uid+'/'+s.key+'/unread'),false);});});$('ndot').style.display='none';}
 onValue(ref(db,'cy_notifs/'+uid),snap=>{
   let nts=[];snap.forEach(s=>{let o=s.val();o._k=s.key;nts.push(o);});nts.sort((a,b)=>b.ts-a.ts);
-  nts=nts.filter(n=>(Date.now()-n.ts)<86400000);
-  const unread=nts.filter(n=>n.unread).length;
+nts=nts.filter(n=>(Date.now()-n.ts)<43200000);  const unread=nts.filter(n=>n.unread).length;
   if(unread>prevNotifCount)playNotifSound();
   prevNotifCount=unread;
   $('ndot').style.display=unread>0?'block':'none';
   const box=$('notifDropList');if(!box)return;
   if(!nts.length){box.innerHTML='<div style="text-align:center;padding:16px;color:var(--text2);font-size:12px;">لا توجد إشعارات</div>';return;}
-  box.innerHTML='';nts.slice(0,30).forEach(n=>{const d=document.createElement('div');d.className='notif-item'+(n.unread?' unread':'');d.innerHTML=`<div style="font-size:17px;flex-shrink:0;">${n.icon||'🔔'}</div><div style="flex:1;"><div style="font-size:12px;line-height:1.5;font-weight:${n.unread?700:400};">${safeA(n.text)}</div><div style="font-size:10px;color:var(--text2);margin-top:2px;">${ago(n.ts)}</div></div>`;d.addEventListener('click',()=>{$('notifDrop').classList.remove('open');remove(ref(db,'cy_notifs/'+uid+'/'+n._k));try{const l=JSON.parse(n.link||'{}');if(l.type==='pvt'&&l.uid)WW.pvt(l.uid,l.name||'',l.img||'');else goPage('home');}catch(e){goPage('home');}});box.appendChild(d);});
+  box.innerHTML='';nts.slice(0,30).forEach(n=>{const
+  d=document.createElement('div');d.className='notif-item'+(n.unread?' unread':'');d.innerHTML=`<div style="font-size:17px;flex-shrink:0;">${n.icon||'🔔'}</div><div style="flex:1;"><div style="font-size:12px;line-height:1.5;font-weight:${n.unread?700:400};">${safeA(n.text)}</div><div style="font-size:10px;color:var(--text2);margin-top:2px;">${ago(n.ts)}</div></div>`;d.addEventListener('click',()=>{$('notifDrop').classList.remove('open');remove(ref(db,'cy_notifs/'+uid+'/'+n._k));try{const l=JSON.parse(n.link||'{}');if(l.type==='pvt'&&l.uid)WW.pvt(l.uid,l.name||'',l.img||'');else goPage('home');}catch(e){goPage('home');}});box.appendChild(d);});
 });
 async function clearAllNotifs(){const snap=await get(ref(db,'cy_notifs/'+uid));snap.forEach(s=>remove(ref(db,'cy_notifs/'+uid+'/'+s.key)));$('ndot').style.display='none';$('notifDropList').innerHTML='<div style="text-align:center;padding:16px;color:var(--text2);font-size:12px;">لا توجد إشعارات</div>';toast('✅ تم المسح!');}
 window.clearAllNotifs=clearAllNotifs;
