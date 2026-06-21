@@ -1011,6 +1011,8 @@ if(pg==='pvt'){
 $('notifBtn').addEventListener('click',()=>toggleNotifDrop());
 function pushNotif(tUid,icon,text,key,linkObj){
   if(!tUid||tUid===uid)return;
+  const currentName=localStorage.getItem('cy_name')||uname;
+  text=text.replace(uname,currentName);
   const data={ts:Date.now(),icon,text,unread:true,link:JSON.stringify(linkObj||{type:'home'})};
   if(key)set(ref(db,'cy_notifs/'+tUid+'/'+key),data);
   else push(ref(db,'cy_notifs/'+tUid),data);
@@ -1394,7 +1396,7 @@ WW.saveEditMsg = function() {
   editGCMsg: function(k,txt){document.getElementById('editMsgId').value=k;document.getElementById('editMsgType').value='gc';document.getElementById('editMsgTxt').value=txt;document.getElementById('mEditMsg').classList.add('open');},
   saveEditMsg: function(){const k=document.getElementById('editMsgId').value;const type=document.getElementById('editMsgType').value;const txt=document.getElementById('editMsgTxt').value.trim();if(!txt){toast('⚠️ اكتب نص!');return;}if(type==='gc')set(ref(db,'cy_gc/'+k+'/txt'),txt);document.getElementById('mEditMsg').classList.remove('open');toast('✅ تم التعديل!');}
 });
-function syncFromFirebase(){onValue(ref(db,'cy_users'),snap=>{snap.forEach(s=>{usersCache[s.key]=s.val();});renderPosts();renderPollsPage();});onValue(ref(db,'cy_users/'+uid+'/coins'),s=>{if(s.val()!==null){myCoins=s.val();updateCoinsUI();}});onValue(ref(db,'cy_users/'+uid+'/rank'),s=>{if(s.val()){myRank=s.val();localStorage.setItem('cy_rank',myRank);refreshStats();}});onValue(ref(db,'cy_users/'+uid+'/activeTitle'),s=>{if(s.val()!==null)activeTitle=s.val()||'';});onValue(ref(db,'cy_users/'+uid+'/name'),s=>{if(s.val()){uname=s.val();localStorage.setItem('cy_name',uname);}});onValue(ref(db,'cy_users/'+uid+'/img'),s=>{if(s.val()){uimg=s.val();localStorage.setItem('cy_img',uimg);}}); }
+function syncFromFirebase(){onValue(ref(db,'cy_users'),snap=>{snap.forEach(s=>{usersCache[s.key]=s.val();});renderPosts();renderPollsPage();});onValue(ref(db,'cy_users/'+uid+'/coins'),s=>{if(s.val()!==null){myCoins=s.val();updateCoinsUI();}});onValue(ref(db,'cy_users/'+uid+'/rank'),s=>{if(s.val()){myRank=s.val();localStorage.setItem('cy_rank',myRank);refreshStats();}});onValue(ref(db,'cy_users/'+uid+'/activeTitle'),s=>{if(s.val()!==null)activeTitle=s.val()||'';});onValue(ref(db,'cy_users/'+uid+'/name'),s=>{if(s.val()&&s.val()!==uname){uname=s.val();localStorage.setItem('cy_name',uname);refreshStats();}});onValue(ref(db,'cy_users/'+uid+'/img'),s=>{if(s.val()){uimg=s.val();localStorage.setItem('cy_img',uimg);}}); }
   // ===== TOUR SYSTEM =====
 const TOUR_STEPS = [
   {title:'⚔️ أهلاً في Golden Warriors!',text:'خليني أشرحلك الموقع في ثواني — اضغط التالي',target:null},
@@ -1461,7 +1463,7 @@ window.startTour = startTour;
 window.WW={
   deletePost:function(k){if(!confirm('حذف؟'))return;remove(ref(db,'cy_posts/'+k));toast('✅ تم الحذف!');},
   deleteGCMsg:function(k){if(!confirm('حذف؟'))return;remove(ref(db,'cy_gc/'+k));toast('✅ تم الحذف!');},
-  deleteGrpMsg:function(grpId,k){if(!confirm('حذف؟'))return;remove(ref(db,'cy_grp_msgs/'+grpId+'/'+k));toast('✅ تم الحذف!');},  like(k,pAId,el){const p=allPosts.find(x=>x._k===k);if(!p)return;if(p.likes&&p.likes[uid]){toast('❌ اللايك مش بيتشالش!');return;}set(ref(db,'cy_posts/'+k+'/likes/'+uid),true);addCoins(100,el);checkTask('like');if(pAId&&pAId!==uid){get(ref(db,'cy_users/'+pAId+'/coins')).then(s=>set(ref(db,'cy_users/'+pAId+'/coins'),(s.val()||0)+200));if(!p.likes||!p.likes[uid])pushNotif(pAId,'❤️',uname+' عمل لايك على منشورك','like_'+k+'_'+uid,{type:'home'});}},
+  deleteGrpMsg:function(grpId,k){if(!confirm('حذف؟'))return;remove(ref(db,'cy_grp_msgs/'+grpId+'/'+k));toast('✅ تم الحذف!');},  like(k,pAId,el){const p=allPosts.find(x=>x._k===k);if(!p)return;if(p.likes&&p.likes[uid]){toast('❌ اللايك مش بيتشالش!');return;}set(ref(db,'cy_posts/'+k+'/likes/'+uid),true);addCoins(100,el);checkTask('like');if(pAId&&pAId!==uid){get(ref(db,'cy_users/'+pAId+'/coins')).then(s=>set(ref(db,'cy_users/'+pAId+'/coins'),(s.val()||0)+200));pushNotif(pAId,'❤️',uname+' عمل لايك على منشورك','like_'+k+'_'+uid,{type:'home'});}},
   likeCmt(pk,ck){const p=allPosts.find(x=>x._k===pk);if(!p)return;const c=p.comments&&p.comments[ck];if(!c||c.likes&&c.likes[uid])return;set(ref(db,'cy_posts/'+pk+'/comments/'+ck+'/likes/'+uid),true);if(c.authorId&&c.authorId!==uid)pushNotif(c.authorId,'❤️',uname+' عمل لايك على تعليقك','',{type:'home'});},
   likeGC(mk,el){if(el.classList.contains('liked')){toast('❌ اللايك مش بيتشالش!');return;}set(ref(db,'cy_gc/'+mk+'/likes/'+uid),true);addCoins(50,el);},
   toggleCmts(k){const el=$('cs_'+k);if(el)el.style.display=el.style.display==='block'?'none':'block';},
