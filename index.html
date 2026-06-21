@@ -1014,8 +1014,7 @@ function pushNotif(tUid,icon,text,key,linkObj){
   const currentName=localStorage.getItem('cy_name')||uname;
   text=text.replace(uname,currentName);
   const data={ts:Date.now(),icon,text,unread:true,link:JSON.stringify(linkObj||{type:'home'})};
-  if(key)set(ref(db,'cy_notifs/'+tUid+'/'+key),data);
-  else push(ref(db,'cy_notifs/'+tUid),data);
+ push(ref(db,'cy_notifs/'+tUid),data);
 // FCM disabled
 }
 function markRead(){get(ref(db,'cy_notifs/'+uid)).then(snap=>{snap.forEach(s=>{if(s.val()?.unread)set(ref(db,'cy_notifs/'+uid+'/'+s.key+'/unread'),false);});});$('ndot').style.display='none';}
@@ -1138,7 +1137,7 @@ function openPvt(oUid,oNm,oImg){if(!oUid||oUid===uid)return;if(pvtUnsub){pvtUnsu
 <div class="mbt">${fmt(m.ts)}</div>${me&&m.readBy&&m.readBy[curPvt.uid]?`<div style="display:flex;gap:2px;margin-top:2px;justify-content:flex-start;"><img src="${avt(usersCache[curPvt.uid]?.img||curPvt.img,usersCache[curPvt.uid]?.name||curPvt.name)}" style="width:14px;height:14px;border-radius:50%;object-fit:cover;border:1px solid var(--primary);" title="${safeA(curPvt.name)}"></div>`:''}</div>${!me?`<button onclick="WW.deletePvtMsg('${m._k}')" style="background:none;border:none;color:#555;font-size:13px;cursor:pointer;flex-shrink:0;padding:2px 4px;" title="حذف">🗑️</button>`:''}</div>`;
 }).join(''):'<div style="text-align:center;padding:28px;color:var(--text2);">ابدأ المحادثة! 💬</div>';setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});}
 $('pvtSend').addEventListener('click',pvtSend);$('pvtIn').addEventListener('keydown',e=>{if(e.key==='Enter')pvtSend();});
-function pvtSend(){const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'cy_pvt/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_pvt_idx/'+uid+'/'+curPvt.uid),{uid:curPvt.uid,name:curPvt.name,img:curPvt.img,last:txt,ts:Date.now(),unread:false});set(ref(db,'cy_pvt_idx/'+curPvt.uid+'/'+uid),{uid,name:uname,img:uimg,last:txt,ts:Date.now(),unread:true});$('pvtIn').value='';addCoins(100);pushNotif(curPvt.uid,'✉️',uname+': '+txt.substring(0,50),'pvt_'+uid+'_'+Date.now(),{type:'pvt',uid,name:uname,img:uimg||''});
+function pvtSend(){const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'cy_pvt/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_pvt_idx/'+uid+'/'+curPvt.uid),{uid:curPvt.uid,name:curPvt.name,img:curPvt.img,last:txt,ts:Date.now(),unread:false});set(ref(db,'cy_pvt_idx/'+curPvt.uid+'/'+uid),{uid,name:uname,img:uimg,last:txt,ts:Date.now(),unread:true});$('pvtIn').value='';addCoins(100);pushNotif(curPvt.uid,'✉️',uname+': '+txt.substring(0,50),'',{type:'pvt',uid,name:uname,img:uimg||''});
 }
 $('grpSend').addEventListener('click',grpSend);$('grpIn').addEventListener('keydown',e=>{if(e.key==='Enter')grpSend();});
 function grpSend(){const txt=$('grpIn').value.trim();if(!txt||!curGrpId)return;push(ref(db,'cy_grp_msgs/'+curGrpId),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_grp_idx/'+uid+'/'+curGrpId),{name:curGrpData.name,count:Object.keys(curGrpData.members||{}).length,ts:Date.now()});$('grpIn').value='';addCoins(50);}
@@ -1592,7 +1591,7 @@ WW.stopVoice = function(type) {
         push(ref(db, 'cy_pvt/' + ck), msg);
         set(ref(db, 'cy_pvt_idx/' + uid + '/' + curPvt.uid), { uid: curPvt.uid, name: curPvt.name, img: curPvt.img, last: '🎤 رسالة صوتية', ts: Date.now(), unread: false });
         set(ref(db, 'cy_pvt_idx/' + curPvt.uid + '/' + uid), { uid, name: uname, img: uimg, last: '🎤 رسالة صوتية', ts: Date.now(), unread: true });
-        pushNotif(curPvt.uid, '🎤', uname + ' بعتلك رسالة صوتية', 'voice_'+uid+'_'+Date.now(), { type: 'pvt', uid, name: uname, img: uimg || '' });
+        pushNotif(curPvt.uid, '🎤', uname + ' بعتلك رسالة صوتية', '', { type: 'pvt', uid, name: uname, img: uimg || '' });
         addCoins(50);
       } else if (type === 'grp' && curGrpId) {
         push(ref(db, 'cy_grp_msgs/' + curGrpId), msg);
