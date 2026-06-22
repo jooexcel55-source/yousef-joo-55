@@ -1011,12 +1011,9 @@ if(pg==='pvt'){
 $('notifBtn').addEventListener('click',()=>toggleNotifDrop());
 function pushNotif(tUid,icon,text,key,linkObj){
   if(!tUid||tUid===uid)return;
-  const currentName=localStorage.getItem('cy_name')||uname;
-  text=text.replace(uname,currentName);
   const data={ts:Date.now(),icon,text,unread:true,link:JSON.stringify(linkObj||{type:'home'})};
- const notifKey = key || (icon+'_'+tUid+'_'+Date.now());
-set(ref(db,'cy_notifs/'+tUid+'/'+notifKey),data);
-// FCM disabled
+  const notifKey='n_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
+  set(ref(db,'cy_notifs/'+tUid+'/'+notifKey),data);
 }
 function markRead(){get(ref(db,'cy_notifs/'+uid)).then(snap=>{snap.forEach(s=>{if(s.val()?.unread)set(ref(db,'cy_notifs/'+uid+'/'+s.key+'/unread'),false);});});$('ndot').style.display='none';}
 onValue(ref(db,'cy_notifs/'+uid),snap=>{
@@ -1044,7 +1041,7 @@ onValue(postsRef, snap => {
     renderPosts();
     renderPollsPage();
     refreshStats();
-  }, 150);
+  }, 0);
 });
 $('srch').addEventListener('input',renderPosts);
   let renderTimer;
@@ -1138,7 +1135,7 @@ function openPvt(oUid,oNm,oImg){if(!oUid||oUid===uid)return;if(pvtUnsub){pvtUnsu
 <div class="mbt">${fmt(m.ts)}</div>${me&&m.readBy&&m.readBy[curPvt.uid]?`<div style="display:flex;gap:2px;margin-top:2px;justify-content:flex-start;"><img src="${avt(usersCache[curPvt.uid]?.img||curPvt.img,usersCache[curPvt.uid]?.name||curPvt.name)}" style="width:14px;height:14px;border-radius:50%;object-fit:cover;border:1px solid var(--primary);" title="${safeA(curPvt.name)}"></div>`:''}</div>${!me?`<button onclick="WW.deletePvtMsg('${m._k}')" style="background:none;border:none;color:#555;font-size:13px;cursor:pointer;flex-shrink:0;padding:2px 4px;" title="حذف">🗑️</button>`:''}</div>`;
 }).join(''):'<div style="text-align:center;padding:28px;color:var(--text2);">ابدأ المحادثة! 💬</div>';setTimeout(()=>{if(w)w.scrollTop=w.scrollHeight;},50);});}
 $('pvtSend').addEventListener('click',pvtSend);$('pvtIn').addEventListener('keydown',e=>{if(e.key==='Enter')pvtSend();});
-function pvtSend(){const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'cy_pvt/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_pvt_idx/'+uid+'/'+curPvt.uid),{uid:curPvt.uid,name:curPvt.name,img:curPvt.img,last:txt,ts:Date.now(),unread:false});set(ref(db,'cy_pvt_idx/'+curPvt.uid+'/'+uid),{uid,name:uname,img:uimg,last:txt,ts:Date.now(),unread:true});$('pvtIn').value='';addCoins(100);pushNotif(curPvt.uid,'✉️',uname+': '+txt.substring(0,50),'',{type:'pvt',uid,name:uname,img:uimg||''});
+function pvtSend(){const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'cy_pvt/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_pvt_idx/'+uid+'/'+curPvt.uid),{uid:curPvt.uid,name:curPvt.name,img:curPvt.img,last:txt,ts:Date.now(),unread:false});set(ref(db,'cy_pvt_idx/'+curPvt.uid+'/'+uid),{uid,name:uname,img:uimg,last:txt,ts:Date.now(),unread:true});$('pvtIn').value='';addCoins(100);pushNotif(curPvt.uid,'✉️',uname+' بعتلك رسالة خاصة: '+txt.substring(0,40),'',{type:'pvt',uid,name:uname,img:uimg||''});
 }
 $('grpSend').addEventListener('click',grpSend);$('grpIn').addEventListener('keydown',e=>{if(e.key==='Enter')grpSend();});
 function grpSend(){const txt=$('grpIn').value.trim();if(!txt||!curGrpId)return;push(ref(db,'cy_grp_msgs/'+curGrpId),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_grp_idx/'+uid+'/'+curGrpId),{name:curGrpData.name,count:Object.keys(curGrpData.members||{}).length,ts:Date.now()});$('grpIn').value='';addCoins(50);}
@@ -1646,7 +1643,7 @@ window.playVoice = function(btn, src) {
   };
 };
 // ===== END VOICE MESSAGES =====
-  WW.logout=function(){
+ WW.logout=function(){
   if(!confirm('هتخرج من حسابك؟'))return;
   if(uid){
     const presRef=ref(db,'cy_presence/'+uid);
@@ -1662,7 +1659,7 @@ window.playVoice = function(btn, src) {
   localStorage.removeItem('cy_lastLogin');
   localStorage.removeItem('cy_version');
   Object.keys(localStorage).forEach(k=>{if(k.startsWith('cy_tasks_'))localStorage.removeItem(k);});
-  location.reload();
+  document.getElementById('setupScreen').style.cssText='display:flex!important';
 };
 window.searchTeamMember=async function(q){const box=$('teamMemberSearchResults');if(!box||!q)return;const snap=await get(ref(db,'cy_users'));let res=[];snap.forEach(s=>{const u=s.val();if(s.key!==uid&&(u.name||'').toLowerCase().includes(q.toLowerCase()))res.push({...u,_k:s.key});});box.innerHTML='';res.forEach(u=>{const div=document.createElement('div');div.className='cli';div.style.marginBottom='4px';const img=document.createElement('img');img.className='clia';img.src=avt(u.img,u.name);img.alt='';const info=document.createElement('div');info.className='clin';info.innerHTML=`<div class="clinm">${safeA(u.name)}</div><div class="clip">${safeA(u.mcname||'')}</div>`;const btn=document.createElement('button');btn.className='mc-btn small';btn.textContent='إضافة';btn.onclick=()=>{if(!currentTeamId)return;set(ref(db,'cy_teams/'+currentTeamId+'/members/'+u._k),true);toast('✅ تم إضافة '+u.name);pushNotif(u._k,'⚔️','تمت إضافتك لتيم!','',{type:'home'});btn.textContent='✅';btn.disabled=true;};div.appendChild(img);div.appendChild(info);div.appendChild(btn);box.appendChild(div);});};
   function initPresence(){
