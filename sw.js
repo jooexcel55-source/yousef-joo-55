@@ -13,17 +13,18 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function(payload) {
-  const title = payload.notification?.title || '⚔️ Golden Warriors';
-  const options = {
-    body: payload.notification?.body || '',
-    icon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10',
+  // قرا البيانات من payload مباشرة
+  const title = payload.notification?.title || payload.data?.title || '⚔️ Golden Warriors';
+  const body  = payload.notification?.body  || payload.data?.body  || '';
+  const icon  = payload.notification?.icon  || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10';
+
+  return self.registration.showNotification(title, {
+    body,
+    icon,
+    badge: icon,
     vibrate: [200, 100, 200],
-  };
-  self.registration.showNotification(title, options);
-});
-self.addEventListener('notificationclick', function(event) {
-  event.notification.close();
-  event.waitUntil(
-    clients.openWindow('https://jooexcel55-source.github.io/yousef-joo-55/')
-  );
+    tag: 'gw-notif-' + Date.now(), // مهم جداً — يمنع تكرار نفس الإشعار
+    renotify: true,
+    data: payload.data || {}
+  });
 });
