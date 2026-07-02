@@ -1012,7 +1012,10 @@ $('notifBtn').addEventListener('click',()=>toggleNotifDrop());
 function pushNotif(tUid,icon,text,key,linkObj){
   if(!tUid||tUid===uid)return;
   const data={ts:Date.now(),icon,text,unread:true,link:JSON.stringify(linkObj||{type:'home'})};
-  const notifKey='n_'+tUid+'_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);
+  // لو فيه key حقيقي اتبعت، استخدمه كمعرّف ثابت → أي نداء تاني بنفس الـ key
+  // هيعمل overwrite على نفس السجل بدل ما يضيف سجل جديد (بكده مفيش تكرار)
+  // ولو مفيش key (فاضي)، نولّد مفتاح عشوائي زي ما كان قبل كده
+  const notifKey = key ? ('n_'+key) : ('n_'+tUid+'_'+Date.now()+'_'+Math.random().toString(36).substr(2,9));
   set(ref(db,'cy_notifs/'+tUid+'/'+notifKey),data);
 }
 function markRead(){get(ref(db,'cy_notifs/'+uid)).then(snap=>{snap.forEach(s=>{if(s.val()?.unread)set(ref(db,'cy_notifs/'+uid+'/'+s.key+'/unread'),false);});});$('ndot').style.display='none';}
