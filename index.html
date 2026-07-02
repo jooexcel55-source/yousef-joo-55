@@ -512,7 +512,7 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
     vid.addEventListener('error',closeIntro);
   }else closeIntro();
   if(skipBtn)skipBtn.addEventListener('click',closeIntro);
-  setTimeout(closeIntro,8000); // أمان: تقفل تلقائي بعد 8 ثواني حتى لو الفيديو اتعلق
+  setTimeout(closeIntro,11000); // أمان: تقفل تلقائي بعد 8 ثواني حتى لو الفيديو اتعلق
 })();
 </script>
 <div id="loadingScreen" style="position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
@@ -632,7 +632,7 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
 <div id="pg_laws" class="page" style="padding:0;">
   <div class="law-screen">
     <div class="law-box">
-      <div style="font-size:17px;font-weight:900;color:var(--primary);margin-bottom:4px;text-shadow:2px 2px 0 #000;">📜 قوانين Golden Warriors</div>
+      <div style="font-size:17px;font-weight:900;color:var(--primary);margin-bottom:4px;text-shadow:2px 2px 0 #000;">📜 قوانين ⚔️ سيرفر هواري كرافت</div>
       <div style="font-size:11px;color:#333;letter-spacing:2px;margin:6px 0;">━━━━━━━━━━━━━━━━━━</div>
       <div class="law-number" id="lawNum">1</div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:8px;" id="lawProgress">قانون 1 من 18</div>
@@ -2492,7 +2492,7 @@ if('serviceWorker' in navigator){
       const token=await getToken(messaging,{vapidKey:VAPID_KEY,serviceWorkerRegistration:reg});
       if(token&&uid)set(ref(db,'cy_users/'+uid+'/fcmToken'),token);
       onMessage(messaging,payload=>{
-        const title=payload.notification?.title||'⚔️ Golden Warriors';
+        const title=payload.notification?.title||'⚔️ Hwary Craft';
         const body=payload.notification?.body||'';
 new Notification(title,{body,icon:'https://k.top4top.io/p_3834idfhb1.png'});
         playNotifSound();
