@@ -1,7 +1,7 @@
 {
-  "name": "Golden Warriors",
-  "short_name": "GWarriors",
-  "description": "سيرفر Golden Warriors",
+  "name": "Hwary Craft",
+  "short_name": "Hwary Craft",
+  "description": "سيرفر Hwary Craft",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0d0d0d",
@@ -10,12 +10,12 @@
   "gcm_sender_id": "645915709487",
   "icons": [
     {
-      "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10",
+      "src": "https://g.top4top.io/p_3836xze171.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTPGbVU71SHCNSoeMKBiglfaaGJL5pHEidqhaI3EM6Hw&s=10",
+      "src": "https://g.top4top.io/p_3836xze171.png",
       "sizes": "512x512",
       "type": "image/png"
     }
