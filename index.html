@@ -2507,6 +2507,43 @@ new Notification(title,{body,icon:'https://k.top4top.io/p_3834idfhb1.png'});
 
 setTimeout(requestNotifPermission,3000);
 </script>
+        
+        <!-- ==== كود تثبيت PWA - حط ده قبل </body> في index.html ==== -->
+
+<!-- 1) الزرار نفسه (شكله زي أي زرار مك رافت عندك) -->
+<button id="installAppBtn" style="display:none;position:fixed;bottom:70px;left:50%;transform:translateX(-50%);z-index:5000;background:linear-gradient(160deg,#c99a3a,#8a6000);color:#1a0f00;border:3px solid #000;box-shadow:inset -3px -3px 0 #5a3f00,inset 3px 3px 0 #f4d98a,0 4px 15px rgba(0,0,0,.5);font-family:'Cairo',sans-serif;font-weight:900;font-size:13px;padding:10px 20px;cursor:pointer;border-radius:4px;">
+  📲 ثبّت التطبيق الآن
+</button>
+
+<script>
+let deferredPrompt = null;
+const installBtn = document.getElementById('installAppBtn');
+
+// المتصفح بيبعت الحدث ده لما الموقع يبقى صالح للتثبيت
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'block'; // اظهر الزرار
+});
+
+// لما المستخدم يضغط الزرار
+installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === 'accepted') {
+    console.log('✅ المستخدم ثبّت التطبيق');
+  }
+  deferredPrompt = null;
+  installBtn.style.display = 'none';
+});
+
+// لو اتثبت بالفعل، اخفي الزرار
+window.addEventListener('appinstalled', () => {
+  installBtn.style.display = 'none';
+  deferredPrompt = null;
+});
+</script>
 </body>
 </html>
 <!-- do not change the markup -->
