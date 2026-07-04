@@ -648,12 +648,14 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
       <button class="tab-btn" onclick="switchExpTab('lb')">🏆 المتصدرين</button>
 <button class="tab-btn" onclick="switchExpTab('war')">⚔️ الحرب</button>
     </div>
-    <div id="expTab_chests">
+<div id="expTab_chests">
       <div style="background:linear-gradient(135deg,#1a1000,#2a1e00);border:3px solid var(--primary);padding:12px;margin-bottom:12px;text-align:center;">
         <div style="font-size:18px;font-weight:900;color:var(--primary);text-shadow:2px 2px 0 #000;">🎁 صناديق الغنيمة الأسطورية</div>
         <div style="font-size:11px;color:var(--text2);margin-top:3px;">10 مستويات من الأضعف للأقوى</div>
       </div>
       <div class="chests-grid" id="chestsList"></div>
+      <div class="stitle" style="margin-top:14px;">📋 طلبات صناديقي</div>
+      <div id="myChestList"></div>
     </div>
     <div id="expTab_teams" style="display:none;">
       <div id="adminTeamCreate" style="display:none;">
@@ -911,8 +913,11 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
           <button class="mc-btn small gold" onclick="WW.saveRedeemRate()">حفظ</button>
         </div>
       </div>
-      <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:6px;">📋 طلبات الاستبدال المعلقة</div>
+<div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:6px;">📋 طلبات الاستبدال المعلقة</div>
       <div id="adminRedeemList" style="max-height:250px;overflow-y:auto;"></div>
+
+      <div style="font-size:12px;font-weight:900;color:var(--primary);margin:12px 0 6px;">🎁 طلبات الصناديق المعلقة</div>
+      <div id="adminChestList" style="max-height:250px;overflow-y:auto;"></div>
     </div>
   </div>
 </div>
@@ -1078,7 +1083,8 @@ window.nextLaw=()=>{if(lawIndex<LAWS.length-1){lawIndex++;renderLaw();}};
 window.prevLaw=()=>{if(lawIndex>0){lawIndex--;renderLaw();}};
 function renderChests(){
   const box=$('chestsList');if(!box)return;
-  box.innerHTML=CHESTS.map(c=>`<div class="chest-card" style="border-color:${c.bc};"><div class="chest-header" style="background:linear-gradient(180deg,${c.color}18,transparent);"><div class="chest-num-badge">${c.num}</div><div class="chest-icon">🎁</div><div class="chest-name" style="color:${c.color};">${c.name}</div></div><div class="chest-body"><div style="font-size:9px;color:var(--text2);font-weight:700;margin-bottom:3px;">المحتويات:</div>${c.items.map(it=>`<div class="chest-row"><span>⚔️</span><span>${it}</span></div>`).join('')}</div><div class="chest-price" style="color:${c.color};">${c.price.toLocaleString()} $</div></div>`).join('');
+  box.innerHTML=CHESTS.map(c=>`<div class="chest-card" style="border-color:${c.bc};"><div class="chest-header" style="background:linear-gradient(180deg,${c.color}18,transparent);"><div class="chest-num-badge">${c.num}</div><div class="chest-icon">🎁</div><div class="chest-name" style="color:${c.color};">${c.name}</div></div><div class="chest-body"><div style="font-size:9px;color:var(--text2);font-weight:700;margin-bottom:3px;">المحتويات:</div>${c.items.map(it=>`<div class="chest-row"><span>⚔️</span><span>${it}</span></div>`).join('')}</div><div class="chest-price" style="color:${c.color};">${c.price.toLocaleString()} 🪙</div><button class="mc-btn small gold" style="width:100%;border-radius:0;" onclick="WW.requestChest('${c.id}')">🎁 اطلب الصندوق</button></div>`).join('');
+  renderMyChestList();
 }
 $('sNext1').addEventListener('click',()=>{
   const nm=$('sName').value.trim(),mcnm=$('sMCName').value.trim();
@@ -2328,6 +2334,86 @@ Object.assign(WW, {
   }
 });
 // ==================== END REDEEM SYSTEM ====================
+  // ==================== CHEST REDEEM SYSTEM (استبدال الكوينز بصناديق) ====================
+let allChestReqs = [];
+
+onValue(ref(db,'cy_chest_requests'), snap=>{
+  let all=[]; snap.forEach(s=>{ let o=s.val(); o._k=s.key; all.push(o); });
+  allChestReqs = all;
+  renderMyChestList();
+  renderAdminChestList();
+});
+
+function renderMyChestList(){
+  const box = $('myChestList'); if(!box) return;
+  const mine = allChestReqs.filter(r=>r.uid===uid).sort((a,b)=>b.ts-a.ts);
+  if(!mine.length){ box.innerHTML = '<div style="text-align:center;color:var(--text2);font-size:11px;padding:10px;">لا توجد طلبات صناديق بعد</div>'; return; }
+  box.innerHTML = mine.map(r=>{
+    const st = r.status==='pending' ? '⏳ قيد المراجعة' : r.status==='approved' ? '✅ تم التسليم' : '❌ مرفوض';
+    const stC = r.status==='pending' ? 'var(--primary)' : r.status==='approved' ? 'var(--green)' : 'var(--red)';
+    return `<div class="task-item"><div style="flex:1;"><div style="font-size:12px;font-weight:700;">🎁 ${safeA(r.chestName)}</div><div style="font-size:10px;color:var(--text2);">${r.chestPrice.toLocaleString()} 🪙 — ${ago(r.ts)}</div></div><div style="font-size:11px;font-weight:900;color:${stC};white-space:nowrap;">${st}</div></div>`;
+  }).join('');
+}
+
+function renderAdminChestList(){
+  const box = $('adminChestList'); if(!box) return;
+  const pending = allChestReqs.filter(r=>r.status==='pending').sort((a,b)=>a.ts-b.ts);
+  if(!pending.length){ box.innerHTML = '<div style="font-size:11px;color:var(--text2);text-align:center;padding:10px;">لا توجد طلبات معلقة</div>'; return; }
+  box.innerHTML = pending.map(r=>`
+    <div style="background:#0d0d0d;border:2px solid #1a1a1a;padding:8px;margin-bottom:6px;border-radius:4px;">
+      <div style="font-size:12px;font-weight:700;">${safeA(r.playerName)} ${r.mcname?`<span style="color:var(--text2);font-size:10px;">(${safeA(r.mcname)})</span>`:''}</div>
+      <div style="font-size:11px;color:var(--primary);margin:3px 0;font-weight:900;">🎁 ${safeA(r.chestName)} — ${r.chestPrice.toLocaleString()} 🪙</div>
+      <div style="font-size:9px;color:var(--text2);margin-bottom:6px;">${ago(r.ts)}</div>
+      <div style="display:flex;gap:6px;">
+        <button class="mc-btn small" style="flex:1;" onclick="WW.acceptChestReq('${r._k}')">✅ قبول وتسليم</button>
+        <button class="mc-btn small danger" style="flex:1;" onclick="WW.rejectChestReq('${r._k}')">❌ رفض</button>
+      </div>
+    </div>`).join('');
+}
+
+Object.assign(WW, {
+  async requestChest(chestId){
+    const chest = CHESTS.find(c=>c.id===chestId);
+    if(!chest) return;
+    if(myCoins < chest.price){ toast('❌ الكوينز اللي عندك مش كفاية لطلب '+chest.name+'!'); return; }
+    const reqId = 'cr_'+Date.now()+'_'+uid;
+    await set(ref(db,'cy_chest_requests/'+reqId), {
+      uid, playerName: uname, mcname: umcname, img: uimg,
+      chestId: chest.id, chestName: chest.name, chestPrice: chest.price,
+      status: 'pending', ts: Date.now()
+    });
+    toast('✅ تم إرسال طلب '+chest.name+'! استنى موافقة الإدارة');
+  },
+  async acceptChestReq(rk){
+    if(!isAdmin()){ toast('❌ الأدمن/الأونر بس!'); return; }
+    const r = allChestReqs.find(x=>x._k===rk);
+    if(!r || r.status!=='pending'){ toast('⚠️ الطلب ده مش متاح!'); return; }
+    const snap = await get(ref(db,'cy_users/'+r.uid+'/coins'));
+    const bal = snap.val()||0;
+    if(bal < r.chestPrice){
+      await set(ref(db,'cy_chest_requests/'+rk+'/status'),'rejected');
+      await set(ref(db,'cy_chest_requests/'+rk+'/note'),'رصيد غير كافي وقت الموافقة');
+      pushNotif(r.uid,'❌','طلب صندوق "'+r.chestName+'" اتلغى لأن رصيدك قل عن المطلوب وقت المراجعة','',{type:'explore'});
+      toast('❌ رصيد اللاعب مش كافي، اتلغى الطلب تلقائيًا');
+      return;
+    }
+    await set(ref(db,'cy_users/'+r.uid+'/coins'), bal - r.chestPrice);
+    await set(ref(db,'cy_chest_requests/'+rk+'/status'),'approved');
+    await set(ref(db,'cy_chest_requests/'+rk+'/approvedBy'), uname);
+    await set(ref(db,'cy_chest_requests/'+rk+'/approvedAt'), Date.now());
+    pushNotif(r.uid,'🎁','تم تسليم صندوق "'+r.chestName+'"! تفقد حسابك في السيرفر 🎮','',{type:'explore'});
+    toast('✅ تم القبول وخصم الكوينز من اللاعب');
+  },
+  async rejectChestReq(rk){
+    if(!isAdmin()){ toast('❌ الأدمن/الأونر بس!'); return; }
+    const r = allChestReqs.find(x=>x._k===rk);
+    if(!r || r.status!=='pending'){ toast('⚠️ الطلب ده مش متاح!'); return; }
+    await set(ref(db,'cy_chest_requests/'+rk+'/status'),'rejected');
+    pushNotif(r.uid,'❌','للأسف تم رفض طلب صندوق "'+r.chestName+'"','',{type:'explore'});
+    toast('تم رفض الطلب');
+  }
+});
+// ==================== END CHEST REDEEM SYSTEM ====================
   // ===== LOGIN SYSTEM =====
 $('sLoginBtn').addEventListener('click',()=>{
   const ls=$('loginSection');
