@@ -177,14 +177,13 @@ animation:spin 1s linear infinite;
 to{transform:rotate(360deg);}
 }
 :root{
-  --bg:#120b06;--card:#1f150c;--primary:#e8b64f;--primary2:#b8862a;
-  --text:#f4e9d0;--text2:#a08f6d;--border:#4a3520;
-  --hdr:#0a0503;--inp:#160d06;
-  --red:#8a2332;--green:#4f7a3a;--gold:#e8b64f;
-  --admin:#e2585f;--owner:#f4c96b;--vip:#9b8cff;--member:#c9a978;
-  --royal:#3a1530;
+  --bg:#0a0505;--card:#160808;--primary:#cc1f2b;--primary2:#7a0f18;
+  --text:#f0d8d8;--text2:#8a6060;--border:#4a1015;
+  --hdr:#050202;--inp:#0d0404;
+  --red:#a5111f;--green:#4f7a3a;--gold:#cc1f2b;
+  --admin:#ff3b3b;--owner:#ff6a3d;--vip:#9b30ff;--member:#8a6060;
+  --royal:#2a0510;
   --nav-h:45px;--tab-h:50px;
-
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
@@ -539,10 +538,8 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
       <input type="file" accept="image/*" id="sAvtFile" style="position:absolute;opacity:0;width:1px;height:1px;" onchange="handleSetupAvatar(this)">
       <div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">اسمك الحقيقي:</div>
       <input class="mc-input" id="sName" placeholder="اسمك الحقيقي...">
-      <div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">اسمك في اللعبة (Minecraft):</div>
+<div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">اسمك في اللعبة (Minecraft):</div>
       <input class="mc-input" id="sMCName" placeholder="اسمك في ماين كرافت...">
-     <div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">كلمة المرور الي تخش بها السيرفر:</div>
-<input class="mc-input" id="sServerPass" type="password" placeholder="كلمة مرور السيرفر...">
 <div style="font-size:11px;color:var(--text2);text-align:right;margin-bottom:3px;">كود دخولك الشخصي (اختاره واحفظه):</div>
 <input class="mc-input" id="sPersonalCode" type="password" placeholder="كود خاص بيك تحفظه...">
       <button class="mc-btn" style="width:100%;margin-top:4px;" id="sNext1">تسجيل جديد ←</button>
@@ -733,6 +730,7 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
   <div class="tab-btns">
     <button class="tab-btn active" onclick="switchPTab('settings')">⚙️ إعدادات</button>
     <button class="tab-btn" onclick="switchPTab('tasks')">🎯 مهام</button>
+    <button class="tab-btn" onclick="switchPTab('redeem')">💱 استبدال</button>
   </div>
   <div id="pTab_settings">
     <div class="card">
@@ -753,9 +751,24 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
   <button class="mc-btn danger" style="width:100%;" onclick="window.WW.logout()"
 >🚪 تسجيل الخروج</button>
 </div>
-  <div id="pTab_tasks" style="display:none;">
+<div id="pTab_tasks" style="display:none;">
     <div class="card" style="border-color:var(--primary);margin-bottom:8px;"><div style="color:var(--primary);font-size:13px;font-weight:900;">🎯 المهام اليومية</div><div style="color:var(--text2);font-size:11px;margin-top:3px;">أتمّ المهام واكسب ذهب! 🔄</div></div>
     <div id="tasksList"></div>
+  </div>
+  <div id="pTab_redeem" style="display:none;">
+    <div class="card" style="border-color:var(--primary);margin-bottom:8px;">
+      <div style="color:var(--primary);font-size:13px;font-weight:900;">💱 استبدال الكوينز بفلوس داخل اللعبة</div>
+      <div id="redeemRateInfo" style="color:var(--text2);font-size:11px;margin-top:3px;">جاري تحميل سعر الصرف...</div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:6px;">عدد الكوينز اللي عايز تستبدلها (أقل حاجة 1,000 🪙):</div>
+      <input class="mc-input" type="number" id="redeemCoinsIn" placeholder="مثال: 5000" oninput="updateRedeemPreview()">
+      <div id="redeemPreview" style="font-size:12px;color:var(--primary);font-weight:900;margin:-4px 0 8px;"></div>
+      <button class="mc-btn gold" style="width:100%;" onclick="submitRedeem()">🎮 اطلب الاستبدال</button>
+      <div style="font-size:10px;color:var(--text2);margin-top:6px;">⚠️ الكوينز بتتخصم من رصيدك بس بعد ما الإدارة توافق وتديك الفلوس فعليًا في السيرفر.</div>
+    </div>
+    <div class="stitle">📋 طلباتي</div>
+    <div id="myRedeemList"></div>
   </div>
 </div>
 <div id="pg_auction" class="page">
@@ -885,9 +898,22 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
         📢 اعلن [النص]
       </div>
     </div>
-    <textarea class="mc-input" id="adminCmdIn" placeholder="اكتب الأمر هنا..." style="min-height:80px;border-color:#cc0000;"></textarea>
+<textarea class="mc-input" id="adminCmdIn" placeholder="اكتب الأمر هنا..." style="min-height:80px;border-color:#cc0000;"></textarea>
     <div id="adminCmdResult" style="font-size:12px;padding:8px;background:#0d0d0d;border:2px solid #1a1a1a;margin-bottom:8px;min-height:36px;border-radius:4px;display:none;"></div>
     <button class="mc-btn danger" style="width:100%;font-size:14px;" onclick="WW.runAdminCmd()">⚡ تنفيذ الأمر</button>
+
+    <div style="border-top:2px solid #330000;margin:14px 0 10px;padding-top:10px;">
+      <div style="background:#0d0000;border:2px solid var(--primary);padding:10px;margin-bottom:10px;border-radius:4px;">
+        <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:6px;">💱 سعر صرف الاستبدال</div>
+        <div style="font-size:10px;color:var(--text2);margin-bottom:6px;">كل كوينز 🪙 واحد = كام فلوس في اللعبة؟</div>
+        <div style="display:flex;gap:6px;">
+          <input class="mc-input" type="number" id="adminRedeemRateIn" style="margin-bottom:0;">
+          <button class="mc-btn small gold" onclick="WW.saveRedeemRate()">حفظ</button>
+        </div>
+      </div>
+      <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:6px;">📋 طلبات الاستبدال المعلقة</div>
+      <div id="adminRedeemList" style="max-height:250px;overflow-y:auto;"></div>
+    </div>
   </div>
 </div>
   <div class="moverlay" id="mEditPost">
@@ -982,7 +1008,7 @@ const TASKS=[{id:'post1',label:'انشر منشور',goal:1,reward:500,action:'p
 let uid='',uname='',umcname='',uimg='',myCoins=0,myRank='member',activeTitle='';
 let allPosts=[],usersCache={},myFollowers={},myFollowing={};
 let prevPg='home',curPvt={uid:'',name:'',img:''};
-let curGrpId='',curGrpData={},pvtUnsub=null,grpUnsub=null,activePvtUid='';
+let curGrpId='',curGrpData={},pvtUnsub=null,grpUnsub=null,activePvtUid='',gcPageOpen=false;
 let taskProgress={},replyTarget=null,selectedTeamColor=null,currentTeamId=null,lawIndex=0;
 let apOC=2,phOC=2;
 const $=id=>document.getElementById(id);
@@ -1089,8 +1115,15 @@ function checkSetup(){}
 function goPage(pg){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const el=$('pg_'+pg);if(el)el.classList.add('active');
   document.querySelectorAll('.tni').forEach(n=>n.classList.toggle('active',n.dataset.pg===pg));window.scrollTo(0,0);
-  if(pg==='laws'){lawIndex=0;renderLaw();}
 
+  gcPageOpen=(pg==='chat');
+  if(gcPageOpen)markGcRead();
+
+  if(pg!=='pvt'&&pvtUnsub){pvtUnsub();pvtUnsub=null;activePvtUid='';}
+  if(pg!=='grp'&&grpUnsub){grpUnsub();grpUnsub=null;curGrpId='';}
+  if(pg!=='grp'&&window.grpReadsUnsub){window.grpReadsUnsub();window.grpReadsUnsub=null;}
+
+  if(pg==='laws'){lawIndex=0;renderLaw();}
   if(pg==='explore'){renderChests();renderTeams();}
 }
 document.querySelectorAll('.tni').forEach(btn=>{btn.addEventListener('click',()=>{const pg=btn.dataset.pg;if(!['home','polls','laws','explore','chat','msgs','profile','auction'].includes(pg))return;
@@ -1133,7 +1166,7 @@ nts=nts.filter(n=>(Date.now()-n.ts)<43200000);  const unread=nts.filter(n=>n.unr
   const box=$('notifDropList');if(!box)return;
   if(!nts.length){box.innerHTML='<div style="text-align:center;padding:16px;color:var(--text2);font-size:12px;">لا توجد إشعارات</div>';return;}
   box.innerHTML='';nts.slice(0,30).forEach(n=>{const
-  d=document.createElement('div');d.className='notif-item'+(n.unread?' unread':'');d.innerHTML=`<div style="font-size:17px;flex-shrink:0;">${n.icon||'🔔'}</div><div style="flex:1;"><div style="font-size:12px;line-height:1.5;font-weight:${n.unread?700:400};">${safeA(n.text)}</div><div style="font-size:10px;color:var(--text2);margin-top:2px;">${ago(n.ts)}</div></div>`;d.addEventListener('click',()=>{$('notifDrop').classList.remove('open');remove(ref(db,'cy_notifs/'+uid+'/'+n._k));try{const l=JSON.parse(n.link||'{}');if(l.type==='pvt'&&l.uid)WW.pvt(l.uid,l.name||'',l.img||'');else goPage('home');}catch(e){goPage('home');}});box.appendChild(d);});
+  d=document.createElement('div');d.className='notif-item'+(n.unread?' unread':'');d.innerHTML=`<div style="font-size:17px;flex-shrink:0;">${n.icon||'🔔'}</div><div style="flex:1;"><div style="font-size:12px;line-height:1.5;font-weight:${n.unread?700:400};">${safeA(n.text)}</div><div style="font-size:10px;color:var(--text2);margin-top:2px;">${ago(n.ts)}</div></div>`;d.addEventListener('click',()=>{$('notifDrop').classList.remove('open');remove(ref(db,'cy_notifs/'+uid+'/'+n._k));try{const l=JSON.parse(n.link||'{}');if(l.type==='pvt'&&l.uid)WW.pvt(l.uid,l.name||'',l.img||'');else goPage(l.type||'home');}catch(e){goPage('home');}});box.appendChild(d);});
 });
 async function clearAllNotifs(){const snap=await get(ref(db,'cy_notifs/'+uid));snap.forEach(s=>remove(ref(db,'cy_notifs/'+uid+'/'+s.key)));$('ndot').style.display='none';$('notifDropList').innerHTML='<div style="text-align:center;padding:16px;color:var(--text2);font-size:12px;">لا توجد إشعارات</div>';toast('✅ تم المسح!');}
 window.clearAllNotifs=clearAllNotifs;
@@ -1220,19 +1253,21 @@ return`<div class="gmsg ${me?'mine':''}">
   </div>`;}).join('');
 setTimeout(()=>{const gcBox=$('gcBox');if(gcBox)gcBox.scrollTop=gcBox.scrollHeight;},50);
 }
+function markGcRead(){
+  if(!gcMsgs.length)return;
+  const lastOther=[...gcMsgs].reverse().find(m=>m.sid!==uid);
+  if(lastOther){
+    const cur=gcReads[uid];
+    if(!cur||cur.ts<lastOther.ts){
+      set(ref(db,'cy_gc_reads/'+uid),{msgKey:lastOther._k,ts:lastOther.ts});
+    }
+  }
+}
 onValue(gcRef,snap=>{
   let msgs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;msgs.push(o);});msgs.sort((a,b)=>a.ts-b.ts);
   gcMsgs=msgs;
   renderGC();
-  if(msgs.length){
-    const lastOther=[...msgs].reverse().find(m=>m.sid!==uid);
-    if(lastOther){
-      const cur=gcReads[uid];
-      if(!cur||cur.ts<lastOther.ts){
-        set(ref(db,'cy_gc_reads/'+uid),{msgKey:lastOther._k,ts:lastOther.ts});
-      }
-    }
-  }
+  if(gcPageOpen)markGcRead();
 });
 onValue(ref(db,'cy_gc_reads'),snap=>{
   gcReads=snap.val()||{};
@@ -1265,7 +1300,7 @@ function loadGroupsList(){
     box.innerHTML='';grps.forEach(g=>{const div=document.createElement('div');div.className='cli';div.innerHTML=`<div style="width:44px;height:44px;border-radius:2px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:2px solid #7a5800;">👥</div><div class="clin"><div class="clinm">${safeA(g.name)}</div><div class="clip">${g.count||0} أعضاء</div></div>`;div.addEventListener('click',()=>WW.openGrp(g._k));box.appendChild(div);});
   });
 }
-window.switchMsgTab=function(tab){$('msgsChats').style.display=tab==='chats'?'block':'none';$('msgsGroups').style.display=tab==='groups'?'block':'none';$('msgsSearch').style.display=tab==='search'?'block':'none';document.querySelectorAll('#pvtSection .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chats','groups','search'][i]===tab));if(tab==='groups')loadGroupsList();};
+window.switchMsgTab=function(tab){$('msgsChats').style.display=tab==='chats'?'block':'none';$('msgsGroups').style.display=tab==='groups'?'block':'none';$('msgsSearch').style.display=tab==='search'?'block':'none';document.querySelectorAll('#pg_msgs .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chats','groups','search'][i]===tab));if(tab==='groups')loadGroupsList();};
 $('userSearch').addEventListener('input',async function(){const q=this.value.trim().toLowerCase(),box=$('userSearchResults');if(!q){box.innerHTML='';return;}const snap=await get(ref(db,'cy_users'));let res=[];snap.forEach(s=>{const u=s.val();if(s.key!==uid&&(u.name||'').toLowerCase().includes(q))res.push({...u,_k:s.key});});if(!res.length){box.innerHTML='<div style="text-align:center;color:var(--text2);padding:14px;font-size:12px;">لا توجد نتائج</div>';return;}box.innerHTML='';res.forEach(u=>{const div=document.createElement('div');div.className='cli';const img=document.createElement('img');img.className='clia';img.src=avt(u.img,u.name);img.alt='';const info=document.createElement('div');info.className='clin';info.innerHTML=`<div class="clinm">${safeA(u.name)}</div><div class="clip">${safeA(u.mcname||'')}</div>`;div.appendChild(img);div.appendChild(info);div.addEventListener('click',()=>{prevPg='msgs';WW.pvt(u._k,u.name,u.img||'');});box.appendChild(div);});});
 let pvtReads={};let pvtReadsUnsub=null;
 function renderPvtMsgsList(msgs){
@@ -1326,7 +1361,7 @@ if (adminBtn) adminBtn.style.display = isAdmin() ? 'flex' : 'none';
 $('saveNm').addEventListener('click',async()=>{const nm=$('nmIn').value.trim(),mc=$('mcnmIn').value.trim();if(!nm){toast('⚠️ اكتب اسمك!');return;}try{const snap=await get(ref(db,'cy_users'));let nt=false,mt=false;snap.forEach(s=>{if(s.key===uid)return;if((s.val()?.name||'').toLowerCase()===nm.toLowerCase())nt=true;if(mc&&(s.val()?.mcname||'').toLowerCase()===mc.toLowerCase())mt=true;});if(nt){toast('❌ الاسم مأخوذ!');return;}if(mt){toast('❌ اسم اللعبة مأخوذ!');return;}}catch(e){}uname=nm;umcname=mc||umcname;localStorage.setItem('cy_name',uname);localStorage.setItem('cy_mcname',umcname);set(ref(db,'cy_users/'+uid+'/name'),uname);set(ref(db,'cy_users/'+uid+'/mcname'),umcname);set(ref(db,'cy_users/'+uid+'/ts'),Date.now());delete usersCache[uid];usersCache[uid]={...usersCache[uid],name:uname,mcname:umcname};refreshStats();renderPosts();toast('✅ تم الحفظ!');});
 $('avtFile').addEventListener('change',function(){const f=this.files[0];if(!f)return;toast('⏳ جاري تحميل الصورة...');const r=new FileReader();r.onload=function(e){const img=new Image();img.onload=function(){const canvas=document.createElement('canvas');const MAX=300;let w=img.width,h=img.height;if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);uimg=canvas.toDataURL('image/jpeg',0.92);localStorage.setItem('cy_img',uimg);set(ref(db,'cy_users/'+uid+'/img'),uimg);set(ref(db,'cy_users/'+uid+'/ts'),Date.now());refreshStats();push(postsRef,{type:'post',ts:Date.now(),text:'🖼️ '+uname+' غيّر صورته الشخصية!',authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,img:uimg,likes:{},views:{},comments:{}});get(ref(db,'cy_users')).then(snap=>{snap.forEach(s=>{if(s.key!==uid)pushNotif(s.key,'🖼️',uname+' غيّر صورته الشخصية!','imgchange_'+uid,{type:'home'});});});toast('✅ تم تغيير الصورة!');};img.onerror=()=>{uimg=e.target.result;localStorage.setItem('cy_img',uimg);set(ref(db,'cy_users/'+uid+'/img'),uimg);refreshStats();toast('✅ تم!');};img.src=e.target.result;};r.readAsDataURL(f);});
 $('promoIn').addEventListener('input',()=>{const v=$('promoIn').value,msg=$('promoMsg');const found=RANK_CODES[v];if(found){myRank=found.rank;localStorage.setItem('cy_rank',myRank);set(ref(db,'cy_users/'+uid+'/rank'),myRank);set(ref(db,'cy_users/'+uid+'/ts'),Date.now());msg.innerHTML=`<span style="color:var(--primary);font-weight:900;">✅ رتبة ${found.label} مفعّلة!</span>`;refreshStats();renderPollsPage();renderTeams();}else if(v.length>=7)msg.innerHTML=`<span style="color:var(--red);">❌ كود غلط</span>`;else msg.innerHTML='';});
-window.switchPTab=function(tab){['settings','tasks'].forEach(t=>{const el=$('pTab_'+t);if(el)el.style.display=t===tab?'block':'none';});document.querySelectorAll('#pg_profile .tab-btn').forEach((b,i)=>b.classList.toggle('active',['settings','tasks'][i]===tab));};
+window.switchPTab=function(tab){['settings','tasks','redeem'].forEach(t=>{const el=$('pTab_'+t);if(el)el.style.display=t===tab?'block':'none';});document.querySelectorAll('#pg_profile .tab-btn').forEach((b,i)=>b.classList.toggle('active',['settings','tasks','redeem'][i]===tab));};
 function loadTasks(){const today=new Date().toDateString();taskProgress=JSON.parse(localStorage.getItem('cy_tasks_'+today)||'{}');renderTasks();}
 function checkTask(action,n=1){const today=new Date().toDateString();TASKS.forEach(t=>{if(t.action!==action||taskProgress[t.id]>=t.goal)return;taskProgress[t.id]=(taskProgress[t.id]||0)+n;localStorage.setItem('cy_tasks_'+today,JSON.stringify(taskProgress));if(taskProgress[t.id]>=t.goal){addCoins(t.reward);toast('🎯 مهمة مكتملة! +'+fC(t.reward)+'🪙');}});renderTasks();}
 function renderTasks(){const box=$('tasksList');if(!box)return;box.innerHTML=TASKS.map(t=>{const prog=Math.min(taskProgress[t.id]||0,t.goal),done=prog>=t.goal;return`<div class="task-item ${done?'task-done':''}"><div style="font-size:17px;">${done?'✅':'🎯'}</div><div class="task-prog"><div class="task-nm">${t.label}</div><div class="task-bar"><div class="task-fill" style="width:${(prog/t.goal)*100}%;"></div></div><div style="font-size:10px;color:var(--text2);margin-top:2px;">${prog}/${t.goal}</div></div><div style="font-size:11px;color:var(--primary);font-weight:700;white-space:nowrap;">+${fC(t.reward)}🪙</div></div>`;}).join('');}
@@ -1622,7 +1657,21 @@ window.WW={
   likeCmt(pk,ck){const p=allPosts.find(x=>x._k===pk);if(!p)return;const c=p.comments&&p.comments[ck];if(!c||c.likes&&c.likes[uid])return;set(ref(db,'cy_posts/'+pk+'/comments/'+ck+'/likes/'+uid),true);if(c.authorId&&c.authorId!==uid)pushNotif(c.authorId,'❤️',uname+' عمل لايك على تعليقك','',{type:'home'});},
   likeGC(mk,el){if(el.classList.contains('liked')){toast('❌ اللايك مش بيتشالش!');return;}set(ref(db,'cy_gc/'+mk+'/likes/'+uid),true);addCoins(50,el);},
   toggleCmts(k){const el=$('cs_'+k);if(el)el.style.display=el.style.display==='block'?'none':'block';},
-  cmt(k,pAId,el){const inp=$('ci_'+k),txt=inp?inp.value.trim():'';if(!txt)return;push(ref(db,'cy_posts/'+k+'/comments'),{ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,likes:{}});if(inp)inp.value='';addCoins(100,el);checkTask('comment');if(pAId&&pAId!==uid){get(ref(db,'cy_users/'+pAId+'/coins')).then(s=>set(ref(db,'cy_users/'+pAId+'/coins'),(s.val()||0)+100));pushNotif(pAId,'💬',uname+' علق على منشورك: "'+txt.substring(0,25)+'"','',{type:'home'});}},
+  cmt(k,pAId,el){
+  const inp=$('ci_'+k),txt=inp?inp.value.trim():'';
+  if(!txt)return;
+  if(el&&el.dataset.sending==='1')return;
+  if(el)el.dataset.sending='1';
+  const cmtRef=push(ref(db,'cy_posts/'+k+'/comments'),{ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,likes:{}});
+  if(inp)inp.value='';
+  addCoins(100,el);
+  checkTask('comment');
+  if(pAId&&pAId!==uid){
+    get(ref(db,'cy_users/'+pAId+'/coins')).then(s=>set(ref(db,'cy_users/'+pAId+'/coins'),(s.val()||0)+100));
+    pushNotif(pAId,'💬',uname+' علق على منشورك: "'+txt.substring(0,25)+'"','cmt_'+k+'_'+cmtRef.key,{type:'home'});
+  }
+  if(el)setTimeout(()=>{el.dataset.sending='';},800);
+},
   voteP(pk,ok,ci,el){const p=allPosts.find(x=>x._k===pk);if(!p)return;if(p.options&&Object.values(p.options).some(o=>o.votes&&o.votes[uid])){toast('⚠️ مينفعش تغير تصويتك!');return;}set(ref(db,'cy_posts/'+pk+'/options/'+ok+'/votes/'+uid),true);checkTask('vote');const c=ci!==null?parseInt(ci):null,mx=parseInt(ok.replace('o',''));if(c!==null&&mx===c){addCoins(1000,el);toast('🎉 إجابة صح! +1,000🪙');}else if(c!==null)toast('❌ إجابة غلط!');else{addCoins(300,el);toast('✅ تم التصويت +300🪙');}if(p.authorId&&p.authorId!==uid)pushNotif(p.authorId,'📊',uname+' صوت في تصويتك','vote_'+pk+'_'+uid,{type:'home'});},
   voteAP(pk,ok,ci,el){const p=allPosts.find(x=>x._k===pk);if(!p)return;if(p.options&&Object.values(p.options).some(o=>o.votes&&o.votes[uid])){toast('⚠️ مينفعش تغير تصويتك!');return;}set(ref(db,'cy_posts/'+pk+'/options/'+ok+'/votes/'+uid),true);checkTask('vote');const c=ci!==null?parseInt(ci):null,mx=parseInt(ok.replace('o',''));if(c!==null&&mx===c){addCoins(1000,el);toast('🎉 إجابة صح! +1,000🪙');}else if(c!==null)toast('❌ إجابة غلط!');else{addCoins(300,el);}},
   replyGC(mk,name,txt){replyTarget={msgId:mk,name,text:txt};$('replyingToText').textContent='↩️ رد على '+name+': '+txt.substring(0,30)+'...';$('replyingTo').style.display='flex';$('gcIn').focus();},
@@ -2172,6 +2221,113 @@ Object.assign(WW, {
   }
 });
 // ==================== END AUCTION ====================
+// ==================== REDEEM SYSTEM (استبدال الكوينز) ====================
+let redeemRate = 1; // كل كوينز واحد = كام فلوس داخل اللعبة (افتراضي 1، بيتغير من لوحة الأدمن)
+let allRedeemReqs = [];
+
+onValue(ref(db,'cy_config/redeemRate'), s=>{
+  redeemRate = s.exists() ? s.val() : 1;
+  const info = $('redeemRateInfo');
+  if(info) info.textContent = `كل كوينز 🪙 واحد = ${redeemRate.toLocaleString()} فلوس داخل اللعبة`;
+  const adminIn = $('adminRedeemRateIn');
+  if(adminIn && document.activeElement !== adminIn) adminIn.value = redeemRate;
+  updateRedeemPreview();
+});
+
+window.updateRedeemPreview = function(){
+  const amt = parseInt($('redeemCoinsIn')?.value) || 0;
+  const money = Math.floor(amt*redeemRate);
+  const el = $('redeemPreview');
+  if(el) el.textContent = amt>0 ? `= ${money.toLocaleString()} فلوس داخل اللعبة` : '';
+};
+window.submitRedeem = async function(){
+  const amt = parseInt($('redeemCoinsIn').value);
+  if(!amt || amt < 1000){ toast('⚠️ أقل مبلغ للاستبدال 1,000 🪙'); return; }
+  if(amt > myCoins){ toast('❌ الكوينز اللي عندك مش كفاية!'); return; }
+const money = Math.floor(amt*redeemRate);
+  if(money < 1){ toast('⚠️ المبلغ قليل جدًا، جرب رقم أكبر!'); return; }
+  const reqId = 'r_'+Date.now()+'_'+uid;
+  await set(ref(db,'cy_redeem_requests/'+reqId), {
+    uid, playerName: uname, mcname: umcname, img: uimg,
+    coinsRequested: amt, gameMoney: money, rateUsed: redeemRate,
+    status: 'pending', ts: Date.now()
+  });
+  $('redeemCoinsIn').value = ''; updateRedeemPreview();
+  toast('✅ تم إرسال طلب الاستبدال! استنى موافقة الإدارة');
+};
+
+onValue(ref(db,'cy_redeem_requests'), snap=>{
+  let all=[]; snap.forEach(s=>{ let o=s.val(); o._k=s.key; all.push(o); });
+  allRedeemReqs = all;
+  renderMyRedeemList();
+  renderAdminRedeemList();
+});
+
+function renderMyRedeemList(){
+  const box = $('myRedeemList'); if(!box) return;
+  const mine = allRedeemReqs.filter(r=>r.uid===uid).sort((a,b)=>b.ts-a.ts);
+  if(!mine.length){ box.innerHTML = '<div style="text-align:center;color:var(--text2);font-size:11px;padding:10px;">لا توجد طلبات استبدال بعد</div>'; return; }
+  box.innerHTML = mine.map(r=>{
+    const st = r.status==='pending' ? '⏳ قيد المراجعة' : r.status==='approved' ? '✅ تم التسليم' : '❌ مرفوض';
+    const stC = r.status==='pending' ? 'var(--primary)' : r.status==='approved' ? 'var(--green)' : 'var(--red)';
+    return `<div class="task-item"><div style="flex:1;"><div style="font-size:12px;font-weight:700;">${r.coinsRequested.toLocaleString()} 🪙 ← ${r.gameMoney.toLocaleString()} فلوس</div><div style="font-size:10px;color:var(--text2);">${ago(r.ts)}</div></div><div style="font-size:11px;font-weight:900;color:${stC};white-space:nowrap;">${st}</div></div>`;
+  }).join('');
+}
+
+function renderAdminRedeemList(){
+  const box = $('adminRedeemList'); if(!box) return;
+  const pending = allRedeemReqs.filter(r=>r.status==='pending').sort((a,b)=>a.ts-b.ts);
+  if(!pending.length){ box.innerHTML = '<div style="font-size:11px;color:var(--text2);text-align:center;padding:10px;">لا توجد طلبات معلقة</div>'; return; }
+  box.innerHTML = pending.map(r=>`
+    <div style="background:#0d0d0d;border:2px solid #1a1a1a;padding:8px;margin-bottom:6px;border-radius:4px;">
+      <div style="font-size:12px;font-weight:700;">${safeA(r.playerName)} ${r.mcname?`<span style="color:var(--text2);font-size:10px;">(${safeA(r.mcname)})</span>`:''}</div>
+      <div style="font-size:11px;color:var(--primary);margin:3px 0;font-weight:900;">${r.coinsRequested.toLocaleString()} 🪙 ← ${r.gameMoney.toLocaleString()} فلوس</div>
+      <div style="font-size:9px;color:var(--text2);margin-bottom:6px;">${ago(r.ts)}</div>
+      <div style="display:flex;gap:6px;">
+        <button class="mc-btn small" style="flex:1;" onclick="WW.acceptRedeem('${r._k}')">✅ قبول وتسليم</button>
+        <button class="mc-btn small danger" style="flex:1;" onclick="WW.rejectRedeem('${r._k}')">❌ رفض</button>
+      </div>
+    </div>`).join('');
+}
+
+Object.assign(WW, {
+  saveRedeemRate(){
+    if(!isAdmin()){ toast('❌ الأدمن/الأونر بس!'); return; }
+    const v = parseFloat($('adminRedeemRateIn').value);
+    if(!v || v<=0){ toast('⚠️ اكتب رقم صحيح أكبر من صفر!'); return; }
+    set(ref(db,'cy_config/redeemRate'), v);
+    toast('✅ تم تحديث سعر الصرف!');
+  },
+  async acceptRedeem(rk){
+    if(!isAdmin()){ toast('❌ الأدمن/الأونر بس!'); return; }
+    const r = allRedeemReqs.find(x=>x._k===rk);
+    if(!r || r.status!=='pending'){ toast('⚠️ الطلب ده مش متاح!'); return; }
+    const snap = await get(ref(db,'cy_users/'+r.uid+'/coins'));
+    const bal = snap.val()||0;
+    if(bal < r.coinsRequested){
+      await set(ref(db,'cy_redeem_requests/'+rk+'/status'),'rejected');
+      await set(ref(db,'cy_redeem_requests/'+rk+'/note'),'رصيد غير كافي وقت الموافقة');
+      pushNotif(r.uid,'❌','طلب الاستبدال اتلغى لأن رصيدك قل عن المطلوب وقت المراجعة','',{type:'profile'});
+      toast('❌ رصيد اللاعب مش كافي، اتلغى الطلب تلقائيًا');
+      return;
+    }
+    await set(ref(db,'cy_users/'+r.uid+'/coins'), bal - r.coinsRequested);
+    await set(ref(db,'cy_redeem_requests/'+rk+'/status'),'approved');
+    await set(ref(db,'cy_redeem_requests/'+rk+'/approvedBy'), uname);
+    await set(ref(db,'cy_redeem_requests/'+rk+'/approvedAt'), Date.now());
+    pushNotif(r.uid,'✅','تم تسليم '+r.gameMoney.toLocaleString()+' فلوس داخل اللعبة! تفقد حسابك في السيرفر 🎮','',{type:'profile'});
+    toast('✅ تم القبول وخصم الكوينز من اللاعب');
+  },
+  async rejectRedeem(rk){
+    if(!isAdmin()){ toast('❌ الأدمن/الأونر بس!'); return; }
+    const r = allRedeemReqs.find(x=>x._k===rk);
+    if(!r || r.status!=='pending'){ toast('⚠️ الطلب ده مش متاح!'); return; }
+    await set(ref(db,'cy_redeem_requests/'+rk+'/status'),'rejected');
+    pushNotif(r.uid,'❌','للأسف تم رفض طلب استبدال الكوينز بتاعك','',{type:'profile'});
+    toast('تم رفض الطلب');
+  }
+});
+// ==================== END REDEEM SYSTEM ====================
   // ===== LOGIN SYSTEM =====
 $('sLoginBtn').addEventListener('click',()=>{
   const ls=$('loginSection');
