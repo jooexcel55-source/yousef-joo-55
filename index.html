@@ -3,6 +3,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -572,13 +573,14 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
     <span class="coins-hdr" id="coinsBadge">🪙 0</span>
 
     <button class="icbtn" id="notifBtn">🔔<span class="ndot" id="ndot"></span></button>
+                                                                      
     <button class="icbtn" onclick="startTour()" title="جولة تعريفية">❓</button>
   </div>
 </header>
 
 <nav class="tnav">
   <button class="tni active" data-pg="home"><span class="tni-icon">🏠</span><span class="tni-label">المنشورات</span></button>
-  <button class="tni" data-pg="auction"><span class="tni-icon">🔨</span><span class="tni-label">المزاد</span></button>
+  
   <button class="tni" data-pg="laws"><span class="tni-icon">📜</span><span class="tni-label">القوانين</span></button>
   <button class="tni" data-pg="explore"><span class="tni-icon">⚔️</span><span class="tni-label">استكشاف</span></button>
   <button class="tni" data-pg="chat"><span class="tni-icon">💬</span><span class="tni-label">الشات العام</span></button>
@@ -644,9 +646,8 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
   <div style="padding:10px;">
     <div class="tab-btns" style="border-bottom:3px solid var(--primary);padding-bottom:8px;margin-bottom:10px;">
       <button class="tab-btn active" onclick="switchExpTab('chests')">🎁 الصناديق</button>
-      <button class="tab-btn" onclick="switchExpTab('teams')">⚔️ التيمات</button>
+<button class="tab-btn" onclick="switchExpTab('teams')">🏛️ المنظمات</button>
       <button class="tab-btn" onclick="switchExpTab('lb')">🏆 المتصدرين</button>
-<button class="tab-btn" onclick="switchExpTab('war')">⚔️ الحرب</button>
     </div>
 <div id="expTab_chests">
       <div style="background:linear-gradient(135deg,#1a1000,#2a1e00);border:3px solid var(--primary);padding:12px;margin-bottom:12px;text-align:center;">
@@ -658,17 +659,24 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
       <div id="myChestList"></div>
     </div>
     <div id="expTab_teams" style="display:none;">
-      <div id="adminTeamCreate" style="display:none;">
+<div id="adminTeamCreate" style="display:block;">
         <div class="card" style="border-color:var(--primary);">
-          <div class="stitle">➕ إنشاء تيم جديد</div>
-          <input class="mc-input" id="teamNameIn" placeholder="اسم التيم...">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:5px;font-weight:700;">اختار لون التيم:</div>
+          <div class="stitle">🏛️ إنشاء منظمة جديدة (100,000 🪙)</div>
+          <div style="cursor:pointer;text-align:center;margin-bottom:10px;" onclick="document.getElementById('orgLogoFile').click()">
+            <img id="orgLogoPreview" src="https://ui-avatars.com/api/?name=Org&background=2a1e00&color=f0c040&size=80" style="width:70px;height:70px;border-radius:6px;border:3px solid var(--primary);object-fit:cover;">
+            <div style="font-size:10px;color:var(--primary);margin-top:4px;">🖼️ اضغط لاختيار لوجو المنظمة</div>
+          </div>
+          <input type="file" accept="image/*" id="orgLogoFile" style="display:none" onchange="handleOrgLogo(this)">
+          <input class="mc-input" id="teamNameIn" placeholder="اسم المنظمة...">
+          <textarea class="mc-input" id="orgDescIn" placeholder="وصف المنظمة..." style="min-height:55px;"></textarea>
+          <textarea class="mc-input" id="orgReqIn" placeholder="شروط الانضمام (هتتعرض للي عاوز ينضم)..." style="min-height:50px;"></textarea>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:5px;font-weight:700;">اختار لون المنظمة:</div>
           <div class="color-grid" id="colorGrid"></div>
           <div style="font-size:11px;margin-bottom:8px;" id="selColorLabel">لم يتم اختيار لون</div>
-          <button class="mc-btn" style="width:100%;" id="doCreateTeam">إنشاء التيم ⚔️</button>
+          <button class="mc-btn gold" style="width:100%;" id="doCreateTeam">إنشاء المنظمة 🏛️ (-100,000 🪙)</button>
         </div>
       </div>
-      <div class="stitle">⚔️ التيمات</div>
+      <div class="stitle">🏛️ المنظمات</div>
       <div id="teamsList"></div>
     </div>
     <div id="expTab_lb" style="display:none;">
@@ -677,8 +685,7 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
       <div class="stitle">🏆 المتصدرين</div>
 <div id="lbList"></div>
     </div>
-    <div id="expTab_war" style="display:none;"></div>
-  </div>
+      </div>
 </div>
 <div id="pg_chat" class="page chat-page" style="flex-direction:column;">
   <!-- شات عام -->
@@ -866,8 +873,33 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
       <div style="background:#0d0d0d;border:2px solid #1a1a1a;padding:9px 4px;text-align:center;"><div style="font-size:14px;font-weight:900;color:var(--primary);" id="upF">0</div><div style="font-size:9px;color:var(--text2);">متابع</div></div>
       <div style="background:#0d0d0d;border:2px solid #1a1a1a;padding:9px 4px;text-align:center;"><div style="font-size:14px;font-weight:900;color:var(--primary);" id="upCoins">0</div><div style="font-size:9px;color:var(--text2);">🪙</div></div>
     </div>
-    <div class="stitle">📝 منشوراته</div>
+<div class="stitle">📝 منشوراته</div>
     <div id="upPosts"></div>
+  </div>
+</div>
+
+<div id="pg_orgprofile" class="page" style="padding:0;overflow-y:auto;max-height:calc(100vh - var(--nav-h) - var(--tab-h));">
+  <div class="up-cover" style="position:relative;">
+    <button onclick="WW.backFromOrgProfile()" style="position:absolute;top:10px;right:10px;z-index:10;background:rgba(0,0,0,.8);border:2px solid #444;color:#fff;font-size:16px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;">←</button>
+  </div>
+  <div style="padding:0 12px 20px;position:relative;">
+    <div style="position:relative;margin-top:-38px;margin-bottom:10px;display:flex;align-items:flex-end;justify-content:space-between;">
+      <img id="orgpAvt" src="" alt="" style="width:74px;height:74px;border-radius:8px;object-fit:cover;border:3px solid var(--primary);background:#222;flex-shrink:0;">
+      <div id="orgpActionBtns" style="display:flex;gap:6px;padding-bottom:4px;"></div>
+    </div>
+    <div id="orgpNm" style="font-size:17px;font-weight:900;margin-bottom:2px;"></div>
+    <div id="orgpLevel" style="font-size:12px;color:var(--primary);margin-bottom:4px;font-weight:900;"></div>
+    <div id="orgpLeader" style="font-size:12px;color:var(--text2);margin-bottom:8px;"></div>
+    <div class="card" style="margin-bottom:10px;"><div style="font-weight:700;font-size:12px;color:var(--primary);margin-bottom:6px;">📋 الوصف</div><div id="orgpDesc" style="font-size:12px;color:var(--text);"></div></div>
+    <div class="card" style="margin-bottom:10px;"><div style="font-weight:700;font-size:12px;color:var(--primary);margin-bottom:6px;">✅ شروط الانضمام</div><div id="orgpReq" style="font-size:12px;color:var(--text);"></div></div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:12px;">
+      <div style="background:#0d0d0d;border:2px solid #1a1a1a;padding:9px 4px;text-align:center;"><div style="font-size:14px;font-weight:900;color:var(--primary);" id="orgpMembersCount">0</div><div style="font-size:9px;color:var(--text2);">أعضاء</div></div>
+      <div style="background:#0d0d0d;border:2px solid #1a1a1a;padding:9px 4px;text-align:center;"><div style="font-size:14px;font-weight:900;color:var(--primary);" id="orgpTreasury">0</div><div style="font-size:9px;color:var(--text2);">🪙 الخزينة</div></div>
+    </div>
+    <div id="orgpDonateBox" style="display:none;margin-bottom:14px;"></div>
+    <div id="orgpLeaderPanel" style="display:none;margin-bottom:14px;"></div>
+    <div class="stitle">👥 الأعضاء</div>
+    <div id="orgpMembers"></div>
   </div>
 </div>
 </div>
@@ -876,7 +908,7 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
 <div class="moverlay" id="mMedia"><div class="modal"><button class="mclose" id="mMediaClose">×</button><div class="mtitle">📸 صورة أو فيديو</div><textarea class="mc-input" id="mediaTxt" placeholder="وصف (اختياري)..." style="min-height:55px;"></textarea><input type="file" accept="image/*,video/*" class="mc-input" id="mediaFile"><div id="mediaPreview" style="margin-bottom:6px;"></div><button class="mc-btn" style="width:100%;" id="doMedia">نشر (+500 🪙)</button></div></div>
 <div class="moverlay" id="mPollHome"><div class="modal"><button class="mclose" onclick="document.getElementById('mPollHome').classList.remove('open')">×</button><div class="mtitle">📊 تصويت جديد</div><input class="mc-input" id="phQ" placeholder="السؤال..."><textarea class="mc-input" id="phDesc" placeholder="وصف (اختياري)..." style="min-height:50px;"></textarea><div id="phOptsWrap"></div><button class="mc-btn small" id="phAddOpt" style="margin-bottom:8px;">➕ خيار جديد</button><div style="font-size:11px;color:var(--text2);margin-bottom:5px;font-weight:700;">الإجابة الصح (اختياري):</div><select class="mc-input" id="phCorrect" style="margin-bottom:10px;"></select><button class="mc-btn" style="width:100%;" id="doPollHome">نشر التصويت 📊 (+500 🪙)</button></div></div>
 <div class="moverlay" id="mNewGroup"><div class="modal"><button class="mclose" id="mNewGroupClose">×</button><div class="mtitle">👥 مجموعة جديدة</div><input class="mc-input" id="grpNameIn" placeholder="اسم المجموعة..."><input class="mc-input" id="grpSearchIn" placeholder="🔍 ابحث عن عضو..." oninput="renderGrpMembersList(this.value)"><div id="grpMembersList" style="max-height:220px;overflow-y:auto;"></div><button class="mc-btn" style="width:100%;margin-top:8px;" id="doCreateGroup">إنشاء 👥</button></div></div>
-<div class="moverlay" id="mTeamMembers"><div class="modal"><button class="mclose" onclick="document.getElementById('mTeamMembers').classList.remove('open')">×</button><div class="mtitle" id="teamMembersTitle">أعضاء التيم</div><div id="teamMembersContent"></div><div id="addTeamMemberSection" style="display:none;margin-top:10px;"><input class="mc-input" id="teamMemberSearch" placeholder="ابحث عن لاعب لإضافته..." oninput="searchTeamMember(this.value)"><div id="teamMemberSearchResults"></div></div></div></div>
+<div class="moverlay" id="mTeamMembers"><div class="modal"><button class="mclose" onclick="document.getElementById('mTeamMembers').classList.remove('open')">×</button><div class="mtitle" id="teamMembersTitle">أعضاء المنظمه</div><div id="teamMembersContent"></div><div id="addTeamMemberSection" style="display:none;margin-top:10px;"><input class="mc-input" id="teamMemberSearch" placeholder="ابحث عن لاعب لإضافته..." oninput="searchTeamMember(this.value)"><div id="teamMemberSearchResults"></div></div></div></div>
 <div class="img-viewer" id="imgViewer" onclick="WW.closeViewer(event)">
   <button class="img-viewer-close" onclick="WW.closeViewer()">✕</button>
   <div id="imgViewerContent"></div>
@@ -897,7 +929,11 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
         🌿 اخلي [اسم اللاعب] عضو<br>
         🗑️ امسح منشور [id المنشور]<br>
         🔇 امسح رسالة [id الرسالة]<br>
-        📢 اعلن [النص]
+        📢 اعلن [النص]<br>
+        ⛔ ابند [اسم اللاعب]<br>
+        ✅ فك بند [اسم اللاعب]<br>
+        🚪 اطلع [اسم اللاعب] من منظمة<br>
+        🔒 اقفل منظمة [اسم المنظمة]
       </div>
     </div>
 <textarea class="mc-input" id="adminCmdIn" placeholder="اكتب الأمر هنا..." style="min-height:80px;border-color:#cc0000;"></textarea>
@@ -916,8 +952,12 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
 <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:6px;">📋 طلبات الاستبدال المعلقة</div>
       <div id="adminRedeemList" style="max-height:250px;overflow-y:auto;"></div>
 
-      <div style="font-size:12px;font-weight:900;color:var(--primary);margin:12px 0 6px;">🎁 طلبات الصناديق المعلقة</div>
+<div style="font-size:12px;font-weight:900;color:var(--primary);margin:12px 0 6px;">🎁 طلبات الصناديق المعلقة</div>
+<div style="font-size:12px;font-weight:900;color:var(--primary);margin:12px 0 6px;">🎁 طلبات الصناديق المعلقة</div>
       <div id="adminChestList" style="max-height:250px;overflow-y:auto;"></div>
+
+      <div style="font-size:12px;font-weight:900;color:var(--primary);margin:12px 0 6px;">📜 سجل الأوامر</div>
+      <div id="adminCmdLog" style="max-height:250px;overflow-y:auto;"></div>
     </div>
   </div>
 </div>
@@ -968,6 +1008,22 @@ window.handleSetupAvatar=function(input){
     img.src=e.target.result;
   };reader.readAsDataURL(f);
 };
+                             let orgLogoData='';
+window.handleOrgLogo=function(input){
+  const f=input.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const img=new Image();
+    img.onload=function(){
+      const canvas=document.createElement('canvas');const MAX=200;let w=img.width,h=img.height;
+      if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
+      canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);
+      orgLogoData=canvas.toDataURL('image/jpeg',0.85);
+      document.getElementById('orgLogoPreview').src=orgLogoData;
+    };
+    img.src=e.target.result;
+  };reader.readAsDataURL(f);
+};
 </script>
 
 <script type="module">
@@ -977,6 +1033,7 @@ const app=initializeApp({apiKey:"AIzaSyDgi3--q8nDGfps5MV4AmC8B4PYPMfAPZo",authDo
 const db=getDatabase(app);
 const SERVER_PASS="golden2024";
 const RANK_CODES={"admin12345":{rank:"admin",label:"Admin"},"owner12345":{rank:"owner",label:"Owner"},"vip12345":{rank:"vip",label:"VIP"}};
+const INFINITE_COINS=999999999;                                                                                                                                        
 const TC=[{n:"أخضر",h:"#55aa33"},{n:"أحمر",h:"#cc3333"},{n:"أزرق",h:"#3399ff"},{n:"أصفر",h:"#ffdd00"},{n:"بنفسجي",h:"#aa44ff"},{n:"برتقالي",h:"#ff8800"},{n:"وردي",h:"#ff55aa"},{n:"سماوي",h:"#00dddd"},{n:"أبيض",h:"#dddddd"},{n:"رمادي",h:"#888888"},{n:"بني",h:"#8b4513"},{n:"ذهبي",h:"#f0c040"}];
 const CHESTS=[
   {id:"c1",num:1,name:"صندوق البداية",color:"#aaa",bc:"#666",price:5000,items:["أدوات حديدية كاملة","درع جلدي","8 جولدن أبل مطورة"]},
@@ -1012,6 +1069,7 @@ const TASKS=[{id:'post1',label:'انشر منشور',goal:1,reward:500,action:'p
   window.WW={};
 let uid='',uname='',umcname='',uimg='',myCoins=0,myRank='member',activeTitle='';
 let allPosts=[],usersCache={},myFollowers={},myFollowing={};
+let userOrgMap={};
 let prevPg='home',curPvt={uid:'',name:'',img:''};
 let curGrpId='',curGrpData={},pvtUnsub=null,grpUnsub=null,activePvtUid='',gcPageOpen=false;
 let taskProgress={},replyTarget=null,selectedTeamColor=null,currentTeamId=null,lawIndex=0;
@@ -1049,14 +1107,26 @@ function renderUN(aId,nm,mc,ud){
   const rank=aId===uid?myRank:(ud?.rank||'member');const rc=rankC(rank);
   const rl=rank==='admin'?'[Admin]':rank==='owner'?'[Owner]':rank==='vip'?'[VIP]':'[عضو]';
   const aT=aId===uid?activeTitle:(ud?.activeTitle||'');const mcn=mc||(ud?.mcname||'');
+  const org=userOrgMap[aId];
   let h=`${onlineDot(aId)}<span style="color:${rc};font-weight:900;font-size:10px;">${rl}</span> <b>${safeA(nm||'مجهول')}</b>`;
+  if(org)h+=` <span style="color:${org.color};font-weight:900;font-size:10px;border:1px solid ${org.color};background:${org.color}22;padding:1px 6px;border-radius:3px;">🏛️ ${safeA(org.name)}</span>`;
   if(mcn)h+=` <span style="color:var(--text2);font-size:10px;">(${safeA(mcn)})</span>`;
   if(aT)h+=` <span style="background:rgba(240,192,64,.12);color:var(--primary);font-size:9px;padding:1px 5px;border:1px solid var(--primary);">${safeA(aT)}</span>`;
   return h;
 }
 async function getUser(aId){if(usersCache[aId])return usersCache[aId];try{const s=await get(ref(db,'cy_users/'+aId));if(s.exists()){usersCache[aId]=s.val();return s.val();}}catch(e){}return null;}
-function addCoins(n,el){myCoins+=n;localStorage.setItem('cy_coins',myCoins);set(ref(db,'cy_users/'+uid+'/coins'),myCoins);updateCoinsUI();if(el)coinPop(n,el);}
-function updateCoinsUI(){const d=fC(myCoins);$('coinsBadge').textContent='🪙 '+d;if($('stCoins'))$('stCoins').textContent=d;}
+function addCoins(n,el){
+  if(isAdmin()){
+    myCoins=INFINITE_COINS;
+    localStorage.setItem('cy_coins',myCoins);
+    set(ref(db,'cy_users/'+uid+'/coins'),myCoins);
+    updateCoinsUI();
+    if(el)coinPop(n,el);
+    return;
+  }
+  myCoins+=n;localStorage.setItem('cy_coins',myCoins);set(ref(db,'cy_users/'+uid+'/coins'),myCoins);updateCoinsUI();if(el)coinPop(n,el);
+}
+function updateCoinsUI(){const d=isAdmin()?'∞':fC(myCoins);$('coinsBadge').textContent='🪙 '+d;if($('stCoins'))$('stCoins').textContent=d;}
 function buildOpts(wid,cv){
   const w=$(wid);if(!w)return;w.innerHTML='';
   for(let i=0;i<window[cv];i++){
@@ -1372,9 +1442,94 @@ function loadTasks(){const today=new Date().toDateString();taskProgress=JSON.par
 function checkTask(action,n=1){const today=new Date().toDateString();TASKS.forEach(t=>{if(t.action!==action||taskProgress[t.id]>=t.goal)return;taskProgress[t.id]=(taskProgress[t.id]||0)+n;localStorage.setItem('cy_tasks_'+today,JSON.stringify(taskProgress));if(taskProgress[t.id]>=t.goal){addCoins(t.reward);toast('🎯 مهمة مكتملة! +'+fC(t.reward)+'🪙');}});renderTasks();}
 function renderTasks(){const box=$('tasksList');if(!box)return;box.innerHTML=TASKS.map(t=>{const prog=Math.min(taskProgress[t.id]||0,t.goal),done=prog>=t.goal;return`<div class="task-item ${done?'task-done':''}"><div style="font-size:17px;">${done?'✅':'🎯'}</div><div class="task-prog"><div class="task-nm">${t.label}</div><div class="task-bar"><div class="task-fill" style="width:${(prog/t.goal)*100}%;"></div></div><div style="font-size:10px;color:var(--text2);margin-top:2px;">${prog}/${t.goal}</div></div><div style="font-size:11px;color:var(--primary);font-weight:700;white-space:nowrap;">+${fC(t.reward)}🪙</div></div>`;}).join('');}
 function initColorGrid(){const g=$('colorGrid');if(!g)return;g.innerHTML=TC.map((c,i)=>`<div class="color-dot" style="background:${c.h};" onclick="window.selColor(${i})" title="${c.n}"></div>`).join('');}
+  function announceTeamChange(playerId, playerName, playerImg, teamName, teamColor, joined){
+  const actionText = joined ? 'انضم إلى منظمة' : 'غادر منظمة';
+  const icon = joined ? '⚔️' : '🚪';
+  const text = `${icon} ${playerName} ${actionText} "${teamName}"!`;
+  push(postsRef,{
+    type:'post', ts:Date.now(), text,
+    authorId:playerId, authorName:playerName,
+    authorMCName:usersCache[playerId]?.mcname||'',
+    authorImg:playerImg||'',
+    likes:{}, views:{}, comments:{}
+  });
+  get(ref(db,'cy_users')).then(snap=>{
+    snap.forEach(s=>{
+      if(s.key!==playerId) pushNotif(s.key, icon, text, '', {type:'home'});
+    });
+  });
+}
 window.selColor=function(i){selectedTeamColor=TC[i];document.querySelectorAll('.color-dot').forEach((d,j)=>d.classList.toggle('selected',j===i));const lbl=$('selColorLabel');if(lbl){lbl.textContent='اللون: '+TC[i].n;lbl.style.color=TC[i].h;}};
-$('doCreateTeam').addEventListener('click',async()=>{if(!isAdmin()){toast('❌ الأدمن/الأونر بس!');return;}const nm=$('teamNameIn').value.trim();if(!nm){toast('⚠️ اكتب اسم التيم!');return;}if(!selectedTeamColor){toast('⚠️ اختار لون!');return;}const snap=await get(ref(db,'cy_teams'));let nt=false,ct=false;snap.forEach(s=>{const t=s.val();if((t.name||'').toLowerCase()===nm.toLowerCase())nt=true;if(t.color===selectedTeamColor.h)ct=true;});if(nt){toast('❌ اسم التيم مأخوذ!');return;}if(ct){toast('❌ اللون مأخوذ!');return;}const tid='t_'+Date.now();set(ref(db,'cy_teams/'+tid),{name:nm,color:selectedTeamColor.h,colorName:selectedTeamColor.n,members:{},owner:uid,ts:Date.now()});$('teamNameIn').value='';selectedTeamColor=null;document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));const lbl=$('selColorLabel');if(lbl){lbl.textContent='لم يتم اختيار لون';lbl.style.color='';}toast('✅ تم إنشاء تيم: '+nm);renderTeams();});
-function renderTeams(){const adm=$('adminTeamCreate');if(adm)adm.style.display=isAdmin()?'block':'none';initColorGrid();const box=$('teamsList');if(!box)return;onValue(ref(db,'cy_teams'),snap=>{let teams=[];snap.forEach(s=>{let o=s.val();o._k=s.key;teams.push(o);});if(!teams.length){box.innerHTML='<div class="empty-state"><div class="ei">⚔️</div><p>لا توجد تيمات بعد</p></div>';return;}box.innerHTML=teams.map(t=>{const mc=t.members?Object.keys(t.members).length:0;return`<div class="team-item" style="border-color:${t.color};"><div style="width:32px;height:32px;background:${t.color};display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;border:2px solid #000;">⚔️</div><div style="flex:1;"><div style="font-weight:900;font-size:13px;color:${t.color};">${safeA(t.name)}</div><div style="font-size:10px;color:var(--text2);">${mc} أعضاء</div></div>${isAdmin()?`<button class="mc-btn small blue" onclick="WW.openTeam('${t._k}')">إدارة</button>`:`<button class="mc-btn small" style="background:#111;box-shadow:inset -2px -2px 0 #000,inset 2px 2px 0 #222;" onclick="WW.viewTeam('${t._k}')">عرض</button>`}</div>`;}).join('');});}
+$('doCreateTeam').addEventListener('click',async()=>{
+  const nm=$('teamNameIn').value.trim();
+  const desc=$('orgDescIn').value.trim();
+  const reqs=$('orgReqIn').value.trim();
+if(!nm){toast('⚠️ اكتب اسم المنظمة!');return;}
+  if(!orgLogoData){toast('⚠️ لازم تختار لوجو للمنظمة!');return;}
+  if(!selectedTeamColor){toast('⚠️ اختار لون!');return;}
+  if(myCoins<100000){toast('❌ محتاج 100,000 🪙 على الأقل عشان تنشئ منظمة!');return;}
+  const snap=await get(ref(db,'cy_teams'));
+  let nt=false,ct=false;
+  snap.forEach(s=>{const t=s.val();if((t.name||'').toLowerCase()===nm.toLowerCase())nt=true;if(t.color===selectedTeamColor.h)ct=true;});
+  if(nt){toast('❌ اسم المنظمة مأخوذ!');return;}
+  if(ct){toast('❌ اللون مأخوذ!');return;}
+  const tid='t_'+Date.now();
+  await set(ref(db,'cy_teams/'+tid),{
+    name:nm,color:selectedTeamColor.h,colorName:selectedTeamColor.n,
+    logo:orgLogoData||'',desc:desc||'',requirements:reqs||'',
+    donated:0,level:1,
+    members:{[uid]:'leader'},owner:uid,ts:Date.now()
+  });
+  addCoins(-100000);
+  $('teamNameIn').value='';$('orgDescIn').value='';$('orgReqIn').value='';orgLogoData='';
+  $('orgLogoPreview').src='https://ui-avatars.com/api/?name=Org&background=2a1e00&color=f0c040&size=80';
+  selectedTeamColor=null;document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));
+  const lbl=$('selColorLabel');if(lbl){lbl.textContent='لم يتم اختيار لون';lbl.style.color='';}
+  toast('✅ تم إنشاء منظمة: '+nm+' وانت القائد!');
+  renderTeams();
+});
+function orgLevel(donated){return Math.min(100,Math.floor((donated||0)/10000)+1);}
+function myRoleInOrg(t){if(!t.members)return null;const r=t.members[uid];if(!r)return null;return typeof r==='string'?r:'member';}
+function renderTeams(){
+  const adm=$('adminTeamCreate');if(adm)adm.style.display='block';
+  initColorGrid();
+  const box=$('teamsList');if(!box)return;
+  onValue(ref(db,'cy_teams'),snap=>{
+    let teams=[];snap.forEach(s=>{let o=s.val();o._k=s.key;teams.push(o);});
+    if(!teams.length){box.innerHTML='<div class="empty-state"><div class="ei">🏛️</div><p>لا توجد منظمات بعد</p></div>';return;}
+    box.innerHTML=teams.map(t=>{
+      const mc=t.members?Object.keys(t.members).length:0;
+      const lvl=orgLevel(t.donated);
+      const myRole=myRoleInOrg(t);
+      const canManage=myRole==='leader'||isAdmin();
+      const logoHtml=t.logo?`<img src="${t.logo}" style="width:32px;height:32px;border-radius:6px;object-fit:cover;border:2px solid ${t.color};flex-shrink:0;">`:`<div style="width:32px;height:32px;background:${t.color};display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;border:2px solid #000;border-radius:6px;">🏛️</div>`;
+      return`<div class="team-item" style="border-color:${t.color};">${logoHtml}<div style="flex:1;"><div style="font-weight:900;font-size:13px;color:${t.color};">${safeA(t.name)} <span style="font-size:9px;color:var(--primary);">LV.${lvl}</span></div><div style="font-size:10px;color:var(--text2);">${mc} أعضاء</div></div>${canManage?`<button class="mc-btn small blue" onclick="WW.openTeam('${t._k}')">إدارة</button>`:`<button class="mc-btn small" style="background:#111;box-shadow:inset -2px -2px 0 #000,inset 2px 2px 0 #222;" onclick="WW.viewTeam('${t._k}')">عرض</button>`}</div>`;
+    }).join('');
+  });
+}
+  function renderOrgRequests(tid,t){
+  const box=$('orgReqList_'+tid);if(!box)return;
+  const reqs=t.requests?Object.entries(t.requests).filter(([k,r])=>r.status==='pending'):[];
+  if(!reqs.length){box.innerHTML='<div style="font-size:11px;color:var(--text2);">لا توجد طلبات معلقة</div>';return;}
+  box.innerHTML=reqs.map(([k,r])=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #111;">
+    <img src="${avt(r.img,r.name)}" style="width:26px;height:26px;border-radius:3px;object-fit:cover;">
+    <div style="flex:1;font-size:11px;">${safeA(r.name)}</div>
+    <button class="mc-btn small" style="font-size:9px;" onclick="WW.acceptOrgRequest('${tid}','${k}')">قبول</button>
+    <button class="mc-btn small danger" style="font-size:9px;" onclick="WW.rejectOrgRequest('${tid}','${k}')">رفض</button>
+  </div>`).join('');
+}
+  onValue(ref(db,'cy_teams'), snap=>{
+  const map={};
+  snap.forEach(s=>{
+    const t=s.val();
+    if(t.members){
+      Object.keys(t.members).forEach(mId=>{ map[mId]={name:t.name,color:t.color}; });
+    }
+  });
+  userOrgMap=map;
+  renderPosts();
+  renderGC();
+});
   function loadOnlineUsers(){
   onValue(ref(db,'cy_presence'),snap=>{
     const box=$('onlineList');if(!box)return;
@@ -1409,10 +1564,10 @@ function loadFollowData(){onValue(ref(db,'cy_users/'+uid+'/followers'),s=>{myFol
 function checkDailyLogin(){const today=new Date().toDateString(),last=localStorage.getItem('cy_lastLogin')||'';if(last===today)return;localStorage.setItem('cy_lastLogin',today);addCoins(1000);toast('🎉 تسجيل يومي! +1,000🪙');}
 function toggleNotifDrop(){const d=$('notifDrop');if(d.classList.contains('open'))d.classList.remove('open');else{d.classList.add('open');markRead();}}
 document.addEventListener('click',e=>{const d=$('notifDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target)&&e.target.id!=='notifBtn')d.classList.remove('open');});
-window.switchExpTab=function(tab){['chests','teams','lb','war'].forEach(t=>{
-const el=$('expTab_'+t);if(el)el.style.display=t===tab?'block':'none';});document.querySelectorAll('#pg_explore .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chests','teams','lb','war'][i]===tab));
+window.switchExpTab=function(tab){['chests','teams','lb'].forEach(t=>{
+const el=$('expTab_'+t);if(el)el.style.display=t===tab?'block':'none';});document.querySelectorAll('#pg_explore .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chests','teams','lb'][i]===tab));
 if(tab==='lb'){loadLeaderboard();loadOnlineUsers();}
-if(tab==='war'){renderWarTab();}if(tab==='teams')renderTeams();if(tab==='chests')renderChests();};
+if(tab==='teams')renderTeams();if(tab==='chests')renderChests();};
 $('btnPost').addEventListener('click',()=>$('mPost').classList.add('open'));$('mPostClose').addEventListener('click',()=>$('mPost').classList.remove('open'));
 $('doPost').addEventListener('click',()=>{const txt=$('postTxt').value.trim();if(!txt){toast('⚠️ اكتب شيئاً!');return;}push(postsRef,{type:'post',ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,likes:{},views:{},comments:{}});$('postTxt').value='';$('mPost').classList.remove('open');addCoins(500);checkTask('post');toast('✨ تم النشر! +500🪙');get(ref(db,'cy_users')).then(snap=>{snap.forEach(s=>{if(s.key!==uid)pushNotif(s.key,'📝',uname+' نشر منشور جديد','post_'+Date.now(),{type:'home'});});});});
 $('btnMedia').addEventListener('click',()=>$('mMedia').classList.add('open'));$('mMediaClose').addEventListener('click',()=>$('mMedia').classList.remove('open'));
@@ -1428,6 +1583,23 @@ WW.openAdminPanel = function() {
   document.getElementById('mAdminPanel').classList.add('open');
 };
 
+function logAdminCmd(cmd, summary, ok){
+  push(ref(db,'cy_admin_log'), {cmd, summary, ok:!!ok, admin:uname, adminId:uid, ts:Date.now()});
+}
+
+onValue(ref(db,'cy_admin_log'), snap=>{
+  const box=$('adminCmdLog');if(!box)return;
+  let logs=[];snap.forEach(s=>{let o=s.val();o._k=s.key;logs.push(o);});
+  logs.sort((a,b)=>b.ts-a.ts);
+  if(!logs.length){box.innerHTML='<div style="font-size:11px;color:var(--text2);text-align:center;padding:10px;">لا يوجد سجل أوامر بعد</div>';return;}
+  box.innerHTML=logs.slice(0,50).map(l=>`
+    <div style="background:#0d0d0d;border:2px solid ${l.ok?'#1a1a1a':'var(--red)'};padding:7px 9px;margin-bottom:5px;border-radius:4px;">
+      <div style="font-size:11px;font-family:monospace;color:${l.ok?'var(--primary)':'var(--red)'};">${safeA(l.cmd)}</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:2px;">${safeA(l.summary||'')}</div>
+      <div style="font-size:9px;color:var(--text2);margin-top:2px;">👤 ${safeA(l.admin)} — ${ago(l.ts)}</div>
+    </div>`).join('');
+});
+  
 WW.runAdminCmd = async function() {
   if (!isAdmin()) return;
   const cmd = document.getElementById('adminCmdIn').value.trim();
@@ -1437,7 +1609,6 @@ WW.runAdminCmd = async function() {
   res.textContent = '⏳ جاري التنفيذ...';
   if (!cmd) { res.textContent = '⚠️ اكتب أمر!'; res.style.color = 'var(--primary)'; return; }
 
-  // دالة مساعدة للبحث عن لاعب بالاسم
   async function findPlayer(name) {
     const snap = await get(ref(db, 'cy_users'));
     let found = null;
@@ -1446,6 +1617,16 @@ WW.runAdminCmd = async function() {
       if ((u.name || '').toLowerCase().includes(name.toLowerCase()) ||
           (u.mcname || '').toLowerCase().includes(name.toLowerCase()))
         found = { ...u, _k: s.key };
+    });
+    return found;
+  }
+  async function findOrg(name) {
+    const snap = await get(ref(db, 'cy_teams'));
+    let found = null;
+    snap.forEach(s => {
+      const t = s.val();
+      if ((t.name || '').toLowerCase().includes(name.toLowerCase()))
+        found = { ...t, _k: s.key };
     });
     return found;
   }
@@ -1462,6 +1643,7 @@ WW.runAdminCmd = async function() {
       res.textContent = '✅ تم إضافة ' + amt.toLocaleString() + ' 🪙 لـ ' + p.name;
       res.style.color = 'var(--green)';
       if (p._k === uid) { myCoins += amt; updateCoinsUI(); }
+      logAdminCmd(cmd, res.textContent, true);
       return;
     }
 
@@ -1477,6 +1659,7 @@ WW.runAdminCmd = async function() {
       res.textContent = '✅ تم خصم ' + amt.toLocaleString() + ' 🪙 من ' + p.name;
       res.style.color = 'var(--green)';
       if (p._k === uid) { myCoins = newCoins; updateCoinsUI(); }
+      logAdminCmd(cmd, res.textContent, true);
       return;
     }
 
@@ -1493,6 +1676,65 @@ WW.runAdminCmd = async function() {
       res.textContent = '✅ تم تغيير رتبة ' + p.name + ' إلى ' + rankMatch[2];
       res.style.color = 'var(--green)';
       delete usersCache[p._k];
+      logAdminCmd(cmd, res.textContent, true);
+      return;
+    }
+
+    // ابند [اسم]
+    const banMatch = cmd.match(/^ابند\s+(.+)$/);
+    if (banMatch) {
+      const p = await findPlayer(banMatch[1]);
+      if (!p) { res.textContent = '❌ مش لاقي اللاعب!'; res.style.color = 'var(--red)'; return; }
+      if (p.rank === 'owner') { res.textContent = '❌ مينفعش تبند الأونر!'; res.style.color = 'var(--red)'; return; }
+      await set(ref(db, 'cy_users/' + p._k + '/banned'), true);
+      res.textContent = '✅ تم بند ' + p.name;
+      res.style.color = 'var(--green)';
+      logAdminCmd(cmd, res.textContent, true);
+      return;
+    }
+
+    // فك بند [اسم]
+    const unbanMatch = cmd.match(/^فك بند\s+(.+)$/);
+    if (unbanMatch) {
+      const p = await findPlayer(unbanMatch[1]);
+      if (!p) { res.textContent = '❌ مش لاقي اللاعب!'; res.style.color = 'var(--red)'; return; }
+      await set(ref(db, 'cy_users/' + p._k + '/banned'), false);
+      res.textContent = '✅ تم فك بند ' + p.name;
+      res.style.color = 'var(--green)';
+      logAdminCmd(cmd, res.textContent, true);
+      return;
+    }
+
+    // اطلع [اسم] من منظمة
+    const kickOrgMatch = cmd.match(/^اطلع\s+(.+?)\s+من منظمة$/);
+    if (kickOrgMatch) {
+      const p = await findPlayer(kickOrgMatch[1]);
+      if (!p) { res.textContent = '❌ مش لاقي اللاعب!'; res.style.color = 'var(--red)'; return; }
+      const orgsSnap = await get(ref(db, 'cy_teams'));
+      let done = false;
+      orgsSnap.forEach(s => {
+        const t = s.val();
+        if (t.members && t.members[p._k]) { remove(ref(db, 'cy_teams/' + s.key + '/members/' + p._k)); done = true; }
+      });
+      if (!done) { res.textContent = '❌ اللاعب ده مش في أي منظمة!'; res.style.color = 'var(--red)'; return; }
+      pushNotif(p._k, '🚪', 'تم طردك من المنظمة بواسطة الإدارة', '', { type: 'explore' });
+      res.textContent = '✅ تم طرد ' + p.name + ' من منظمته';
+      res.style.color = 'var(--green)';
+      logAdminCmd(cmd, res.textContent, true);
+      return;
+    }
+
+    // اقفل منظمة [اسم]
+    const closeOrgMatch = cmd.match(/^اقفل منظمة\s+(.+)$/);
+    if (closeOrgMatch) {
+      const org = await findOrg(closeOrgMatch[1]);
+      if (!org) { res.textContent = '❌ مش لاقي منظمة بالاسم ده!'; res.style.color = 'var(--red)'; return; }
+      const members = org.members ? Object.keys(org.members) : [];
+      members.forEach(m => pushNotif(m, '🔒', 'تم حذف منظمة "' + org.name + '" بواسطة الإدارة', '', { type: 'explore' }));
+      await remove(ref(db, 'cy_teams/' + org._k));
+      res.textContent = '✅ تم حذف منظمة ' + org.name;
+      res.style.color = 'var(--green)';
+      logAdminCmd(cmd, res.textContent, true);
       return;
     }
 
@@ -1502,6 +1744,7 @@ WW.runAdminCmd = async function() {
       await remove(ref(db, 'cy_posts/' + delPostMatch[1].trim()));
       res.textContent = '✅ تم مسح المنشور!';
       res.style.color = 'var(--green)';
+      logAdminCmd(cmd, res.textContent, true);
       return;
     }
 
@@ -1511,6 +1754,7 @@ WW.runAdminCmd = async function() {
       await remove(ref(db, 'cy_gc/' + delMsgMatch[1].trim()));
       res.textContent = '✅ تم مسح الرسالة!';
       res.style.color = 'var(--green)';
+      logAdminCmd(cmd, res.textContent, true);
       return;
     }
 
@@ -1519,17 +1763,19 @@ WW.runAdminCmd = async function() {
     if (announceMatch) {
       const msg = announceMatch[1];
       push(gcRef, { ts: Date.now(), txt: '📢 إعلان من الإدارة:\n' + msg, sid: uid, sname: '📢 الإدارة', simg: '' });
-const usersSnap = await get(ref(db, 'cy_users'));
+      const usersSnap = await get(ref(db, 'cy_users'));
       usersSnap.forEach(s => {
         if (s.key !== uid) pushNotif(s.key, '📢', 'إعلان: ' + msg.substring(0, 40), 'ann_' + Date.now(), { type: 'chat' });
       });
       res.textContent = '✅ تم الإعلان!';
       res.style.color = 'var(--green)';
+      logAdminCmd(cmd, res.textContent, true);
       return;
     }
 
     res.textContent = '❌ أمر غير معروف! راجع الأوامر المتاحة.';
     res.style.color = 'var(--red)';
+    logAdminCmd(cmd, res.textContent, false);
 
   } catch (e) {
     res.textContent = '❌ خطأ: ' + e.message;
@@ -1592,13 +1838,18 @@ WW.saveEditMsg = function() {
   editGCMsg: function(k,txt){document.getElementById('editMsgId').value=k;document.getElementById('editMsgType').value='gc';document.getElementById('editMsgTxt').value=txt;document.getElementById('mEditMsg').classList.add('open');},
   saveEditMsg: function(){const k=document.getElementById('editMsgId').value;const type=document.getElementById('editMsgType').value;const txt=document.getElementById('editMsgTxt').value.trim();if(!txt){toast('⚠️ اكتب نص!');return;}if(type==='gc')set(ref(db,'cy_gc/'+k+'/txt'),txt);document.getElementById('mEditMsg').classList.remove('open');toast('✅ تم التعديل!');}
 });
-function syncFromFirebase(){onValue(ref(db,'cy_users'),snap=>{snap.forEach(s=>{usersCache[s.key]=s.val();});renderPosts();renderPollsPage();});onValue(ref(db,'cy_users/'+uid+'/coins'),s=>{if(s.val()!==null){myCoins=s.val();updateCoinsUI();}});onValue(ref(db,'cy_users/'+uid+'/rank'),s=>{if(s.val()){myRank=s.val();localStorage.setItem('cy_rank',myRank);refreshStats();}});onValue(ref(db,'cy_users/'+uid+'/activeTitle'),s=>{if(s.val()!==null)activeTitle=s.val()||'';});onValue(ref(db,'cy_users/'+uid+'/name'),s=>{if(s.val()&&s.val()!==uname){uname=s.val();localStorage.setItem('cy_name',uname);refreshStats();}});onValue(ref(db,'cy_users/'+uid+'/img'),s=>{if(s.val()){uimg=s.val();localStorage.setItem('cy_img',uimg);}}); }
+function syncFromFirebase(){onValue(ref(db,'cy_users'),snap=>{snap.forEach(s=>{usersCache[s.key]=s.val();});renderPosts();renderPollsPage();});onValue(ref(db,'cy_users/'+uid+'/coins'),s=>{
+  if(s.val()!==null){
+    myCoins=isAdmin()?INFINITE_COINS:s.val();
+    updateCoinsUI();
+  }
+});onValue(ref(db,'cy_users/'+uid+'/rank'),s=>{if(s.val()){myRank=s.val();localStorage.setItem('cy_rank',myRank);if(isAdmin())myCoins=INFINITE_COINS;refreshStats();}});onValue(ref(db,'cy_users/'+uid+'/activeTitle'),s=>{if(s.val()!==null)activeTitle=s.val()||'';});onValue(ref(db,'cy_users/'+uid+'/name'),s=>{if(s.val()&&s.val()!==uname){uname=s.val();localStorage.setItem('cy_name',uname);refreshStats();}});onValue(ref(db,'cy_users/'+uid+'/img'),s=>{if(s.val()){uimg=s.val();localStorage.setItem('cy_img',uimg);}}); }
   // ===== TOUR SYSTEM =====
 const TOUR_STEPS = [
 {title:'⚔️ أهلاً في سيرفر هواري كرافت!',text:'خليني أشرحلك الموقع في ثواني — اضغط التالي',target:null},
   {title:'🏠 المنشورات',text:'من هنا تشوف منشورات الأعضاء وتنشر منشوراتك وتصويتاتك وصورك',target:'pg_home'},
   {title:'🔨 المزاد',text:'بيع واشتري الأيتمز مع باقي اللاعبين — أعلى سعر يفوز!',target:'pg_auction'},
-  {title:'⚔️ الاستكشاف',text:'فيه الصناديق والتيمات والمتصدرين وساحة الحرب بين التيمات',target:'expTab_chests'},
+  {title:'⚔️ الاستكشاف',text:'فيه الصناديق والمنظمات والمتصدرين وساحة الحرب بين المنظمات',target:'expTab_chests'},
   {title:'💬 الشات',text:'شات عام مع الكل أو رسايل خاصة مع أي لاعب',target:'pg_chat'},
   {title:'👤 البروفايل',text:'غيّر صورتك واسمك وشوف مهامك اليومية واكسب ذهب',target:'pg_profile'},
   {title:'🪙 الذهب',text:'اكسب ذهب من المنشورات والتعليقات والمهام اليومية واشتري صناديق',target:'coinsBadge'},
@@ -1672,9 +1923,8 @@ window.WW={
   if(inp)inp.value='';
   addCoins(100,el);
   checkTask('comment');
-  if(pAId&&pAId!==uid){
+if(pAId&&pAId!==uid){
     get(ref(db,'cy_users/'+pAId+'/coins')).then(s=>set(ref(db,'cy_users/'+pAId+'/coins'),(s.val()||0)+100));
-    pushNotif(pAId,'💬',uname+' علق على منشورك: "'+txt.substring(0,25)+'"','cmt_'+k+'_'+cmtRef.key,{type:'home'});
   }
   if(el)setTimeout(()=>{el.dataset.sending='';},800);
 },
@@ -1717,8 +1967,91 @@ openGrp(grpId){
 },
   follow(tUid){const al=myFollowing[tUid];if(al){delete myFollowing[tUid];set(ref(db,'cy_users/'+uid+'/following/'+tUid),null);set(ref(db,'cy_users/'+tUid+'/followers/'+uid),null);toast('تم إلغاء المتابعة');}else{myFollowing[tUid]=true;set(ref(db,'cy_users/'+uid+'/following/'+tUid),true);set(ref(db,'cy_users/'+tUid+'/followers/'+uid),true);addCoins(100);pushNotif(tUid,'👤',uname+' بدأ يتابعك!','follow_'+uid,{type:'home'});toast('✅ تم المتابعة!');}delete usersCache[tUid];loadUserProfile(tUid);refreshStats();},
   viewProfile(tUid){prevPg=document.querySelector('.tni.active')?.dataset.pg||'home';loadUserProfile(tUid);},
-  openTeam(tid){currentTeamId=tid;const addSec=$('addTeamMemberSection');if(addSec)addSec.style.display=isAdmin()?'block':'none';get(ref(db,'cy_teams/'+tid)).then(s=>{if(!s.exists())return;const t=s.val();$('teamMembersTitle').innerHTML=`<span style="color:${t.color};">⚔️ ${safeA(t.name)}</span>`;const cont=$('teamMembersContent');cont.innerHTML='<div style="text-align:center;padding:10px;color:var(--text2);">جاري التحميل...</div>';const members=t.members?Object.keys(t.members):[];if(!members.length){cont.innerHTML='<div class="empty-state"><div class="ei">👥</div><p>لا توجد أعضاء بعد</p></div>';}else{cont.innerHTML='';members.forEach(async mId=>{const u=await getUser(mId)||{name:'مجهول',img:''};const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:2px solid #111;';const img=document.createElement('img');img.src=avt(u.img,u.name);img.style.cssText='width:32px;height:32px;border-radius:3px;object-fit:cover;border:2px solid #1a1a1a;cursor:pointer;';img.onclick=()=>{$('mTeamMembers').classList.remove('open');WW.viewProfile(mId);};const info=document.createElement('div');info.style.flex='1';info.innerHTML=`<div style="font-weight:700;font-size:12px;">${safeA(u.name||'مجهول')}</div><div style="font-size:10px;color:var(--text2);">${safeA(u.mcname||'')}</div>`;row.appendChild(img);row.appendChild(info);if(isAdmin()){const rm=document.createElement('button');rm.className='mc-btn small danger';rm.textContent='إزالة';rm.onclick=()=>{remove(ref(db,'cy_teams/'+tid+'/members/'+mId));toast('تم الإزالة');WW.openTeam(tid);};row.appendChild(rm);}cont.appendChild(row);});}$('mTeamMembers').classList.add('open');});},
-  viewTeam(tid){currentTeamId=tid;const a=$('addTeamMemberSection');if(a)a.style.display='none';this.openTeam(tid);},
+  openTeam(tid){
+  currentTeamId=tid;
+  get(ref(db,'cy_teams/'+tid)).then(async ts=>{
+    if(!ts.exists())return;
+    const t=ts.val();
+    const myRole=myRoleInOrg(t);
+    const isLeader=myRole==='leader'||isAdmin();
+    const addSec=$('addTeamMemberSection');if(addSec)addSec.style.display=isLeader?'block':'none';
+    $('teamMembersTitle').innerHTML=`<span style="color:${t.color};">🏛️ ${safeA(t.name)}</span> <span style="font-size:10px;color:var(--primary);">LV.${orgLevel(t.donated)}</span>`;
+    const cont=$('teamMembersContent');
+    let html='';
+    if(t.logo)html+=`<img src="${t.logo}" style="width:70px;height:70px;border-radius:8px;object-fit:cover;border:3px solid ${t.color};display:block;margin:0 auto 8px;">`;
+    if(t.desc)html+=`<div style="font-size:12px;color:var(--text);background:#0d0d0d;border:2px solid #1a1a1a;padding:8px;border-radius:4px;margin-bottom:6px;">${safeA(t.desc)}</div>`;
+    if(t.requirements)html+=`<div style="font-size:11px;color:var(--text2);margin-bottom:8px;"><b style="color:var(--primary);">شروط الانضمام:</b> ${safeA(t.requirements)}</div>`;
+    html+=`<div style="font-size:11px;color:var(--text2);margin-bottom:8px;">💰 خزينة المنظمة: <b style="color:var(--primary);">${fC(t.donated||0)} 🪙</b></div>`;
+    if(isLeader){
+      html+=`<div style="border-top:2px solid #1a1a1a;padding-top:8px;margin-bottom:8px;">
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:5px;">📬 طلبات الانضمام</div>
+        <div id="orgReqList_${tid}"></div>
+      </div>`;
+    }
+    html+=`<div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:5px;">👥 الأعضاء:</div>`;
+    const members=t.members?Object.keys(t.members):[];
+    if(!members.length){html+='<div class="empty-state"><div class="ei">👥</div><p>لا توجد أعضاء بعد</p></div>';}
+    else{
+      for(const mId of members){
+        const u=await getUser(mId)||{name:'مجهول',img:''};
+        const role=typeof t.members[mId]==='string'?t.members[mId]:'member';
+        const roleLbl=role==='leader'?'👑 قائد':role==='officer'?'⭐ نائب':'عضو';
+        html+=`<div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:2px solid #111;">
+          <img src="${avt(u.img,u.name)}" style="width:32px;height:32px;border-radius:3px;object-fit:cover;border:2px solid #1a1a1a;cursor:pointer;" onclick="WW.viewProfile('${mId}')">
+          <div style="flex:1;"><div style="font-weight:700;font-size:12px;">${safeA(u.name||'مجهول')}</div><div style="font-size:10px;color:var(--text2);">${roleLbl}</div></div>
+          ${(isLeader&&role!=='leader')?`<button class="mc-btn small" style="font-size:9px;" onclick="WW.setOrgRole('${tid}','${mId}','${role==='officer'?'member':'officer'}')">${role==='officer'?'إنزال':'ترقية'}</button><button class="mc-btn small danger" onclick="WW.kickOrgMember('${tid}','${mId}')">إزالة</button>`:''}
+        </div>`;
+      }
+    }
+    if(!isLeader){
+      const alreadyMember=!!myRole;
+      const hasPending=t.requests&&Object.values(t.requests).some(r=>r.uid===uid&&r.status==='pending');
+      if(!alreadyMember){
+        html+=`<button class="mc-btn gold" style="width:100%;margin-top:10px;" ${hasPending?'disabled':''} onclick="WW.sendOrgRequest('${tid}')">${hasPending?'⏳ طلبك قيد المراجعة':'📨 إرسال طلب انضمام'}</button>
+        <div style="font-size:10px;color:var(--text2);margin-top:5px;text-align:center;">هيتخصم 10,000 🪙 لما القائد يوافق فقط</div>`;
+      }
+    }
+    cont.innerHTML=html;
+    if(isLeader)renderOrgRequests(tid,t);
+    $('mTeamMembers').classList.add('open');
+  });
+},
+setOrgRole(tid,mId,newRole){
+  set(ref(db,'cy_teams/'+tid+'/members/'+mId),newRole);
+  const roleTxt=newRole==='officer'?'⭐ نائب':'عضو عادي';
+  pushNotif(mId,'📋','تم تغيير رتبتك في المنظمة إلى: '+roleTxt,'',{type:'explore'});
+  toast('✅ تم التحديث');
+  WW.openTeam(tid);
+},
+kickOrgMember(tid,mId){if(!confirm('إزالة العضو؟'))return;remove(ref(db,'cy_teams/'+tid+'/members/'+mId));toast('تم الإزالة');pushNotif(mId,'🚪','تمت إزالتك من المنظمة','',{type:'explore'});WW.openTeam(tid);},
+sendOrgRequest(tid){
+  const reqId='req_'+Date.now()+'_'+uid;
+  set(ref(db,'cy_teams/'+tid+'/requests/'+reqId),{uid,name:uname,mcname:umcname,img:uimg,ts:Date.now(),status:'pending'});
+  get(ref(db,'cy_teams/'+tid)).then(s=>{const t=s.val();if(t&&t.owner)pushNotif(t.owner,'📨',uname+' عايز ينضم لمنظمتك "'+t.name+'"','',{type:'explore'});});
+  toast('✅ تم إرسال طلب الانضمام! هتتخصم 10,000🪙 لما القائد يوافق');
+  WW.openTeam(tid);
+},
+async acceptOrgRequest(tid,reqId){
+  const ts=await get(ref(db,'cy_teams/'+tid));const t=ts.val();if(!t)return;
+  const myRole=myRoleInOrg(t);
+  if(myRole!=='leader'&&!isAdmin()){toast('❌ القائد بس يقدر يوافق!');return;}
+  const req=t.requests&&t.requests[reqId];if(!req||req.status!=='pending')return;
+  const csnap=await get(ref(db,'cy_users/'+req.uid+'/coins'));
+  const bal=csnap.val()||0;
+  if(bal<10000){await set(ref(db,'cy_teams/'+tid+'/requests/'+reqId+'/status'),'rejected');pushNotif(req.uid,'❌','رصيدك مش كفاية (10,000🪙) فاتلغى طلب الانضمام','',{type:'explore'});toast('❌ رصيد اللاعب مش كافي');WW.openTeam(tid);return;}
+  await set(ref(db,'cy_users/'+req.uid+'/coins'),bal-10000);
+  await set(ref(db,'cy_teams/'+tid+'/members/'+req.uid),'member');
+  await set(ref(db,'cy_teams/'+tid+'/requests/'+reqId+'/status'),'accepted');
+  pushNotif(req.uid,'🎉','تم قبولك في منظمة "'+t.name+'"! (-10,000🪙)','',{type:'explore'});
+  toast('✅ تم قبول '+req.name);
+  WW.openTeam(tid);
+},
+rejectOrgRequest(tid,reqId){
+  set(ref(db,'cy_teams/'+tid+'/requests/'+reqId+'/status'),'rejected');
+  get(ref(db,'cy_teams/'+tid+'/requests/'+reqId)).then(s=>{const r=s.val();if(r)pushNotif(r.uid,'❌','اتراض طلب انضمامك للمنظمة','',{type:'explore'});});
+  toast('تم الرفض');WW.openTeam(tid);
+},
+  viewTeam(tid){this.openTeam(tid);},
   backFromPvt(){if(pvtUnsub){pvtUnsub();pvtUnsub=null;}activePvtUid='';goPage(prevPg);},
   deletePvtMsg:function(k){if(!confirm('حذف الرسالة؟'))return;const ck=[uid,curPvt.uid].sort().join('_');remove(ref(db,'cy_pvt/'+ck+'/'+k));toast('✅ تم الحذف!');},
   backFromGrp(){if(grpUnsub){grpUnsub();grpUnsub=null;}curGrpId='';const p=document.getElementById('grpInfoPanel');if(p)p.style.display='none';goPage('msgs');switchMsgTab('groups');},
@@ -1913,7 +2246,16 @@ window.playVoice = function(btn, src) {
   Object.keys(localStorage).forEach(k=>{if(k.startsWith('cy_tasks_'))localStorage.removeItem(k);});
   document.getElementById('setupScreen').style.cssText='display:flex!important';
 };
-window.searchTeamMember=async function(q){const box=$('teamMemberSearchResults');if(!box||!q)return;const snap=await get(ref(db,'cy_users'));let res=[];snap.forEach(s=>{const u=s.val();if(s.key!==uid&&(u.name||'').toLowerCase().includes(q.toLowerCase()))res.push({...u,_k:s.key});});box.innerHTML='';res.forEach(u=>{const div=document.createElement('div');div.className='cli';div.style.marginBottom='4px';const img=document.createElement('img');img.className='clia';img.src=avt(u.img,u.name);img.alt='';const info=document.createElement('div');info.className='clin';info.innerHTML=`<div class="clinm">${safeA(u.name)}</div><div class="clip">${safeA(u.mcname||'')}</div>`;const btn=document.createElement('button');btn.className='mc-btn small';btn.textContent='إضافة';btn.onclick=()=>{if(!currentTeamId)return;set(ref(db,'cy_teams/'+currentTeamId+'/members/'+u._k),true);toast('✅ تم إضافة '+u.name);pushNotif(u._k,'⚔️','تمت إضافتك لتيم!','',{type:'home'});btn.textContent='✅';btn.disabled=true;};div.appendChild(img);div.appendChild(info);div.appendChild(btn);box.appendChild(div);});};
+window.searchTeamMember=async function(q){const box=$('teamMemberSearchResults');if(!box||!q)return;const snap=await get(ref(db,'cy_users'));let res=[];snap.forEach(s=>{const u=s.val();if(s.key!==uid&&(u.name||'').toLowerCase().includes(q.toLowerCase()))res.push({...u,_k:s.key});});box.innerHTML='';res.forEach(u=>{const div=document.createElement('div');div.className='cli';div.style.marginBottom='4px';const img=document.createElement('img');img.className='clia';img.src=avt(u.img,u.name);img.alt='';const info=document.createElement('div');info.className='clin';info.innerHTML=`<div class="clinm">${safeA(u.name)}</div><div class="clip">${safeA(u.mcname||'')}</div>`;const btn=document.createElement('button');btn.className='mc-btn small';btn.textContent='إضافة';btn.onclick=async()=>{
+  if(!currentTeamId)return;
+  await set(ref(db,'cy_teams/'+currentTeamId+'/members/'+u._k),true);
+  toast('✅ تم إضافة '+u.name);
+  pushNotif(u._k,'⚔️','تمت إضافتك لمنظمة!','',{type:'home'});
+  const ts=await get(ref(db,'cy_teams/'+currentTeamId));
+  const t=ts.val();
+  if(t) announceTeamChange(u._k,u.name,u.img,t.name,t.color,true);
+  btn.textContent='✅';btn.disabled=true;
+};div.appendChild(img);div.appendChild(info);div.appendChild(btn);box.appendChild(div);});};
   function initPresence(){
   if(!uid)return;
   const presRef=ref(db,'cy_presence/'+uid);
@@ -1927,7 +2269,8 @@ function init(){
   if(!uid)uid=localStorage.getItem('cy_uid')||'';if(!uname)uname=localStorage.getItem('cy_name')||'';
   if(!localStorage.getItem('cy_tour_done')) setTimeout(startTour, 1500);
   umcname=localStorage.getItem('cy_mcname')||'';uimg=localStorage.getItem('cy_img')||'';
-  myCoins=parseInt(localStorage.getItem('cy_coins')||'0');myRank=localStorage.getItem('cy_rank')||'member';activeTitle=localStorage.getItem('cy_activeTitle')||'';
+myCoins=parseInt(localStorage.getItem('cy_coins')||'0');myRank=localStorage.getItem('cy_rank')||'member';activeTitle=localStorage.getItem('cy_activeTitle')||'';
+  if(isAdmin())myCoins=INFINITE_COINS;
  initPresence(); loadFollowData();loadMsgsList(); setTimeout(requestNotifPermission,2000);loadGroupsList();loadTasks();syncFromFirebase();refreshStats();checkDailyLogin();initOpts();renderChests();renderTeams();renderPollsPage();
 }
   // تحديث النقط الخضرا
@@ -2436,6 +2779,7 @@ $('doLogin').addEventListener('click',async()=>{
       found={...u,_k:s.key};
   });
   if(!found){errEl.textContent='❌ اسم اللعبة أو الكود غلط!';errEl.style.display='block';errEl.style.color='var(--red)';return;}
+  if(found.banned){errEl.textContent='⛔ حسابك محظور من الإدارة!';errEl.style.display='block';errEl.style.color='var(--red)';return;}
   uid=found._k;uname=found.name||'';umcname=found.mcname||'';uimg=found.img||'';
   myCoins=found.coins||0;myRank=found.rank||'member';activeTitle=found.activeTitle||'';
   localStorage.setItem('cy_uid',uid);localStorage.setItem('cy_name',uname);
@@ -2447,201 +2791,7 @@ $('doLogin').addEventListener('click',async()=>{
   toast('✅ أهلاً '+uname+'! رجعت لحسابك 🎉');
 });
 // ===== END LOGIN =====
-  // ==================== WAR SYSTEM ====================
-const warRef = ref(db, 'cy_war');
-let currentWar = null;
 
-onValue(warRef, snap => {
-  currentWar = snap.val();
-  renderWarTab();
-  updateWarBadge();
-});
-
-function updateWarBadge() {
-  const tab = document.querySelector('[data-pg="explore"]');
-  if (!tab) return;
-  let badge = document.getElementById('warBadge');
-  if (currentWar && currentWar.status === 'active') {
-    if (!badge) {
-      badge = document.createElement('span');
-      badge.id = 'warBadge';
-      badge.style.cssText = 'position:absolute;top:4px;right:2px;width:8px;height:8px;border-radius:50%;background:#cc3333;box-shadow:0 0 6px #cc3333;';
-      tab.style.position = 'relative';
-      tab.appendChild(badge);
-    }
-  } else if (badge) badge.remove();
-}
-
-window.startWar = async function() {
-
-  if (!isAdmin()) { toast('❌ الأدمن/الأونر بس!'); return; }
-  if (currentWar && currentWar.status === 'active') { toast('❌ في حرب شغالة!'); return; }
-  const snap = await get(ref(db, 'cy_teams'));
-  let validTeams = [];
-  snap.forEach(s => {
-    const t = s.val();
-    const memberCount = t.members ? Object.keys(t.members).length : 0;
-    if (memberCount > 0) validTeams.push({ ...t, _k: s.key });
-  });
-  if (validTeams.length < 2) { toast('❌ محتاج تيمين على الأقل فيهم أعضاء!'); return; }
-  const shuffled = validTeams.sort(() => Math.random() - 0.5);
-  const team1 = shuffled[0];
-  const team2 = shuffled[1];
-  const warData = {
-    status: 'active',
-    startedAt: Date.now(),
-    endsAt: Date.now() + 30 * 60 * 1000,
-
-    team1: { id: team1._k, name: team1.name, color: team1.color, members: team1.members || {}, score: 0 },
-    team2: { id: team2._k, name: team2.name, color: team2.color, members: team2.members || {}, score: 0 },
-    kills: {},
-    log: {}
-  };
-  await set(warRef, warData);
-  const allMembers = [...Object.keys(team1.members || {}), ...Object.keys(team2.members || {})];
-  allMembers.forEach(mId => pushNotif(mId, '⚔️', `🔥 حرب بدأت! ${team1.name} ضد ${team2.name}`, 'war_start', { type: 'explore' }));
-  toast('⚔️ الحرب بدأت!');
-  renderWarTab();
-}
-
-window.endWar = async function() {
-
-  if (!isAdmin()) return;
-  if (!currentWar || currentWar.status !== 'active') { toast('❌ م في حرب!'); return; }
-  const s1 = currentWar.team1.score || 0;
-  const s2 = currentWar.team2.score || 0;
-  const winner = s1 > s2 ? currentWar.team1 : s2 > s1 ? currentWar.team2 : null;
-  await set(ref(db, 'cy_war/status'), 'ended');
-  await set(ref(db, 'cy_war/endedAt'), Date.now());
-  await set(ref(db, 'cy_war/winner'), winner ? winner.id : 'draw');
-  if (winner) {
-    Object.keys(winner.members || {}).forEach(mId => {
-      pushNotif(mId, '🏆', `تيمك ${winner.name} فاز في الحرب! +5000 🪙`, 'war_end', { type: 'explore' });
-      get(ref(db, 'cy_users/' + mId + '/coins')).then(cs => set(ref(db, 'cy_users/' + mId + '/coins'), (cs.val() || 0) + 5000));
-    });
-    toast('🏆 فاز ' + winner.name + '! +5000🪙 لكل عضو');
-  } else {
-    toast('🤝 تعادل!');
-  }
-  renderWarTab();
-}
-
-async function addKill(killerUid, killerName, victimName) {
-  if (!currentWar || currentWar.status !== 'active') { toast('❌ م في حرب!'); return; }
-  const isT1 = currentWar.team1.members && currentWar.team1.members[killerUid];
-  const isT2 = currentWar.team2.members && currentWar.team2.members[killerUid];
-  if (!isT1 && !isT2) { toast('❌ اللاعب مش في أي تيم في الحرب!'); return; }
-  const teamKey = isT1 ? 'team1' : 'team2';
-  const newScore = (currentWar[teamKey].score || 0) + 1;
-  await set(ref(db, 'cy_war/' + teamKey + '/score'), newScore);
-  const logKey = 'k_' + Date.now();
-  await set(ref(db, 'cy_war/log/' + logKey), {
-    ts: Date.now(), killerUid, killerName, victimName, team: teamKey
-  });
-  get(ref(db, 'cy_users/' + killerUid + '/coins')).then(cs =>
-    set(ref(db, 'cy_users/' + killerUid + '/coins'), (cs.val() || 0) + 500)
-  );
-  toast('⚔️ +1 كيل لـ ' + (isT1 ? currentWar.team1.name : currentWar.team2.name) + ' | +500🪙 لـ ' + killerName);
-  renderWarTab();
-}
-
-function renderWarTab() {
-  const box = document.getElementById('expTab_war');
-  if (!box) return;
-  if (!currentWar || currentWar.status === 'idle' || currentWar.status === 'ended' && !isAdmin()) {
-
-    box.innerHTML = `
-      <div style="text-align:center;padding:30px 20px;">
-        <div style="font-size:50px;margin-bottom:10px;">⚔️</div>
-        <div style="font-size:16px;font-weight:900;color:var(--primary);margin-bottom:6px;">لا توجد حرب الآن</div>
-        <div style="font-size:12px;color:var(--text2);margin-bottom:16px;">الإدمن يقدر يبدأ حرب بين التيمات</div>
-        ${isAdmin() ? `<button class="mc-btn" onclick="startWar()">⚔️ ابدأ حرب عشوائية</button>` : ''}
-      </div>`;
-    return;
-  }
-  const w = currentWar;
-  const s1 = w.team1?.score || 0;
-  const s2 = w.team2?.score || 0;
-  const total = s1 + s2 || 1;
-  const pct1 = Math.round(s1 / total * 100);
-  const pct2 = 100 - pct1;
-  const diff = w.endsAt - Date.now();
-  const h = Math.floor(diff / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const timeStr = diff > 0 ? `${h}س ${m}د` : 'انتهى الوقت';
-  const logs = w.log ? Object.values(w.log).sort((a, b) => b.ts - a.ts).slice(0, 10) : [];
-  const myTeam = w.team1?.members?.[uid] ? 'team1' : w.team2?.members?.[uid] ? 'team2' : null;
-
-  box.innerHTML = `
-    <div style="background:linear-gradient(135deg,#1a0000,#0d0000);border:3px solid #cc3333;padding:14px;margin-bottom:12px;text-align:center;">
-      <div style="font-size:11px;color:#cc3333;font-weight:900;letter-spacing:2px;margin-bottom:8px;">⚔️ الحرب جارية ⚔️</div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
-        <div style="text-align:center;">
-          <div style="font-size:22px;font-weight:900;color:${w.team1.color};">${w.team1.name}</div>
-          <div style="font-size:36px;font-weight:900;color:${w.team1.color};">${s1}</div>
-          <div style="font-size:10px;color:var(--text2);">كيل</div>
-        </div>
-        <div style="font-size:24px;color:#cc3333;font-weight:900;">VS</div>
-        <div style="text-align:center;">
-          <div style="font-size:22px;font-weight:900;color:${w.team2.color};">${w.team2.name}</div>
-          <div style="font-size:36px;font-weight:900;color:${w.team2.color};">${s2}</div>
-          <div style="font-size:10px;color:var(--text2);">كيل</div>
-        </div>
-      </div>
-      <div style="background:#111;border-radius:4px;height:12px;overflow:hidden;margin-bottom:8px;display:flex;">
-        <div style="width:${pct1}%;background:${w.team1.color};transition:width .5s;"></div>
-        <div style="width:${pct2}%;background:${w.team2.color};transition:width .5s;"></div>
-      </div>
-      <div style="font-size:12px;color:var(--text2);">⏱️ ${w.status === 'ended' ? '🏁 انتهت الحرب' : 'ينتهي بعد: ' + timeStr}</div>
-      ${myTeam ? `<div style="margin-top:8px;font-size:11px;background:rgba(240,192,64,.1);border:1px solid var(--primary);padding:4px 10px;display:inline-block;">أنت في تيم: <b style="color:var(--primary);">${w[myTeam].name}</b></div>` : ''}
-    </div>
-    ${isAdmin() && w.status === 'active' ? `
-    <div class="card" style="border-color:#cc3333;margin-bottom:10px;">
-      <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:8px;">🗡️ تسجيل كيل — الأدمن فقط</div>
-    <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">القاتل:</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;" id="killerGrid"></div>
-<div style="font-size:11px;color:var(--text2);margin-bottom:4px;">المقتول:</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;" id="victimGrid"></div>
-<div id="selectedKill" style="display:none;background:#0d0d0d;border:2px solid var(--primary);padding:8px;margin-bottom:8px;border-radius:2px;font-size:12px;"></div>
-      <div style="font-size:10px;color:var(--text2);margin-bottom:6px;">سيتم إضافة نقطة لتيم القاتل تلقائياً</div>
-      <button class="mc-btn" style="width:100%;" onclick="registerKill()">⚔️ تسجيل الكيل</button>
-    </div>
-    <button class="mc-btn danger" style="width:100%;margin-bottom:10px;" onclick="endWar()">🏁 إنهاء الحرب</button>` : ''}
-    ${w.status === 'ended' ? `
-    <div style="background:rgba(240,192,64,.08);border:2px solid var(--primary);padding:12px;text-align:center;margin-bottom:10px;">
-      <div style="font-size:14px;font-weight:900;color:var(--primary);">🏆 ${w.winner === 'draw' ? 'تعادل!' : 'الفائز: ' + (w.winner === w.team1?.id ? w.team1?.name : w.team2?.name)}</div>
-      ${isAdmin() ? `<button class="mc-btn" style="margin-top:8px;" onclick="startWar()">⚔️ حرب جديدة</button>` : ''}
-    </div>` : ''}
-    <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:8px;">📋 سجل الكيلز</div>
-    ${logs.length ? logs.map(l => `
-      <div style="display:flex;align-items:center;gap:8px;padding:7px;background:#0d0d0d;border:2px solid #1a1a1a;margin-bottom:4px;border-radius:2px;">
-        <span style="color:${l.team === 'team1' ? w.team1?.color : w.team2?.color};font-size:14px;">⚔️</span>
-        <div style="flex:1;font-size:12px;"><b>${safeA(l.killerName)}</b> قتل <b>${safeA(l.victimName)}</b></div>
-        <span style="font-size:10px;color:var(--text2);">${ago(l.ts)}</span>
-      </div>`).join('') : '<div style="text-align:center;color:var(--text2);font-لا توجد كيلز بعد</div>'}
-  `;
-  if(isAdmin()&&w.status==='active'){const allM={...Object.fromEntries(Object.keys(w.team1?.members||{}).map(k=>([k,{name:'',team:'team1',color:w.team1.color,tname:w.team1.name}]))),...Object.fromEntries(Object.keys(w.team2?.members||{}).map(k=>([k,{name:'',team:'team2',color:w.team2.color,tname:w.team2.name}])))};Promise.all(Object.keys(allM).map(id=>get(ref(db,'cy_users/'+id)).then(s=>{if(s.exists())allM[id].name=s.val().mcname||s.val().name||'مجهول';}))).then(()=>{let selKiller='',selVictim='';const kg=document.getElementById('killerGrid'),vg=document.getElementById('victimGrid');if(!kg||!vg)return;function renderGrids(){kg.innerHTML=Object.entries(allM).map(([id,u])=>`<div onclick="window.selectKiller('${id}')" style="padding:7px;border:2px solid ${selKiller===id?u.color:'#222'};background:${selKiller===id?u.color+'22':'#0d0d0d'};border-radius:4px;cursor:pointer;text-align:center;"><div style="font-size:9px;color:${u.color};font-weight:700;">${u.tname}</div><div style="font-size:11px;font-weight:700;">${u.name}</div></div>`).join('');vg.innerHTML=Object.entries(allM).map(([id,u])=>`<div onclick="window.selectVictim('${id}')" style="padding:7px;border:2px solid ${selVictim===id?'#cc3333':'#222'};background:${selVictim===id?'#cc333322':'#0d0d0d'};border-radius:4px;cursor:pointer;text-align:center;"><div style="font-size:9px;color:${u.color};font-weight:700;">${u.tname}</div><div style="font-size:11px;font-weight:700;">${u.name}</div></div>`).join('');const sd=document.getElementById('selectedKill');if(sd){if(selKiller&&selVictim){sd.style.display='block';sd.innerHTML=`⚔️ <b style="color:${allM[selKiller]?.color}">${allM[selKiller]?.name}</b> قتل <b style="color:#cc3333">${allM[selVictim]?.name}</b>`;}else sd.style.display='none';}}window.selectKiller=function(id){selKiller=id;renderGrids();};window.selectVictim=function(id){selVictim=id;renderGrids();};window.registerKill=async function(){if(!selKiller){toast('⚠️ اختار القاتل!');return;}if(!selVictim){toast('⚠️ اختار المقتول!');return;}if(selKiller===selVictim){toast('❌ مش ينفع نفس اللاعب!');return;}await addKill(selKiller,allM[selKiller].name,allM[selVictim].name);selKiller='';selVictim='';renderGrids();};renderGrids();});}
-}
-
-window.registerKill = async function() {
-
-  const killerMC = document.getElementById('killKillerIn')?.value.trim();
-  const victimName = document.getElementById('killVictimIn')?.value.trim();
-  if (!killerMC || !victimName) { toast('⚠️ اكتب اسم القاتل والمقتول!'); return; }
-  const snap = await get(ref(db, 'cy_users'));
-  let killerUid = null, killerName = '';
-  snap.forEach(s => {
-    const u = s.val();
-    if ((u.mcname || '').toLowerCase() === killerMC.toLowerCase()) {
-      killerUid = s.key; killerName = u.name || killerMC;
-    }
-  });
-  if (!killerUid) { toast('❌ مش لاقي اللاعب ده!'); return; }
-  await addKill(killerUid, killerName, victimName);
-  document.getElementById('killKillerIn').value = '';
-  document.getElementById('killVictimIn').value = '';
-}
-// ==================== END WAR ====================
 // ===== LOADING SCREEN =====
 function setLoad(pct, msg) {
   const bar = document.getElementById('loadBar');
