@@ -4,6 +4,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -645,19 +646,11 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
 <div id="pg_explore" class="page" style="padding:0;">
   <div style="padding:10px;">
     <div class="tab-btns" style="border-bottom:3px solid var(--primary);padding-bottom:8px;margin-bottom:10px;">
-      <button class="tab-btn active" onclick="switchExpTab('chests')">🎁 الصناديق</button>
+      
 <button class="tab-btn" onclick="switchExpTab('teams')">🏛️ المنظمات</button>
       <button class="tab-btn" onclick="switchExpTab('lb')">🏆 المتصدرين</button>
     </div>
-<div id="expTab_chests">
-      <div style="background:linear-gradient(135deg,#1a1000,#2a1e00);border:3px solid var(--primary);padding:12px;margin-bottom:12px;text-align:center;">
-        <div style="font-size:18px;font-weight:900;color:var(--primary);text-shadow:2px 2px 0 #000;">🎁 صناديق الغنيمة الأسطورية</div>
-        <div style="font-size:11px;color:var(--text2);margin-top:3px;">10 مستويات من الأضعف للأقوى</div>
-      </div>
-      <div class="chests-grid" id="chestsList"></div>
-      <div class="stitle" style="margin-top:14px;">📋 طلبات صناديقي</div>
-      <div id="myChestList"></div>
-    </div>
+
     <div id="expTab_teams" style="display:none;">
 <div id="adminTeamCreate" style="display:block;">
         <div class="card" style="border-color:var(--primary);">
@@ -679,7 +672,7 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
       <div class="stitle">🏛️ المنظمات</div>
       <div id="teamsList"></div>
     </div>
-    <div id="expTab_lb" style="display:none;">
+    <div id="expTab_lb">
       <div class="stitle">🟢 المتصلون الآن</div>
 <div id="onlineList" style="margin-bottom:12px;"></div>
       <div class="stitle">🏆 المتصدرين</div>
@@ -952,9 +945,6 @@ header{background:linear-gradient(180deg,#160d07,#0a0503);position:fixed;top:0;l
 <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:6px;">📋 طلبات الاستبدال المعلقة</div>
       <div id="adminRedeemList" style="max-height:250px;overflow-y:auto;"></div>
 
-<div style="font-size:12px;font-weight:900;color:var(--primary);margin:12px 0 6px;">🎁 طلبات الصناديق المعلقة</div>
-<div style="font-size:12px;font-weight:900;color:var(--primary);margin:12px 0 6px;">🎁 طلبات الصناديق المعلقة</div>
-      <div id="adminChestList" style="max-height:250px;overflow-y:auto;"></div>
 
       <div style="font-size:12px;font-weight:900;color:var(--primary);margin:12px 0 6px;">📜 سجل الأوامر</div>
       <div id="adminCmdLog" style="max-height:250px;overflow-y:auto;"></div>
@@ -1035,18 +1025,7 @@ const SERVER_PASS="golden2024";
 const RANK_CODES={"admin12345":{rank:"admin",label:"Admin"},"owner12345":{rank:"owner",label:"Owner"},"vip12345":{rank:"vip",label:"VIP"}};
 const INFINITE_COINS=999999999;                                                                                                                                        
 const TC=[{n:"أخضر",h:"#55aa33"},{n:"أحمر",h:"#cc3333"},{n:"أزرق",h:"#3399ff"},{n:"أصفر",h:"#ffdd00"},{n:"بنفسجي",h:"#aa44ff"},{n:"برتقالي",h:"#ff8800"},{n:"وردي",h:"#ff55aa"},{n:"سماوي",h:"#00dddd"},{n:"أبيض",h:"#dddddd"},{n:"رمادي",h:"#888888"},{n:"بني",h:"#8b4513"},{n:"ذهبي",h:"#f0c040"}];
-const CHESTS=[
-  {id:"c1",num:1,name:"صندوق البداية",color:"#aaa",bc:"#666",price:5000,items:["أدوات حديدية كاملة","درع جلدي","8 جولدن أبل مطورة"]},
-  {id:"c2",num:2,name:"صندوق المستكشف",color:"#55cc44",bc:"#338833",price:10000,items:["أدوات حديدية كاملة","درع حديدي","8 جولدن أبل مطورة"]},
-  {id:"c3",num:3,name:"صندوق الثروة",color:"#f0c040",bc:"#8a6000",price:15000,items:["درع حديدي كامل Protection I","8 جولدن أبل مطورة"]},
-  {id:"c4",num:4,name:"صندوق النخبة",color:"#55ffff",bc:"#008888",price:20000,items:["أدوات ألماس كاملة","درع ألماس","16 جولدن أبل مطورة"]},
-  {id:"c5",num:5,name:"صندوق المحارب",color:"#cc3333",bc:"#7a0000",price:25000,items:["درع ألماس كامل","Power III","32 جولدن أبل مطورة"]},
-  {id:"c6",num:6,name:"صندوق النخبة+",color:"#aa44ff",bc:"#6622aa",price:40000,items:["أدوات ألماس Protection IV","Efficiency IV","64 جولدن أبل مطورة"]},
-  {id:"c7",num:7,name:"صندوق الأساطير",color:"#ff8800",bc:"#884400",price:70000,items:["3 تومنات","درع ندرايت 32","جولدن كاووت","شلكر بوكس إضافي"]},
-  {id:"c8",num:8,name:"صندوق السماء",color:"#00aaff",bc:"#005588",price:100000,items:["درع ألماس Protection IV","4 تومنات","64 جولدن أبل مطورة"]},
-  {id:"c9",num:9,name:"صندوق المجد",color:"#55ff55",bc:"#228822",price:150000,items:["عدة تدريبات كاملة","5 تومنات","64 جولدن أبل مطورة"]},
-  {id:"c10",num:10,name:"صندوق الملك",color:"#f0c040",bc:"#8a6000",price:300000,items:["درع ندرايت Protection IV Unbreaking III Mending","سيف Mace Unbreaking III Mending","10 تومنات","64 جولدن أبل مطورة","Fireworks 64","64 تفاحتي أوت","End Crystal 64"]},
-];
+
 const LAWS=[
   {n:1,t:"الاحترام أولًا",b:"<b>احترام جميع اللاعبين والإدارة واجب.</b>\n\nيُمنع السب، العنصرية أو أي سلوك مسيء."},
   {n:2,t:"اللعب النظيف",b:"<b>يُمنع استخدام أي هاكات أو مودات تعطي أفضلية غير عادلة</b> مثل:\n\n<span class='red'>X-Ray، KillAura، AutoClicker</span>\n\nالعقوبة: حظر دائم + مصادرة المكاسب."},
@@ -1151,11 +1130,7 @@ function renderLaw(){
 }
 window.nextLaw=()=>{if(lawIndex<LAWS.length-1){lawIndex++;renderLaw();}};
 window.prevLaw=()=>{if(lawIndex>0){lawIndex--;renderLaw();}};
-function renderChests(){
-  const box=$('chestsList');if(!box)return;
-  box.innerHTML=CHESTS.map(c=>`<div class="chest-card" style="border-color:${c.bc};"><div class="chest-header" style="background:linear-gradient(180deg,${c.color}18,transparent);"><div class="chest-num-badge">${c.num}</div><div class="chest-icon">🎁</div><div class="chest-name" style="color:${c.color};">${c.name}</div></div><div class="chest-body"><div style="font-size:9px;color:var(--text2);font-weight:700;margin-bottom:3px;">المحتويات:</div>${c.items.map(it=>`<div class="chest-row"><span>⚔️</span><span>${it}</span></div>`).join('')}</div><div class="chest-price" style="color:${c.color};">${c.price.toLocaleString()} 🪙</div><button class="mc-btn small gold" style="width:100%;border-radius:0;" onclick="WW.requestChest('${c.id}')">🎁 اطلب الصندوق</button></div>`).join('');
-  renderMyChestList();
-}
+
 $('sNext1').addEventListener('click',()=>{
   const nm=$('sName').value.trim(),mcnm=$('sMCName').value.trim();
   if(!nm){toast('⚠️ اكتب اسمك!');return;}if(!mcnm){toast('⚠️ اكتب اسمك في اللعبة!');return;}
@@ -1200,7 +1175,7 @@ function goPage(pg){
   if(pg!=='grp'&&window.grpReadsUnsub){window.grpReadsUnsub();window.grpReadsUnsub=null;}
 
   if(pg==='laws'){lawIndex=0;renderLaw();}
-  if(pg==='explore'){renderChests();renderTeams();}
+  if(pg==='explore'){loadLeaderboard();loadOnlineUsers();renderTeams();}
 }
 document.querySelectorAll('.tni').forEach(btn=>{btn.addEventListener('click',()=>{const pg=btn.dataset.pg;if(!['home','polls','laws','explore','chat','msgs','profile','auction'].includes(pg))return;
 prevPg=pg;goPage(pg);
@@ -1501,7 +1476,7 @@ function renderTeams(){
       const mc=t.members?Object.keys(t.members).length:0;
       const lvl=orgLevel(t.donated);
       const myRole=myRoleInOrg(t);
-      const canManage=myRole==='leader'||isAdmin();
+      const canManage=myRole==='leader';
       const logoHtml=t.logo?`<img src="${t.logo}" style="width:32px;height:32px;border-radius:6px;object-fit:cover;border:2px solid ${t.color};flex-shrink:0;">`:`<div style="width:32px;height:32px;background:${t.color};display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;border:2px solid #000;border-radius:6px;">🏛️</div>`;
       return`<div class="team-item" style="border-color:${t.color};">${logoHtml}<div style="flex:1;"><div style="font-weight:900;font-size:13px;color:${t.color};">${safeA(t.name)} <span style="font-size:9px;color:var(--primary);">LV.${lvl}</span></div><div style="font-size:10px;color:var(--text2);">${mc} أعضاء</div></div>${canManage?`<button class="mc-btn small blue" onclick="WW.openTeam('${t._k}')">إدارة</button>`:`<button class="mc-btn small" style="background:#111;box-shadow:inset -2px -2px 0 #000,inset 2px 2px 0 #222;" onclick="WW.viewTeam('${t._k}')">عرض</button>`}</div>`;
     }).join('');
@@ -1564,10 +1539,10 @@ function loadFollowData(){onValue(ref(db,'cy_users/'+uid+'/followers'),s=>{myFol
 function checkDailyLogin(){const today=new Date().toDateString(),last=localStorage.getItem('cy_lastLogin')||'';if(last===today)return;localStorage.setItem('cy_lastLogin',today);addCoins(1000);toast('🎉 تسجيل يومي! +1,000🪙');}
 function toggleNotifDrop(){const d=$('notifDrop');if(d.classList.contains('open'))d.classList.remove('open');else{d.classList.add('open');markRead();}}
 document.addEventListener('click',e=>{const d=$('notifDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target)&&e.target.id!=='notifBtn')d.classList.remove('open');});
-window.switchExpTab=function(tab){['chests','teams','lb'].forEach(t=>{
-const el=$('expTab_'+t);if(el)el.style.display=t===tab?'block':'none';});document.querySelectorAll('#pg_explore .tab-btn').forEach((b,i)=>b.classList.toggle('active',['chests','teams','lb'][i]===tab));
+window.switchExpTab=function(tab){['teams','lb'].forEach(t=>{
+const el=$('expTab_'+t);if(el)el.style.display=t===tab?'block':'none';});document.querySelectorAll('#pg_explore .tab-btn').forEach((b,i)=>b.classList.toggle('active',['teams','lb'][i]===tab));
 if(tab==='lb'){loadLeaderboard();loadOnlineUsers();}
-if(tab==='teams')renderTeams();if(tab==='chests')renderChests();};
+if(tab==='teams')renderTeams();};
 $('btnPost').addEventListener('click',()=>$('mPost').classList.add('open'));$('mPostClose').addEventListener('click',()=>$('mPost').classList.remove('open'));
 $('doPost').addEventListener('click',()=>{const txt=$('postTxt').value.trim();if(!txt){toast('⚠️ اكتب شيئاً!');return;}push(postsRef,{type:'post',ts:Date.now(),text:txt,authorId:uid,authorName:uname,authorMCName:umcname,authorImg:uimg,likes:{},views:{},comments:{}});$('postTxt').value='';$('mPost').classList.remove('open');addCoins(500);checkTask('post');toast('✨ تم النشر! +500🪙');get(ref(db,'cy_users')).then(snap=>{snap.forEach(s=>{if(s.key!==uid)pushNotif(s.key,'📝',uname+' نشر منشور جديد','post_'+Date.now(),{type:'home'});});});});
 $('btnMedia').addEventListener('click',()=>$('mMedia').classList.add('open'));$('mMediaClose').addEventListener('click',()=>$('mMedia').classList.remove('open'));
@@ -1849,7 +1824,7 @@ const TOUR_STEPS = [
 {title:'⚔️ أهلاً في سيرفر هواري كرافت!',text:'خليني أشرحلك الموقع في ثواني — اضغط التالي',target:null},
   {title:'🏠 المنشورات',text:'من هنا تشوف منشورات الأعضاء وتنشر منشوراتك وتصويتاتك وصورك',target:'pg_home'},
   {title:'🔨 المزاد',text:'بيع واشتري الأيتمز مع باقي اللاعبين — أعلى سعر يفوز!',target:'pg_auction'},
-  {title:'⚔️ الاستكشاف',text:'فيه الصناديق والمنظمات والمتصدرين وساحة الحرب بين المنظمات',target:'expTab_chests'},
+  {title:'⚔️ الاستكشاف',text:'فيه المنظمات والمتصدرين وساحة الحرب بينهم',target:'expTab_teams'},
   {title:'💬 الشات',text:'شات عام مع الكل أو رسايل خاصة مع أي لاعب',target:'pg_chat'},
   {title:'👤 البروفايل',text:'غيّر صورتك واسمك وشوف مهامك اليومية واكسب ذهب',target:'pg_profile'},
   {title:'🪙 الذهب',text:'اكسب ذهب من المنشورات والتعليقات والمهام اليومية واشتري صناديق',target:'coinsBadge'},
@@ -1868,7 +1843,7 @@ window.showTourStep = function() {
   else if (s.target === 'pg_auction') goPage('auction');
   else if (s.target === 'pg_chat') { goPage('chat'); switchChatTab('gc'); }
   else if (s.target === 'pg_profile') goPage('profile');
-  else if (s.target === 'expTab_chests') { goPage('explore'); switchExpTab('chests'); }
+  else if (s.target === 'expTab_teams') { goPage('explore'); switchExpTab('teams'); }
   else if (s.target === 'coinsBadge') goPage('home');
   setTimeout(() => {
     const overlay = document.createElement('div');
@@ -2023,7 +1998,16 @@ setOrgRole(tid,mId,newRole){
   toast('✅ تم التحديث');
   WW.openTeam(tid);
 },
-kickOrgMember(tid,mId){if(!confirm('إزالة العضو؟'))return;remove(ref(db,'cy_teams/'+tid+'/members/'+mId));toast('تم الإزالة');pushNotif(mId,'🚪','تمت إزالتك من المنظمة','',{type:'explore'});WW.openTeam(tid);},
+async kickOrgMember(tid,mId){
+  const ts=await get(ref(db,'cy_teams/'+tid));const t=ts.val();if(!t)return;
+  const myRole=myRoleInOrg(t);
+  if(myRole!=='leader'){toast('❌ قائد المنظمة بس يقدر يطرد!');return;}
+  if(!confirm('إزالة العضو؟'))return;
+  remove(ref(db,'cy_teams/'+tid+'/members/'+mId));
+  toast('تم الإزالة');
+  pushNotif(mId,'🚪','تمت إزالتك من المنظمة','',{type:'explore'});
+  WW.openTeam(tid);
+},
 sendOrgRequest(tid){
   const reqId='req_'+Date.now()+'_'+uid;
   set(ref(db,'cy_teams/'+tid+'/requests/'+reqId),{uid,name:uname,mcname:umcname,img:uimg,ts:Date.now(),status:'pending'});
@@ -2034,7 +2018,7 @@ sendOrgRequest(tid){
 async acceptOrgRequest(tid,reqId){
   const ts=await get(ref(db,'cy_teams/'+tid));const t=ts.val();if(!t)return;
   const myRole=myRoleInOrg(t);
-  if(myRole!=='leader'&&!isAdmin()){toast('❌ القائد بس يقدر يوافق!');return;}
+  if(myRole!=='leader'){toast('❌ قائد المنظمة بس يقدر يوافق!');return;}
   const req=t.requests&&t.requests[reqId];if(!req||req.status!=='pending')return;
   const csnap=await get(ref(db,'cy_users/'+req.uid+'/coins'));
   const bal=csnap.val()||0;
@@ -2051,7 +2035,43 @@ rejectOrgRequest(tid,reqId){
   get(ref(db,'cy_teams/'+tid+'/requests/'+reqId)).then(s=>{const r=s.val();if(r)pushNotif(r.uid,'❌','اتراض طلب انضمامك للمنظمة','',{type:'explore'});});
   toast('تم الرفض');WW.openTeam(tid);
 },
-  viewTeam(tid){this.openTeam(tid);},
+viewTeam(tid){this.viewOrg(tid);},
+  async viewOrg(tid){
+    prevPg=document.querySelector('.tni.active')?.dataset.pg||'home';
+    goPage('orgprofile');
+    const snap=await get(ref(db,'cy_teams/'+tid));
+    if(!snap.exists()){toast('❌ المنظمة مش موجودة!');goPage(prevPg);return;}
+    const t=snap.val();t._k=tid;currentTeamId=tid;
+    $('orgpAvt').src=t.logo||`https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=2a1e00&color=f0c040&size=80`;
+    $('orgpNm').textContent=t.name;$('orgpNm').style.color=t.color||'var(--primary)';
+    $('orgpLevel').textContent='⭐ المستوى '+orgLevel(t.donated);
+    const leaderId=Object.keys(t.members||{}).find(m=>t.members[m]==='leader')||t.owner;
+    const leaderData=await getUser(leaderId)||{name:'—'};
+    $('orgpLeader').textContent='👑 القائد: '+(leaderData.name||'—');
+    $('orgpDesc').textContent=t.desc||'لا يوجد وصف';
+    $('orgpReq').textContent=t.requirements||'لا توجد شروط محددة';
+    const mc=t.members?Object.keys(t.members).length:0;
+    $('orgpMembersCount').textContent=mc;$('orgpTreasury').textContent=fC(t.donated||0);
+    const myRole=myRoleInOrg(t);const isLeader=myRole==='leader';
+    const actBox=$('orgpActionBtns');
+    if(isLeader)actBox.innerHTML=`<button class="mc-btn small blue" onclick="WW.openTeam('${tid}')">🛠️ إدارة</button>`;
+    else if(myRole)actBox.innerHTML=`<span class="tbadge" style="border-color:${t.color};color:${t.color};">✅ أنت عضو</span>`;
+    else{
+      const hasPending=t.requests&&Object.values(t.requests).some(r=>r.uid===uid&&r.status==='pending');
+      actBox.innerHTML=`<button class="mc-btn ${hasPending?'':'gold'}" ${hasPending?'disabled':''} onclick="WW.sendOrgRequest('${tid}')">${hasPending?'⏳ طلبك قيد المراجعة':'📨 طلب الانضمام'}</button>`;
+    }
+    $('orgpDonateBox').style.display='none';$('orgpLeaderPanel').style.display='none';
+    const box=$('orgpMembers');const members=t.members?Object.keys(t.members):[];
+    if(!members.length){box.innerHTML='<div class="empty-state"><div class="ei">👥</div><p>لا يوجد أعضاء</p></div>';return;}
+    let html='';
+    for(const mId of members){
+      const u=await getUser(mId)||{name:'مجهول',img:''};
+      const role=typeof t.members[mId]==='string'?t.members[mId]:'member';
+      const roleLbl=role==='leader'?'👑 قائد':role==='officer'?'⭐ نائب':'🌿 عضو';
+      html+=`<div class="cli" onclick="WW.viewProfile('${mId}')"><img class="clia" src="${avt(u.img,u.name)}" alt=""><div class="clin"><div class="clinm">${safeA(u.name||'مجهول')}</div><div class="clip">${roleLbl}</div></div></div>`;
+    }
+    box.innerHTML=html;
+  },
   backFromPvt(){if(pvtUnsub){pvtUnsub();pvtUnsub=null;}activePvtUid='';goPage(prevPg);},
   deletePvtMsg:function(k){if(!confirm('حذف الرسالة؟'))return;const ck=[uid,curPvt.uid].sort().join('_');remove(ref(db,'cy_pvt/'+ck+'/'+k));toast('✅ تم الحذف!');},
   backFromGrp(){if(grpUnsub){grpUnsub();grpUnsub=null;}curGrpId='';const p=document.getElementById('grpInfoPanel');if(p)p.style.display='none';goPage('msgs');switchMsgTab('groups');},
@@ -2063,6 +2083,7 @@ deleteGrp:async function(){if(!confirm('حذف المجموعة نهائياً؟
 searchGrpAdd:async function(q){const box=document.getElementById('grpAddResults');if(!box)return;if(!q){box.innerHTML='';return;}const snap=await get(ref(db,'cy_users'));const grpSnap=await get(ref(db,'cy_groups/'+curGrpId));const members=grpSnap.val()?.members||{};let res=[];snap.forEach(s=>{const u=s.val();if(s.key!==uid&&!members[s.key]&&(u.name||'').toLowerCase().includes(q.toLowerCase()))res.push({...u,_k:s.key});});if(!res.length){box.innerHTML='<div style="font-size:11px;color:var(--text2);padding:5px;">لا توجد نتائج</div>';return;}box.innerHTML=res.slice(0,5).map(u=>`<div style="display:flex;align-items:center;gap:7px;padding:5px;border-bottom:1px solid #111;"><img src="${avt(u.img,u.name)}" style="width:26px;height:26px;border-radius:3px;object-fit:cover;"><div style="flex:1;font-size:11px;">${safeA(u.name)}</div><button onclick="WW.addToGrp('${u._k}','${safeA(u.name)}')" style="background:#4a7a10;border:2px solid #000;color:#fff;font-size:10px;cursor:pointer;padding:2px 7px;border-radius:2px;">إضافة</button></div>`).join('');},
 addToGrp:async function(mId,mName){await set(ref(db,'cy_groups/'+curGrpId+'/members/'+mId),true);const grpSnap=await get(ref(db,'cy_groups/'+curGrpId));const g=grpSnap.val()||{};await set(ref(db,'cy_grp_idx/'+mId+'/'+curGrpId),{name:g.name||'',count:Object.keys(g.members||{}).length,ts:Date.now()});pushNotif(mId,'👥',uname+' أضافك لمجموعة: "'+g.name+'"','',{type:'msgs'});toast('✅ تم إضافة '+mName);WW.renderGrpInfo();document.getElementById('grpAddSearch').value='';document.getElementById('grpAddResults').innerHTML='';},
   backFromUserProfile(){goPage(prevPg);},
+  backFromOrgProfile(){goPage(prevPg);},
 };
   // ===== MEDIA & READ RECEIPTS =====
 WW.sendGCMedia=function(){
@@ -2677,86 +2698,7 @@ Object.assign(WW, {
   }
 });
 // ==================== END REDEEM SYSTEM ====================
-  // ==================== CHEST REDEEM SYSTEM (استبدال الكوينز بصناديق) ====================
-let allChestReqs = [];
 
-onValue(ref(db,'cy_chest_requests'), snap=>{
-  let all=[]; snap.forEach(s=>{ let o=s.val(); o._k=s.key; all.push(o); });
-  allChestReqs = all;
-  renderMyChestList();
-  renderAdminChestList();
-});
-
-function renderMyChestList(){
-  const box = $('myChestList'); if(!box) return;
-  const mine = allChestReqs.filter(r=>r.uid===uid).sort((a,b)=>b.ts-a.ts);
-  if(!mine.length){ box.innerHTML = '<div style="text-align:center;color:var(--text2);font-size:11px;padding:10px;">لا توجد طلبات صناديق بعد</div>'; return; }
-  box.innerHTML = mine.map(r=>{
-    const st = r.status==='pending' ? '⏳ قيد المراجعة' : r.status==='approved' ? '✅ تم التسليم' : '❌ مرفوض';
-    const stC = r.status==='pending' ? 'var(--primary)' : r.status==='approved' ? 'var(--green)' : 'var(--red)';
-    return `<div class="task-item"><div style="flex:1;"><div style="font-size:12px;font-weight:700;">🎁 ${safeA(r.chestName)}</div><div style="font-size:10px;color:var(--text2);">${r.chestPrice.toLocaleString()} 🪙 — ${ago(r.ts)}</div></div><div style="font-size:11px;font-weight:900;color:${stC};white-space:nowrap;">${st}</div></div>`;
-  }).join('');
-}
-
-function renderAdminChestList(){
-  const box = $('adminChestList'); if(!box) return;
-  const pending = allChestReqs.filter(r=>r.status==='pending').sort((a,b)=>a.ts-b.ts);
-  if(!pending.length){ box.innerHTML = '<div style="font-size:11px;color:var(--text2);text-align:center;padding:10px;">لا توجد طلبات معلقة</div>'; return; }
-  box.innerHTML = pending.map(r=>`
-    <div style="background:#0d0d0d;border:2px solid #1a1a1a;padding:8px;margin-bottom:6px;border-radius:4px;">
-      <div style="font-size:12px;font-weight:700;">${safeA(r.playerName)} ${r.mcname?`<span style="color:var(--text2);font-size:10px;">(${safeA(r.mcname)})</span>`:''}</div>
-      <div style="font-size:11px;color:var(--primary);margin:3px 0;font-weight:900;">🎁 ${safeA(r.chestName)} — ${r.chestPrice.toLocaleString()} 🪙</div>
-      <div style="font-size:9px;color:var(--text2);margin-bottom:6px;">${ago(r.ts)}</div>
-      <div style="display:flex;gap:6px;">
-        <button class="mc-btn small" style="flex:1;" onclick="WW.acceptChestReq('${r._k}')">✅ قبول وتسليم</button>
-        <button class="mc-btn small danger" style="flex:1;" onclick="WW.rejectChestReq('${r._k}')">❌ رفض</button>
-      </div>
-    </div>`).join('');
-}
-
-Object.assign(WW, {
-  async requestChest(chestId){
-    const chest = CHESTS.find(c=>c.id===chestId);
-    if(!chest) return;
-    if(myCoins < chest.price){ toast('❌ الكوينز اللي عندك مش كفاية لطلب '+chest.name+'!'); return; }
-    const reqId = 'cr_'+Date.now()+'_'+uid;
-    await set(ref(db,'cy_chest_requests/'+reqId), {
-      uid, playerName: uname, mcname: umcname, img: uimg,
-      chestId: chest.id, chestName: chest.name, chestPrice: chest.price,
-      status: 'pending', ts: Date.now()
-    });
-    toast('✅ تم إرسال طلب '+chest.name+'! استنى موافقة الإدارة');
-  },
-  async acceptChestReq(rk){
-    if(!isAdmin()){ toast('❌ الأدمن/الأونر بس!'); return; }
-    const r = allChestReqs.find(x=>x._k===rk);
-    if(!r || r.status!=='pending'){ toast('⚠️ الطلب ده مش متاح!'); return; }
-    const snap = await get(ref(db,'cy_users/'+r.uid+'/coins'));
-    const bal = snap.val()||0;
-    if(bal < r.chestPrice){
-      await set(ref(db,'cy_chest_requests/'+rk+'/status'),'rejected');
-      await set(ref(db,'cy_chest_requests/'+rk+'/note'),'رصيد غير كافي وقت الموافقة');
-      pushNotif(r.uid,'❌','طلب صندوق "'+r.chestName+'" اتلغى لأن رصيدك قل عن المطلوب وقت المراجعة','',{type:'explore'});
-      toast('❌ رصيد اللاعب مش كافي، اتلغى الطلب تلقائيًا');
-      return;
-    }
-    await set(ref(db,'cy_users/'+r.uid+'/coins'), bal - r.chestPrice);
-    await set(ref(db,'cy_chest_requests/'+rk+'/status'),'approved');
-    await set(ref(db,'cy_chest_requests/'+rk+'/approvedBy'), uname);
-    await set(ref(db,'cy_chest_requests/'+rk+'/approvedAt'), Date.now());
-    pushNotif(r.uid,'🎁','تم تسليم صندوق "'+r.chestName+'"! تفقد حسابك في السيرفر 🎮','',{type:'explore'});
-    toast('✅ تم القبول وخصم الكوينز من اللاعب');
-  },
-  async rejectChestReq(rk){
-    if(!isAdmin()){ toast('❌ الأدمن/الأونر بس!'); return; }
-    const r = allChestReqs.find(x=>x._k===rk);
-    if(!r || r.status!=='pending'){ toast('⚠️ الطلب ده مش متاح!'); return; }
-    await set(ref(db,'cy_chest_requests/'+rk+'/status'),'rejected');
-    pushNotif(r.uid,'❌','للأسف تم رفض طلب صندوق "'+r.chestName+'"','',{type:'explore'});
-    toast('تم رفض الطلب');
-  }
-});
-// ==================== END CHEST REDEEM SYSTEM ====================
   // ===== LOGIN SYSTEM =====
 $('sLoginBtn').addEventListener('click',()=>{
   const ls=$('loginSection');
