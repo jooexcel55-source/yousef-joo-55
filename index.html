@@ -5,6 +5,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1324,8 +1325,9 @@ onValue(ref(db,'cy_gc_reads'),snap=>{
   gcReads=snap.val()||{};
   renderGC();
 });
-function gcSend(){const inp=$('gcIn'),txt=inp.value.trim();if(!txt)return;const msg={ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg};if(replyTarget)msg.replyTo=replyTarget;push(gcRef,msg);inp.value='';replyTarget=null;$('replyingTo').style.display='none';addCoins(100);checkTask('gc');}
-$('gcSend').addEventListener('click',gcSend);$('gcIn').addEventListener('keydown',e=>{if(e.key==='Enter')gcSend();});
+let gcSending=false;
+function gcSend(){if(gcSending)return;const inp=$('gcIn'),txt=inp.value.trim();if(!txt)return;gcSending=true;const msg={ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg};if(replyTarget)msg.replyTo=replyTarget;push(gcRef,msg);inp.value='';replyTarget=null;$('replyingTo').style.display='none';addCoins(100);checkTask('gc');setTimeout(()=>{gcSending=false;},500);}
+$('gcSend').addEventListener('click',gcSend);$('gcIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();gcSend();}});
 window.cancelReply=()=>{replyTarget=null;$('replyingTo').style.display='none';};
 function loadMsgsList(){
   onValue(ref(db,'cy_pvt_idx/'+uid),snap=>{
@@ -1385,11 +1387,13 @@ function openPvt(oUid,oNm,oImg){
     renderPvtMsgsList(msgs);
   });
 }
-$('pvtSend').addEventListener('click',pvtSend);$('pvtIn').addEventListener('keydown',e=>{if(e.key==='Enter')pvtSend();});
-function pvtSend(){const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'cy_pvt/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_pvt_idx/'+uid+'/'+curPvt.uid),{uid:curPvt.uid,name:curPvt.name,img:curPvt.img,last:txt,ts:Date.now(),unread:false});set(ref(db,'cy_pvt_idx/'+curPvt.uid+'/'+uid),{uid,name:uname,img:uimg,last:txt,ts:Date.now(),unread:true});$('pvtIn').value='';addCoins(100);pushNotif(curPvt.uid,'✉️',uname+' بعتلك رسالة خاصة: '+txt.substring(0,40),'',{type:'pvt',uid,name:uname,img:uimg||''});
+let pvtSending=false;
+$('pvtSend').addEventListener('click',pvtSend);$('pvtIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();pvtSend();}});
+function pvtSend(){if(pvtSending)return;const txt=$('pvtIn').value.trim();if(!txt||!curPvt.uid)return;pvtSending=true;const ck=[uid,curPvt.uid].sort().join('_');push(ref(db,'cy_pvt/'+ck),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_pvt_idx/'+uid+'/'+curPvt.uid),{uid:curPvt.uid,name:curPvt.name,img:curPvt.img,last:txt,ts:Date.now(),unread:false});set(ref(db,'cy_pvt_idx/'+curPvt.uid+'/'+uid),{uid,name:uname,img:uimg,last:txt,ts:Date.now(),unread:true});$('pvtIn').value='';addCoins(100);pushNotif(curPvt.uid,'✉️',uname+' بعتلك رسالة خاصة: '+txt.substring(0,40),'',{type:'pvt',uid,name:uname,img:uimg||''});setTimeout(()=>{pvtSending=false;},500);
 }
-$('grpSend').addEventListener('click',grpSend);$('grpIn').addEventListener('keydown',e=>{if(e.key==='Enter')grpSend();});
-function grpSend(){const txt=$('grpIn').value.trim();if(!txt||!curGrpId)return;push(ref(db,'cy_grp_msgs/'+curGrpId),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_grp_idx/'+uid+'/'+curGrpId),{name:curGrpData.name,count:Object.keys(curGrpData.members||{}).length,ts:Date.now()});$('grpIn').value='';addCoins(50);}
+let grpSending=false;
+$('grpSend').addEventListener('click',grpSend);$('grpIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();grpSend();}});
+function grpSend(){if(grpSending)return;const txt=$('grpIn').value.trim();if(!txt||!curGrpId)return;grpSending=true;push(ref(db,'cy_grp_msgs/'+curGrpId),{ts:Date.now(),txt,sid:uid,sname:uname,simg:uimg});set(ref(db,'cy_grp_idx/'+uid+'/'+curGrpId),{name:curGrpData.name,count:Object.keys(curGrpData.members||{}).length,ts:Date.now()});$('grpIn').value='';addCoins(50);setTimeout(()=>{grpSending=false;},500);}
 let allUsersForGrp=[];
 $('btnNewGroup').addEventListener('click',async()=>{const snap=await get(ref(db,'cy_users'));allUsersForGrp=[];snap.forEach(s=>{if(s.key!==uid)allUsersForGrp.push({...s.val(),_k:s.key});});renderGrpMembersList('');$('mNewGroup').classList.add('open');});
 window.renderGrpMembersList=function(q){const box=$('grpMembersList');if(!box)return;const filtered=q?allUsersForGrp.filter(u=>(u.name||'').toLowerCase().includes(q.toLowerCase())):allUsersForGrp;box.innerHTML='';filtered.forEach(u=>{const lbl=document.createElement('label');lbl.style.cssText='display:flex;align-items:center;gap:8px;padding:7px;border:2px solid #1a1a1a;margin-bottom:4px;cursor:pointer;background:#0d0d0d;';const cb=document.createElement('input');cb.type='checkbox';cb.value=u._k;cb.style.cssText='width:auto;margin:0;flex-shrink:0;';const img=document.createElement('img');img.style.cssText='width:28px;height:28px;border-radius:3px;object-fit:cover;';img.src=avt(u.img,u.name);const nm=document.createElement('span');nm.style.fontSize='12px';nm.textContent=u.name||'مجهول';lbl.appendChild(cb);lbl.appendChild(img);lbl.appendChild(nm);box.appendChild(lbl);});};
